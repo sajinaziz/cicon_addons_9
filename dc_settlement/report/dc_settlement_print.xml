@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_dc_settlement_template">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+        <!--<t t-call="report.external_layout"/>-->
+            <div class="page">
+
+                <div class="oe_structure"/>
+                <div class="row" >
+
+                    <div class="col-xs-6 text-center">
+                        <h3> Authorization of D/C Settlement </h3>
+                    </div>
+                    <div class="col-xs-6 text-center">
+                        <h3> تفويض بتسديد اعتماد</h3>
+                    </div>
+                </div>
+                <div class="row mb32">
+                    <div class="col-xs-5">
+                       <h4> The Manager, Arab Bank plc </h4>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <h4> <u> فرع أبوظبى </u> </h4>
+                    </div>
+                    <div class="col-xs-5 text-right"> <h4>  السيد/مدير البنك العربى ش.م.ع
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row div-big-font div-border" >
+                    <div class="row">
+                             <div class="col-xs-2">
+                                  Amount
+                             </div>
+                             <div class="col-xs-3">
+                                 <span t-field="o.amount" />
+                             </div>
+                             <div class="col-xs-2">بمبلغ</div>
+                             <div class="col-xs-3">
+                                 <span t-field="o.name"/>
+                             </div>
+                             <div class="col-xs-2 text-right">رقم الاعتماد</div>
+                        </div>
+                    <div class="row mt32">
+                            <div class="col-xs-2"> Beneficiary</div>
+                            <div class="col-xs-6">
+                                <span t-field="o.partner_id.name"/>
+                            </div>
+                            <div class="col-xs-4 text-right"> المستفيد </div>
+                    </div>
+                </div>
+
+
+                <div class="row div-big-font div-border mb32">
+                <div class="row mb32">
+                    <div class="col-xs-6 text-justify en-font">
+                        Dear Sir,
+                        <br/>
+                        <br/>
+                        I have examined the documents relating
+                        to the a/m credit, and I accept them and
+                        hereby authorize you to debit their values
+                        and the relevant expense to my account
+                        with you. You may also, regardless of
+                        any discrepancies in the documents
+                        arrange to waive any reserve/release my
+                        guarantee held on account of them by
+                        your correspondent.
+                    </div>
+                    <div class="col-xs-6 text-right ar-font">
+                          تحيه واحتراما
+                            <br/>
+                            <br/>
+                            بعد ان اطلعت على جميع المستندات الخاصه
+                            <br/>
+                            بالاعتماد المذكور أعلاه , أوافق على حسابى لديكم
+                            <br/>
+                            , وقيد القيمة والمصاريف على حسابي لديكم
+                            <br/>
+                            وفى حاله أخذكم تعهدا من المستفيد بسبب أيه
+                            <br/>
+                            مخالفات لشروط الاعتماد ,فاننى أخولكم أن
+                            <br/>
+تعملوا على حاله
+                            <br/>
+                        </div>
+                </div>
+
+                <div class="row mt32">
+                    <div class="col-xs-6 text-center" >
+                        Yours Faithfully
+                    </div>
+                    <div class="col-xs-6 text-center" >
+                        وتفضلوا بقبول فائق الاحترام
+                    </div>
+                </div>
+                <div class="row mt32">
+                    <div class="col-xs-5 text-right" >
+                        A/C No.
+                    </div>
+                    <div class="col-xs-2 div-border text-center">
+                       <span t-field="o.ac_no"/>
+                    </div>
+                    <div class="col-xs-5">
+                 رقم الحساب
+                    </div>
+                </div>
+
+                <div class="row mt32">
+                    <div class="col-xs-4 text-right">
+                        Signature
+                    </div>
+                    <div class="col-xs-4 div-bottom-border">
+                           <![CDATA[
+                        &nbsp;]]>
+                    </div>
+                    <div class="col-xs-4">
+                        التوقيع
+                    </div>
+                </div>
+
+                <div class="row mt32 mb32">
+                  <div class="col-xs-4 text-right">
+                        Date
+                    </div>
+                    <div class="col-xs-4 div-bottom-border text-center">
+                        <span t-field="o.date" t-field-options='{"format":"dd-MM-yyyy"}' />
+                    </div>
+                    <div class="col-xs-4">
+التاريخ
+                    </div>
+
+                </div>
+                </div>
+
+
+
+                <div class="row div-border mb32">
+                    <div class="col-xs-4">
+                        <div class="row">
+                            <div class="col-xs-7">
+                               <small>  Documents Delivered to </small>
+                            </div>
+                            <div class="col-xs-5 text-right"> <small>
+                                 سلمت المستندات</small>
+                            </div>
+                        </div>
+                        <div class="row mb4">
+                            <div class="col-xs-5">
+                                Clearing co.
+                            </div>
+                            <div class="col-xs-5 text-right">
+                                شركة التخليص
+                             </div>
+                            <div  class="col-xs-2 div-border">
+                                <t t-if="o.is_clearing_co">
+                                  <span> <i class="fa fa-check"></i> </span>
+                                </t>
+                                <t t-if="not o.is_clearing_co">
+                                     <![CDATA[
+                        &nbsp;]]>
+                                </t>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">
+                                Customer
+                            </div>
+                            <div class="col-xs-5 text-right">
+                 العميل
+                             </div>
+                            <div class="col-xs-2 div-border" >
+                                <t t-if="o.is_customer">
+                                  <span> <i class="fa fa-check"></i> </span>
+                                </t>
+                                <t t-if="not o.is_customer">
+                                     <![CDATA[
+                                    &nbsp;]]>
+                                </t>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-xs-4 div-side-border">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                AC debited
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                قيد على حساب
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10">
+                                _________________
+                            </div>
+                            <div class="col-xs-2 div-border">
+                                 <t t-if="o.ac_debited">
+                                  <span> <i class="fa fa-check"></i> </span>
+                                </t>
+                                <t t-if="not o.ac_debited">
+                                     <![CDATA[
+                                    &nbsp;]]>
+                                </t>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <![CDATA[
+                        &nbsp;]]>
+                        </div>
+                         <div class="row">
+                            <![CDATA[
+                        &nbsp;]]>
+                        </div>
+                    </div>
+
+                       <div class="col-xs-4">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Sig. Checked
+                            </div>
+                            <div class="col-xs-6 text-right">دقق التوقيع</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10">
+                                _________________
+                            </div>
+                            <div class="col-xs-2 div-border">
+                                  <t t-if="o.sign_checked">
+                                  <span> <i class="fa fa-check"></i> </span>
+                                </t>
+                                <t t-if="not o.sign_checked">
+                                     <![CDATA[
+                                    &nbsp;]]>
+                                </t>
+
+                            </div>
+                        </div>
+                             <div class="row">
+                                 <![CDATA[
+                        &nbsp;]]>
+                             </div>
+                            <div class="row">
+                            <![CDATA[
+                        &nbsp;]]>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div style="page-break-after:always;">   </div>
+
+                <div class="row mb32 mt32">
+                    <div class="row text-center">
+                        <h2> Promissory Note</h2>
+                    </div>
+                    <div class="row text-center">
+                        <h3> Number.........</h3>
+                    </div>
+                    <div class="row text-center">
+                        <h3><u> Payable in UAE  </u></h3>
+                    </div>
+
+                </div>
+                <div class="row mb32">
+                    <div class="col-xs-1">
+
+                    </div>
+                    <div class="col-xs-10">
+
+
+                <p class="div-big-font text-justify">
+                    We the undersigned irrevocably &amp; unconditionally Promise to pay
+                    <u> <span t-field="o.due_date" t-field-options='{"format":"dd-MM-yyyy"}'/> </u> to the order of <strong>Arab bank Plc, Abu Dhabi Br.</strong>
+                    The amount of <u> <span t-field="o.amount"/> </u> for the value received under <u>  <span t-field="o.name"/> </u>
+                    In case of default, this note &amp; all other notes (if any) although not yet due,
+                    shall become immediately payable without prior notice with interest at the
+                    rate of <u> <span t-field="o.interest_rate"/> </u> Percent per annum with effect from the due date stated above,
+                    until final payment.
+
+                     </p>
+                    </div>
+                    <div class="col-xs-1">
+
+                    </div>
+                </div>
+                <div class="row mb32 div-big-font col-xs-2 col-xs-offset-1">
+                    Date
+                </div>
+                <div class="row mb32"/>
+                <div class="row mt32">
+                    <div class="col-xs-4 col-xs-offset-5 text-right div-big-font">
+                        <strong>Signature of Debtor(s)</strong>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+            </div>
+            </t>
+        </t>
+        </template>
+    </data>
+</odoo>
+
+

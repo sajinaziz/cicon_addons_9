@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="tech_submittal_revision_form_view_task" model="ir.ui.view">
+            <field name="name">tech.submittal.revision.task.form</field>
+            <field name="model">tech.submittal.revision</field>
+            <field name="inherit_id" ref="cicon_tech.tech_submittal_revision_form_view"/>
+            <field name="arch" type="xml">
+              <field name="drawing_creator_ids" position="before">
+                  <field name="task_project_id" options="{'no_open':True, 'no_create': True}" />
+                  <field name="task_id" domain="[('project_id','=', task_project_id)]" options="{'no_open':True, 'no_create': True}" />
+              </field>
+            </field>
+        </record>
+
+
+
+          <record id="tech_task_timesheet_dwg" model="ir.ui.view">
+             <field name="name">account.analytic.line.tech.form</field>
+            <field name="model">account.analytic.line</field>
+              <field name="priority" eval="99"/>
+              <field name="arch" type="xml">
+                  <form string="Time Sheet">
+                      <sheet>
+                          <group>
+                              <field name="task_id"/>
+                              <field name="name"/>
+                          </group>
+                          <group>
+                              <group>
+                                  <field name="account_id"/>
+                                  <field name="date"/>
+                              </group>
+                              <group>
+                                  <field name="unit_amount" string="Duration"/>
+                                  <field name="user_id" string="Done By" />
+                              </group>
+                          </group>
+                      </sheet>
+                  </form>
+
+              </field>
+        </record>
+
+
+
+          <record id="tech_submittal_doc_form_view_task" model="ir.ui.view">
+             <field name="name">tech.submittal.doc.task.form</field>
+            <field name="model">tech.submittal.document.revision</field>
+            <field name="inherit_id" ref="cicon_tech.tech_submittal_doc_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group" postion="after">
+                    <group string="Time sheet Information">
+                    <field name="task_id"/>
+                    <field name="analytic_account_id" string="Project / Contract"/>
+                    <field name="task_time_sheet_id" domain="[('task_id','=',task_id)]" context="{
+                    'form_view_ref': 'cicon_tech_timesheet.tech_task_timesheet_dwg',
+                    'default_task_id': task_id,
+                    'default_unit_amount': draft_time,
+                    'deafult_user_id': created_by,
+                    'default_date':date,
+                    'default_account_id': analytic_account_id
+
+
+                    }" />
+                    </group>
+
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

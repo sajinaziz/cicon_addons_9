@@ -1,0 +1,42 @@
+.div-border {
+    border: 1px solid black !important;
+}
+
+.div-big-font {
+    font-size: 20px !important;
+}
+
+
+.div-side-border{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.div-bottom-border{
+    border-bottom: 1px solid black;
+}
+
+.mb32{
+    margin-bottom: 32px;
+
+}
+
+.mt32{
+    margin-top: 32px;
+
+}
+
+.mb4{
+    margin-bottom: 4px;
+}
+
+.ar-font{
+font-family: 'Amiri', serif;
+}
+
+
+.en-font{
+font-family: arial ;
+
+}
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<openerp>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="0">
+        <!--Email template -->
+        <record id="submittal_email_template" model="mail.template">
+            <field name="name"> Submittal Template </field>
+            <field name="email_from">${(object.submitted_by.email or object.company_id.email or 'noreply@localhost')|safe}</field>
+            <field name="subject">${object.ref_no}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="cicon_tech.model_tech_submittal_revision"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+            <html>
+            <head>
+            </head>
+            <body>
+                <p> Ref: ${object.ref_no} </p>
+                <p> Date: ${object.submittal_date} </p>
+
+                <p> ${object.submittal_id.partner_id.name} </p>
+            </body>
+            </html>
+
+            ]]></field>
+        </record>
+    </data>
+</openerp>

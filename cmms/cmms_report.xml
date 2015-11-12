@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<report-->
+            <!--id="report_cmms_machine"-->
+            <!--string="Machine Status"-->
+            <!--model="cmms.machine"-->
+            <!--report_type="qweb-pdf"-->
+            <!--file="cmms.report_machine_status"-->
+            <!--name="cmms.report_machine_status"-->
+        <!--/>-->
+
+     <report
+            id="report_pm_plan_cmms"
+            string="PM Plan"
+            model="cmms.pm.sch.plan.report.wizard"
+            report_type="qweb-pdf"
+            file="cmms.pm_sch_plan_report"
+            name="cmms.cmms_pm_plan_report_template"
+    />
+
+
+         <report
+            id="report_job_order_cmms"
+            string="Job Order"
+            model="cmms.job.order"
+            report_type="qweb-pdf"
+            file="cmms.job_order_form_view"
+            name="cmms.cmms_job_order_template"
+    />
+
+
+       <!--<report id="report_cmms_machine_status_webkit"-->
+            <!--name="cmms.machine.status.webkit"-->
+            <!--auto="False"-->
+            <!--model="cmms.machine"-->
+            <!--file="cmms/report/machine_status.mako"-->
+            <!--string="Machine Status Webkit"-->
+            <!--report_type="webkit"/>-->
+
+    </data>
+</openerp>

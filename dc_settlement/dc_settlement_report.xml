@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+    <report
+        id="report_dc_settlement_qweb"
+        string="DC Settlement"
+        model="cic.dc.settlement"
+        report_type="qweb-pdf"
+        file="dc_settlement.dc_settlement_print"
+        name="dc_settlement.report_dc_settlement_template"
+    />
+
+  </data>
+</openerp>

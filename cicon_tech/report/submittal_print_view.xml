@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="tech_cicon_external_layout">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <t t-if="company">
+                <t t-set="parent_company" t-value="company.parent_id or company"></t>
+            </t>
+
+           <t t-call="cicon_tech.tech_cicon_layout_header" />
+           <t t-raw="0" />
+           <t t-call="cicon_tech.tech_cicon_layout_footer" />
+</template>
+
+<template id="tech_cicon_layout_header">
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-2">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+            </div>
+            <div class="col-xs-8">
+                <h3 class="text-center cicon-head-font">
+                     <span t-field="company.name"/>
+                </h3>
+                <p class="text-center">
+                    <strong>
+                    Tel: <span t-field="company.phone"/> ,
+                    Fax: <span t-field="company.fax"/>,
+                    P.O Box: <span t-field="company.zip"/>,
+                    <span t-field="company.state_id.name" /> - <span t-field="company.country_id.name" />
+                    </strong>
+                    <br/>
+                    Main Off. Tel: <span t-field="parent_company.phone"/> Fax: <span t-field="parent_company.fax"/> P.O Box <span t-field="parent_company.zip"/>
+                    <br/>
+                    <strong> E-mail: <span t-field="company.email"/> </strong>
+                </p>
+            </div>
+            <!--<div class="col-xs-8 text-left" style="margin-top:25px;padding-left:25px;" t-field="company.rml_header1"/>-->
+           <div class="col-xs-2">
+                <img t-if="company.logo2" t-att-src="'data:image/png;base64,%s' % company.logo2" style="max-height: 45px;"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <p>
+                </p>
+            </div>
+        </div>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template id="tech_cicon_layout_footer">
+    <div class="footer">
+        <div class="row" style="border-top: 1px solid black;">
+        <div class="text-left col-xs-4">
+          Prepared By:  <span t-field="o.submitted_by.name"/>
+        </div>
+        <div class="text-right col-xs-8" >
+             <ul class="list-inline">
+                <li>Page:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+        </div>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+    <template id="report_submittal_template">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+        <t t-call="cicon_tech.tech_cicon_external_layout"/>
+        <div class="page">
+            <div class="oe_structure"/>
+            <div class="row col-xs-12" >
+              <strong> Ref: <span  t-field="o.ref_no" /> </strong>
+                    <br/>
+                    <br/>
+                    Date : <span t-field="o.submittal_date" />
+                    <br/>
+                    <br/>
+            </div>
+             <div class="row col-xs-12">
+                    <strong t-field="o.partner_id.name" /> <br/>
+                    P.O Box: <span t-field="o.job_site_id.po_box"/>  <br/>
+                    Tel.:  <span t-field="o.job_site_id.telephone" /> <br/>
+                    FAX:  <span t-field="o.job_site_id.fax" /> <br/>
+             </div>
+
+            <div class="row mt32">
+                <div class="col-xs-1">
+                Attn:
+                </div>
+                <div class="col-xs-11">
+                 <span t-field="o.job_site_contact.salutation"/> <span t-field="o.job_site_contact.name" />
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-xs-11 col-xs-offset-1">
+                    <small> [ <span t-field="o.job_site_contact.designation"/> ] </small>
+                </div>
+            </div>
+            <div class="row col-xs-12">
+                    Dear Sir,
+            </div>
+             <div class="row col-xs-12 mt8">
+                  <strong> Project : <span t-field="o.job_site_id.name"/> </strong>
+             </div>
+             <div class="row col-xs-12 mt8">
+                    <strong> Subject : <u t-field="o.subject"/> </strong>
+             </div>
+             <div class="row col-xs-12 mt8 mb12 text-justify">
+                    We would like to
+                    <t t-if="o.revision_number > 0"> resubmit </t>
+                    <t t-if="o.revision_number == 0"> submit  </t>
+                    the following Shop Drawing and Bar Bending Schedules for the above mentioned subject.
+             </div>
+
+             <table class="table table-bordered">
+                <thead>
+                    <th> SL No. </th>
+                    <th> Drawing Number </th>
+                    <th> Status </th>
+                    <th> Drawing Title </th>
+                 </thead>
+                 <tbody>
+                    <t t-foreach="o.document_ids" t-as="d" >
+                        <!--<tr t-att-class=" 'info' if o.revision_number &lt; d.rev_no else '' ">-->
+                        <tr t-att-class=" 'warning' if d.parent_id in o.revised_document_ids else '' ">
+                        <td class="text-center"> <span t-esc="d_index +1"/> </td>
+                        <td> <span t-field="d.name"/> </td>
+                        <td> <span t-field="d.document_status"/>  </td>
+                        <td> <span t-field="d.description" /> </td>
+                        </tr>
+                    </t>
+                 </tbody>
+             </table>
+            <div class="row">
+            <div class="col-xs-12">
+                 This is for your kind information and necessary action.
+                 <br/>
+                 <br/>
+                 Thanks &amp; Regards,
+            </div>
+            <div class="col-xs-12 mt8">
+                For <strong> <span t-field="o.company_id.name" /> </strong>
+            </div>
+            </div>
+           <div class="row">
+                <div class="col-xs-2">
+                    <img t-if="o.signed_by.signature_image" t-att-src="'data:image/png;base64,%s' % o.signed_by.signature_image" style="max-height: 30px;"/>
+                </div>
+            </div>
+            <div class="row mt8 col-xs-12">
+                <strong>  <span t-field="o.signed_by.name"/> </strong>
+            </div>
+            <div class="row mt8 mb12">
+                <div class="col-xs-12">
+                    <span t-field="o.signed_by.signature"/>
+                </div>
+                <div class="col-xs-12">
+                <span t-field="o.signed_by.partner_id.function" />
+                 </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                   <strong>  Enclosures : </strong>
+                </div>
+                <div class="col-xs-4">
+                    <t t-set="dcs" t-value="list(set([x.document_type_id.name for x in o.document_ids]))"/>
+                    <t t-foreach="dcs" t-as="s">
+                        <span t-esc="s"/> :  <span t-esc="len([p for p in o.document_ids if p.document_type_id.name == s])"/> No(s). <br/>
+                    </t>
+                </div>
+                <div class="col-xs-4 col-offset-2">
+                      <span t-esc="o.enclosures"/>
+                </div>
+            </div>
+
+
+
+        </div>
+        </t>
+
+
+    </t>
+</template>
+
+    </data>
+</openerp>
