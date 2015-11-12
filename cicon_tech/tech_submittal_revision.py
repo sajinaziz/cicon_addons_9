@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class SubmittalRevision(models.Model):
@@ -205,27 +205,26 @@ class SubmittalRevision(models.Model):
     @api.onchange('job_site_id')
     def onchange_project(self):
         """
-            On Change Project
-
-
+            On Change Project To Set Site information on Current Submittal Revision form
+            :raise warning if it job site not include site ref and co ordinates
         """
         if self.job_site_id:
             if self.job_site_id.site_ref_no and self.job_site_id.coordinator_id:
                 rev_no = 0
-                if self.submittal_id:
+                if self.submittal_id:   # if it is revision > 0 then Set Submittal name as it is
                     _sub_name = self.submittal_id.name
-                    if self.parent_id:
+                    if self.parent_id:  # if parent_id  (revision > 0) then Set Submittal name as it is
                         rev_no = self.parent_id.revision_number + 1
                         _ref_no = self.parent_id.submittal_id.name + '-R' + str(rev_no)
-                else:
-                    _new_submittal = self.generate_new_ref(self.job_site_id.id)
-                    _ref_no = _new_submittal['_ref_no']
-                    _sub_name = _new_submittal['_sub_name']
-                self.site_ref_no = self.job_site_id.site_ref_no
-                self.coordinator_id = self.job_site_id.coordinator_id.id
+                else:   # if new Submittal with revision 0
+                    _new_submittal = self._generate_new_ref(self.job_site_id.id)
+                    _ref_no = _new_submittal['_ref_no']     # New Code
+                    _sub_name = _new_submittal['_sub_name']     # New submittal Name
+                self.site_ref_no = self.job_site_id.site_ref_no # Fields in tech.submittal (master class)
+                self.coordinator_id = self.job_site_id.coordinator_id.id    # Fields in tech.submittal (master class)
                 self.revision_number = rev_no
                 self.ref_no = _ref_no
-                self.name = _sub_name
+                self.name = _sub_name   # Fields in tech.submittal (master class)
             else:
                     _warn = {
                         'title': 'Warning',
@@ -235,16 +234,22 @@ class SubmittalRevision(models.Model):
 
     @api.onchange('parent_id')
     def onchange_parent(self):
+        """
+        On Change ParentId
+        trigger if creates revision
+        """
         if self.parent_id:
             _docs = []
             _rev = self.parent_id.revision_number + 1
+            # if documents also need revision
             for d in self.parent_id.document_ids:
+                # find status and update if last char isdigit +1
                 _status = d.document_status
                 _rev_val = _status[-1]
                 if _rev_val.isdigit():
                     _status = _status[:-1] + str((int(_status[-1]) + 1))
                 else:
-                    _status = _status + str(_rev)
+                    _status += str(_rev)
                 _docs.append({'name': d.name,
                               'document_type_id': d.document_type_id.id,
                               'description': d.description,
@@ -254,34 +259,43 @@ class SubmittalRevision(models.Model):
                               'draft_time': 0,
                               'document_id': d.document_id.id,
                               })
+            #   Update Subject if it is revision > 0
             if _rev < 2:
                 self.subject = self.parent_id.subject + '-revised'
             else:
                 self.subject = self.parent_id.subject
-            print _docs
             self.document_ids = _docs
             self.signed_by = self.parent_id.signed_by.id
             self.job_site_contact = self.parent_id.job_site_contact.id
 
     @api.onchange('submittal_id')
     def onchange_submittal(self):
+        """
+            On Change submittal_id
+            trigger if creates revision Show information in Master Submittal
+        """
         if self.submittal_id:
-            self.name = self.submittal_id.name
-            self.partner_id = self.submittal_id.partner_id.id
-            self.job_site_id = self.submittal_id.job_site_id.id
+            self.name = self.submittal_id.name  # Fields in tech.submittal
+            self.partner_id = self.submittal_id.partner_id.id   # Fields in tech.submittal
+            self.job_site_id = self.submittal_id.job_site_id.id # Fields in tech.submittal
 
-    def print_revision(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_revision(self):
+        """Print Submittal form button click and
+         set status to submitted
+        """
         self.ensure_one()
-        data_s = {
-            'model': 'tech.submittal.revision',
-            'ids': ids,
-            'form': self.read(cr, uid, ids[0], context=context), }
-        self.write(cr, uid, ids, {'state': 'submitted'}, context=context)
-        return {'type': 'ir.actions.report.xml', 'report_name': 'submittal.print.webkit', 'datas': data_s, 'nodestroy': True}
+        self.write({'state': 'submitted'})
+        return self.env['report'].get_action(self, 'cicon_tech.report_submittal_template')
 
     @api.multi
     def submittal_revision(self):
-        self.ensure_one()#One Record
+        """ Create revision
+         :return : action to show form view with default submittal
+         and parent id , on change of these fields will fill up  the rest
+        """
+        self.ensure_one()   # One Record
+        # Find form view and pass context for default values
         form_id = self.env.ref('cicon_tech.tech_submittal_revision_form_view')
         ctx = dict(
             default_submittal_id=self.submittal_id.id,
@@ -300,8 +314,14 @@ class SubmittalRevision(models.Model):
 
     @api.multi
     def send_email(self):
+        """
+         Show Email Template with exact print Format
+         :return : Wizard form view for compose email
+        """
         self.ensure_one()
+        # Finds Email Template
         template = self.env.ref('cicon_tech.submittal_email_template')
+        # Form view for Compose Email
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
             default_model='tech.submittal.revision',
@@ -311,7 +331,7 @@ class SubmittalRevision(models.Model):
             default_composition_mode='comment',
         )
         return {
-            'name': ('Compose Email'),
+            'name': 'Compose Email',
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -324,18 +344,25 @@ class SubmittalRevision(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('ref_no') is None:
-            if vals.get('name') and vals.get('submittal_id') == False:
-                _new_revision = self.generate_new_ref(vals.get('job_site_id'))
+        """
+        :param vals: create values for create
+        :return : created new id
+
+        """
+        if vals.get('ref_no') is None:  # Check if ref_no , can be blank as form view using it as readonly mode
+            if vals.get('name') and vals.get('submittal_id') == False:  # Check it is new Revision
+                # Create new Code for selected Job Site
+                _new_revision = self._generate_new_ref(vals.get('job_site_id'))
                 _new_ref = _new_revision['_ref_no']
                 vals.update({'name': _new_revision['_sub_name']})
-                vals.update({'submittal_common_count': _new_revision['_sub_count_on_common']})
+                vals.update({'submittal_common_count': _new_revision['_sub_count_common']})
                 vals.update({'submittal_project_count': _new_revision['_sub_count_on_project']})
-            elif vals.get('submittal_id'):
+            elif vals.get('submittal_id'):  # if is it a revision for Existing submittal
                 _sub_name = self.env['tech.submittal'].browse(vals.get('submittal_id')).name
                 _new_ref = _sub_name + "-R" + str(vals.get('revision_number'))
             vals.update({'ref_no': _new_ref})
         res = super(SubmittalRevision, self).create(vals)
+        #   If there is parent_id then change the status to "resubmitted"
         if res:
             _rec = res.parent_id
             _rec.write({'state': 'resubmitted'})
@@ -343,9 +370,13 @@ class SubmittalRevision(models.Model):
 
     @api.multi
     def unlink(self):
+        """ Override normal delete
+        Just set  State to Cancel
+           """
         for r in self:
             if r.state == 'resubmitted':
-                raise Warning('Error', 'Cannot be Deleted ,Revision Superseded')
+                raise UserError('Error', 'Cannot be Deleted ,Revision Superseded')
+            # Check if parent Id and state resubmitted then change to active state 'submitted'
             if r.parent_id:
                 if r.parent_id.state == 'resubmitted':
                     r.parent_id.write({'state': 'submitted'})
@@ -355,5 +386,3 @@ class SubmittalRevision(models.Model):
 
 
 SubmittalRevision()
-
-
