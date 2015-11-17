@@ -33,7 +33,7 @@ class Submittal(models.Model):
             :param: vals- values to create Submittal
             Note:
                 Create need to override to block creation of submittal on new revision
-                  so if name already available then it should return id of existing record.
+                  if name already available then it should return id of existing record.
         """
         _name = vals.get('name')
         _exists = self.search([('name', '=', _name)])

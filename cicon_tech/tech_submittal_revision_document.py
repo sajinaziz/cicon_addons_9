@@ -2,6 +2,13 @@ from openerp import models, fields, api
 
 
 class SubmittalRevisionDocument(models.Model):
+    """
+    Document Master Table
+     used with class : 'tech.submittal.document.revision' as delegation inheritance
+        Please refer : Inheritance and extension Section in ODOO Documentation
+    This class to keep the Master information of Document on Submittal, each new Document creates new mater entry
+    and there after revisions just refer to the main Document on class 'tech.submittal.document.revision'
+    """
     _name = 'tech.submittal.revision.document'
     _description = "Submittal Documents"
 
@@ -10,20 +17,40 @@ class SubmittalRevisionDocument(models.Model):
     submittal_id = fields.Many2one('tech.submittal', 'Submittal', ondelete='cascade', required=True)
     documents_revision_ids = fields.One2many('tech.submittal.document.revision', 'document_id', string="Documents")
 
-    _sql_constraints = [('uniq_doc', 'UNIQUE(name,submittal_id,document_type_id)', 'Unique Drawing Number per Submittal Revision')]
+    _sql_constraints = [('uniq_doc', 'UNIQUE(name,submittal_id,document_type_id)',
+                         'Unique Drawing Number per Submittal Revision')]
 
     @api.model
     def create(self, vals):
-        _rec = self.search([('name', '=', vals.get('name')),('submittal_id', '=', vals.get('submittal_id'))],limit=1)
+        """
+            :param: vals- values to create Document
+            Note:
+                Create need to override to block creation of Document on new revision
+                  if name already available then it should return id of existing record on current revision.
+        """
+        _rec = self.search([('name', '=', vals.get('name')), ('submittal_id', '=', vals.get('submittal_id'))], limit=1)
         if _rec:
             return _rec
         else:
             return super(SubmittalRevisionDocument, self).create(vals)
 
+
 SubmittalRevisionDocument()
 
 
 class SubmittalDocumentRevision(models.Model):
+    """
+        Document Revision Information
+        Note:
+            document_id inherited  tech.submittal.revision.document
+            ( Please refer : Inheritance and extension Section in ODOO Documentation)
+
+            New Document creates it information in both classes then revision of same document
+            will refer tech.submittal.revision.document on field document_id
+
+            state: store Revision state as it is
+
+    """
     _name = 'tech.submittal.document.revision'
     _inherits = {
         'tech.submittal.revision.document': 'document_id',
@@ -37,6 +64,7 @@ class SubmittalDocumentRevision(models.Model):
     rev_no = fields.Integer('Revision No')
     parent_id = fields.Many2one('tech.submittal.document.revision', "Previous Revision")
     draft_time = fields.Float('Draft/Detail Time', digits=(2, 2))
+    # Set if document revised with new one (superseded)
     is_revised = fields.Boolean('Revised', default=False)
     date = fields.Date('Revised Date')
     created_by = fields.Many2one('res.users', 'Revision Done By')
@@ -44,9 +72,16 @@ class SubmittalDocumentRevision(models.Model):
 
     _order = "name,revision_id"
 
+    _sql_constraints = [('uniq_doc_revision', 'UNIQUE(document_id,rev_no,revision_id)',
+                         'Unique Drawing Number per Submittal Revision')]
+
     @api.model
     def create(self, vals):
-        print vals
+        """
+        ORM Create override
+        :param vals: Dict of create fields values
+        """
+        # Set Default details if not in vals
         if not vals.get('created_by') or not vals.get('date') or not vals.get('submittal_id'):
             sub_revision = self.env['tech.submittal.revision'].search([('id', '=', vals.get('revision_id'))], limit=1)
             if not vals.get('created_by'):
@@ -56,6 +91,7 @@ class SubmittalDocumentRevision(models.Model):
             if not vals.get('submittal_id'):
                 vals.update({'submittal_id': sub_revision.submittal_id.id})
         res = super(SubmittalDocumentRevision, self).create(vals)
+        # Check for revision if available set value to be revised
         if res:
             _rec = res.parent_id
             _rec.write({'is_revised': True})
@@ -63,15 +99,19 @@ class SubmittalDocumentRevision(models.Model):
 
     @api.multi
     def doc_revision(self):
-        self.ensure_one()#One Record
+        """Revise drawing from
+         :return : new wizard with default value to revise a docuemnt
+         """
+        self.ensure_one()   # One Record
         form_id = self.env.ref('cicon_tech.tech_submittal_doc_form_view')
         _status = self.document_status
         _rev = self.rev_no + 1
+        # Increase is status last char is a digit eg:- Rev.01 -> Rev.02
         _rev_val = _status[-1]
         if _rev_val.isdigit():
             _status = _status[:-1] + str((int(_status[-1]) + 1))
         else:
-            _status = _status + str(_rev)
+            _status += str(_rev)
         ctx = dict(
             default_parent_id=self.id,
             default_name=self.document_id.name,
@@ -83,7 +123,6 @@ class SubmittalDocumentRevision(models.Model):
             default_document_id=self.document_id.id,
             default_created_by=self.revision_id.submitted_by.id,
             default_date=self.revision_id.submittal_date
-
         )
         return {
             'type': 'ir.actions.act_window',

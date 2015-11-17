@@ -3,12 +3,13 @@ from openerp import models, fields, api
 
 
 class DrawingRegister(models.Model):
+    """ Creates Database view to show drawing registry pivoted view """
     _name = 'tech.drawing.register'
     _description = "Drawing Register"
     _auto = False
 
     job_site_id = fields.Many2one('cic.job.site',readonly=True)
-    submittal_id= fields.Many2one('tech.submittal','Submittal',readonly=True)
+    submittal_id = fields.Many2one('tech.submittal','Submittal',readonly=True)
     revision_id = fields.Many2one('tech.submittal.revision','Submittal',readonly=True)
     name = fields.Char('Drawing Name', readonly=True)
     description = fields.Char('Drawing Description',readonly=True)

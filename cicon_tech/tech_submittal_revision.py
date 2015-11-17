@@ -46,10 +46,11 @@ class SubmittalRevision(models.Model):
     submittal_id = fields.Many2one('tech.submittal', 'Submittal', ondelete='cascade', required=True, readonly=True,
                                    states={'new': [('readonly', False)]})
     submittal_date = fields.Date('Submittal Date', required=True, readonly=True,
-                                 states={'new': [('readonly', False)]}, default=fields.Date.context_today)
+                                 states={'new': [('readonly', False)]}, track_visibility='onchange', default=fields.Date.context_today)
     # Submitted By , Default by logged user can be change if required
     submitted_by = fields.Many2one('res.users', 'Submitted By', required=True, readonly=True,
                                    domain="[('login','!=','admin')]", states={'new': [('readonly', False)]},
+                                   track_visibility='onchange',
                                    default=lambda self: self.env.user)
     # Revision number Generate by function +1
     revision_number = fields.Integer('Revision No', required=True, readonly=True,
@@ -74,7 +75,9 @@ class SubmittalRevision(models.Model):
                                    "Deliveries", readonly=True, states={'submitted': [('readonly', False)]})
     delivered_qty = fields.Float(compute=total_delivery, string='Delivered Qty', store=False)
     balance_qty = fields.Float(compute=total_delivery, string='Balance Qty', store=False)
-    state = fields.Selection([('new', 'Draft'), ('approved', 'Approved'), ('submitted', 'Submitted'), ('resubmitted', 'Superseded'), ('cancel', 'Cancelled')], "Status", readonly=False, default='new', track_visibility='onchange')
+    state = fields.Selection([('new', 'Draft'), ('approved', 'Approved'), ('submitted', 'Submitted'),
+                              ('resubmitted', 'Superseded'), ('cancel', 'Cancelled')], "Status",
+                             readonly=False, default='new', track_visibility='onchange')
     dwg_count = fields.Integer(compute=total_delivery, string="No. Drawings", type='integer')
     # Drawing Creator Helper Wizard
     drawing_creator_ids = fields.Many2many('tech.drawing.creator', 'tech_revision_dwg_rel', 'revision_id', 'dwg_id',
@@ -370,8 +373,8 @@ class SubmittalRevision(models.Model):
 
     @api.multi
     def unlink(self):
-        """ Override normal delete
-        Just set  State to Cancel
+        """ Override ORM delete
+        Record is not deletJust set  State to Cancel
            """
         for r in self:
             if r.state == 'resubmitted':

@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <openerp>
 
-    <!-- Mail template are declared in a NOUPDATE block
+    <!--:  Mail template need to  declared in a NOUPDATE block
          so users can freely customize/delete them -->
-    <data noupdate="0">
+    <data noupdate="1">
         <!--Email template -->
         <record id="submittal_email_template" model="mail.template">
             <field name="name"> Submittal Template </field>
@@ -17,10 +17,107 @@
             <head>
             </head>
             <body>
-                <p> Ref: ${object.ref_no} </p>
-                <p> Date: ${object.submittal_date} </p>
+                <p style="font-weight: bold; font-size: 12px;">
+                     Ref :  ${object.ref_no}
+                </p>
+                <p style= "font-size: 12px; margin-top:10px"> Date: ${object.submittal_date} </p>
+                <div style="font-size: 10px; margin-top:10px;margin-bottom:10px">
+                <p>
+                     <strong>${object.job_site_id.partner_id.name} </strong> <br/>
+                    P.O Box: ${object.job_site_id.po_box or ''}<br/>
+                    Tel.: ${object.job_site_id.telephone or ''}<br/>
+                    FAX: ${object.job_site_id.fax or ''}
+                </p>
+                </div>
 
-                <p> ${object.submittal_id.partner_id.name} </p>
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:5%;font-size: 11px;"> Attn:<td>
+                        <td style="font-weight:bold; font-size: 11px;" >  ${object.job_site_contact.salutation }  ${object.job_site_contact.name or ''}</td>
+                    </tr>
+                    % if object.job_site_contact.designation:
+                        <tr>
+                            <td style="width:5%;"> <td>
+                            <td style="font-size: 9px;">[${object.job_site_contact.designation or ''}]</td>
+                        </tr>
+                    % endif
+                 </table>
+                 <br/>
+                 <br/>
+
+                 <div style="font-size: 12px; margin-top:10px">
+                    Dear Sir,
+                 </div>
+                 <br/>
+                 <div style="font-size: 12px; margin-top:10px">
+                 <p>
+                    <strong> Project : ${object.job_site_id.name or ''} </strong>
+                   </p>
+                 </div>
+                 <div  style="font-size: 12px; margin-top:10px">
+                    <p>
+                    <strong> Subject : <u> ${object.job_site_id.name or ''} </u> </strong>
+                    </p>
+                 </div>
+                 <br/>
+
+                 <div class="text-justify"  style="font-size: 12px; margin-top:10px" >
+                 <p>
+                  We would like to
+                  %if object.revision_number > 0:
+                    resubmit
+                  %else:
+                    submit
+                  %endif
+                    the following Shop Drawing and Bar Bending Schedules for the above mentioned subject.
+                    </p>
+                 </div>
+
+                 <br/>
+
+                 <table  style="font-size: 12px; margin: 3px; width:100%; border: 1px solid; border-collapse:collapse ;" >
+                   <thead>
+                        <th  style="border: 1px solid;height: 25px;" > SL No. </th>
+                        <th  style="border: 1px solid;height: 25px;"> Drawing Number </th>
+                        <th  style="border: 1px solid;height: 25px;"> Status </th>
+                        <th  style="border: 1px solid;height: 25px;"> Drawing Title </th>
+                    </thead>
+                    <tbody>
+                        % for d in object.document_ids:
+                        <tr>
+                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${loop.index} </td>
+                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">   ${d.name or ''} </td>
+                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.document_status or ''}  </td>
+                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.description or ''} </td>
+                        </tr>
+                        % endfor
+                    </tbody>
+
+                 </table>
+
+                 <p style="font-size: 12px">
+                    This is for your kind information and necessary action.
+                 </p>
+
+                 <br/>
+
+                 <table  style="font-size: 11px; width:100%">
+                    <tr>
+                        <td style="font-weight: bold;width:15%;vertical-align: top">  Enclosures : </td>
+                        <td style="vertical-align: top">
+                        % for d in object.document_ids|groupby('document_type_id.name'):
+                           ${d.grouper or 'Documents'} :  ${d.list|count}
+                        <br/>
+                        %endfor
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;width:15%">  </td>
+                        <td>${object.enclosures or ''} </td>
+                    </tr>
+                </table>
+
+
             </body>
             </html>
 

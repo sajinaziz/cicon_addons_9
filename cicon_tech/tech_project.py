@@ -26,7 +26,7 @@ class CicJobSite(models.Model):
                                  help="Job Site Customer")
     project_id = fields.Many2one('project.project', 'Project', domain="[('partner_id','=',partner_id)]",
                                  help="Link with Project Management or leave it blank")
-    site_ref_no = fields.Char('Site Ref #', size=20, help="Unique Site Reference, Using in Submittal reference Number")
+    site_ref_no = fields.Char('Site Ref #', size=20,  help="Unique Site Reference, Using in Submittal reference Number")
     coordinator_id = fields.Many2one('res.users', 'Co-ordinated By', help="Site Coordinator",
                                      domain="[('login','!=','admin')]")
     po_box = fields.Char("PO.Box", size=50)
@@ -38,7 +38,8 @@ class CicJobSite(models.Model):
     submittal_count = fields.Integer(compute=_get_submittal_count, string="Submittal Count")
 
     _sql_constraints = [
-        ('unique_customer', 'unique(partner_id,name)', 'Project Name must be unique')]
+        ('unique_customer', 'unique(partner_id,name)', 'Project Name must be unique'),
+        ('unique_site_ref', 'UNIQUE(site_ref_no)', 'Unique Site Reference')]
 
 CicJobSite()
 
