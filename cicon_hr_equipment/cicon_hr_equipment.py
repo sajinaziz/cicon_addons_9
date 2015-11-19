@@ -37,7 +37,7 @@ HrEquipment()
 class HrEquipmentCategory(models.Model):
     _inherit = 'hr.equipment.category'
 
-    property_ids = fields.One2many('hr.equipment.category.property', 'categ_id', "Properties")
+    property_ids = fields.One2many('hr.equipment.category.property', 'category_id', "Properties")
 
 HrEquipmentCategory()
 
