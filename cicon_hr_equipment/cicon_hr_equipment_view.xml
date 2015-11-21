@@ -26,6 +26,9 @@
                 <xpath expr="//notebook[last()]" position="inside" >
                     <page string="Properties">
                         <field name="property_ids" widget="many2many_tags" invisible="True"/>
+                        <group>
+                            <field name="company_id" options="{'no_open':True,'no_create': True}" />
+                        </group>
                         <field name="property_value_ids" attrs="{'invisible':[('property_ids','=',[])]}" >
                             <tree editable="bottom">
                                 <field name="property_id" options="{'no_open':True,'no_create': True}" domain="[('id','in',parent.property_ids[0][2])]"/>
@@ -36,6 +39,18 @@
 
                 </xpath>
 
+
+            </field>
+        </record>
+
+        <record id="hr_equipment_request_view_form_etxn" model="ir.ui.view">
+            <field name="name">hr.equipment.request.form.extn</field>
+            <field name="model">hr.equipment.request</field>
+            <field name="inherit_id" ref="hr_equipment.hr_equipment_request_view_form"/>
+            <field name="arch" type="xml">
+                 <field name="priority" position="after">
+                     <field name="company_id" options="{'no_open':True,'no_create': True}" />
+                 </field>
 
             </field>
         </record>

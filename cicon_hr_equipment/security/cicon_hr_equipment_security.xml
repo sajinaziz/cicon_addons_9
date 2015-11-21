@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Rules -->
+    <record id="cicon_hr_equipment_request_rule_multi_company" model="ir.rule">
+        <field name="name">Equipment Requests Multi company Rule </field>
+        <field name="model_id" ref="model_hr_equipment_request"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids._ids)]</field>
+        <!--<field name="groups" eval="[(4, ref('base.group_equipment_manager'))]"/>-->
+    </record>
+
+    <record id="cicon_hr_equipment_multi_company" model="ir.rule">
+        <field name="name">Equipment Multi company Rule </field>
+        <field name="model_id" ref="model_hr_equipment"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>
+        <!--<field name="groups" eval="[(4, ref('base.group_equipment_manager'))]"/>-->
+    </record>
+
+
+</odoo>

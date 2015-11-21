@@ -30,8 +30,17 @@ class HrEquipment(models.Model):
 
     property_ids = fields.Many2many(related='category_id.property_ids', store=False, string="Properties")
     property_value_ids = fields.One2many('hr.equipment.property.value', 'equipment_id', string="Property Values")
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
 
 HrEquipment()
+
+
+class HrEquipmentRequest(models.Model):
+    _inherit = 'hr.equipment.request'
+
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
+
+HrEquipmentRequest()
 
 
 class HrEquipmentCategory(models.Model):
