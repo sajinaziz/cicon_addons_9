@@ -6,7 +6,6 @@ class HrEquipmentCategoryProperty(models.Model):
     _description = "Equipment Category Property"
 
     name = fields.Char('Property Name', required=True)
-    category_id = fields.Many2one('hr.equipment.category', string="EquipmentCategory")
 
     _sql_constraints = [('uniq_name', 'UNIQUE(name,category_id)', "Property Name Should be Unique" )]
 
@@ -29,6 +28,7 @@ HrEquipmentCategoryProperty()
 class HrEquipment(models.Model):
     _inherit = 'hr.equipment'
 
+    property_ids = fields.Many2many(related='category_id.property_ids', store=False, string="Properties")
     property_value_ids = fields.One2many('hr.equipment.property.value', 'equipment_id', string="Property Values")
 
 HrEquipment()
@@ -37,7 +37,8 @@ HrEquipment()
 class HrEquipmentCategory(models.Model):
     _inherit = 'hr.equipment.category'
 
-    property_ids = fields.One2many('hr.equipment.category.property', 'category_id', "Properties")
+    property_ids = fields.Many2many('hr.equipment.category.property', 'hr_equipment_categ_property_rel',
+                                    'category_id', "property_id", string="Properties")
 
 HrEquipmentCategory()
 

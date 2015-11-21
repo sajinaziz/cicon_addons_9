@@ -9,6 +9,7 @@
     'category': 'CICON IT',
     'depends': ['hr_equipment'],
     'data': [
+        'security/ir.model.access.csv',
         'cicon_hr_equipment_view.xml'
     ],
     'update_xml': [],
