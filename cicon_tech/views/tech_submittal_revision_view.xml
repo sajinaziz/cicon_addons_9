@@ -7,7 +7,7 @@
        <record model="ir.actions.act_window" id="action_tech_submittal_doc_action">
             <field name="name">Submittal Documents</field>
             <field name="res_model">tech.submittal.document.revision</field>
-            <field name="domain">[('is_revised','=',False)]</field>
+            <field name="domain">[('is_revised','=',False),('revision_id','=', active_id)]</field>
             <field name="context">{"search_default_revision_id":active_id}</field>
         </record>
 

@@ -100,7 +100,7 @@ class SubmittalDocumentRevision(models.Model):
     @api.multi
     def doc_revision(self):
         """Revise drawing from
-         :return : new wizard with default value to revise a docuemnt
+         :return : new wizard with default value to revise a document
          """
         self.ensure_one()   # One Record
         form_id = self.env.ref('cicon_tech.tech_submittal_doc_form_view')
@@ -122,7 +122,7 @@ class SubmittalDocumentRevision(models.Model):
             default_revision_id=self.revision_id.id,
             default_document_id=self.document_id.id,
             default_created_by=self.revision_id.submitted_by.id,
-            default_date=self.revision_id.submittal_date
+            default_date=fields.Date.context_today(self)
         )
         return {
             'type': 'ir.actions.act_window',
