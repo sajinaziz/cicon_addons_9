@@ -15,6 +15,7 @@
                 </field>
 
 
+
             </field>
         </record>
 
@@ -38,6 +39,11 @@
                     </page>
 
                 </xpath>
+
+                 <field name="serial_no" position="after">
+                     <label for="asset_code" class="oe_edit_only"/>
+                     <field name="asset_code"/>
+                 </field>
 
 
             </field>

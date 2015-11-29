@@ -28,9 +28,20 @@ HrEquipmentCategoryProperty()
 class HrEquipment(models.Model):
     _inherit = 'hr.equipment'
 
+    @api.one
+    @api.depends('name', 'serial_no')
+    def _get_asset_name(self):
+        if self.name:
+            self.asset_code = str(self.name)
+            if self.serial_no:
+                self.asset_code += '-' + str(self.serial_no)
+
     property_ids = fields.Many2many(related='category_id.property_ids', store=False, string="Properties")
     property_value_ids = fields.One2many('hr.equipment.property.value', 'equipment_id', string="Property Values")
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
+    asset_code = fields.Char(compute=_get_asset_name, string="Asset Code", store=True)
+
+    _sql_constraints = [('UniqueAsset', 'UNIQUE(asset_code)', 'Asset Name Should be Unique !')]
 
 HrEquipment()
 
