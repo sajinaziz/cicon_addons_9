@@ -204,8 +204,9 @@
             <field name="model">tech.submittal.revision</field>
             <field name="arch" type="xml">
                 <gantt  date_start="submittal_date"
-                       string="Submittal" default_group_by="submittal_id">
-                    <field name="ref_no"/>
+                       string="Submittal">
+
+
                 </gantt>
             </field>
         </record>

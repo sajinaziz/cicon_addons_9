@@ -13,6 +13,12 @@
             <field name="res_model">tech.submittal.revision.document</field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_document_revisions">
+            <field name="name">Manage Documents Revisions</field>
+            <field name="res_model">tech.submittal.document.revision</field>
+        </record>
+
+
          <record model="ir.actions.act_window" id="action_delivery_details">
             <field name="name">Manage Delivery Details</field>
             <field name="res_model">tech.delivery.details</field>
@@ -30,11 +36,14 @@
 
 
         <menuitem id="submittal_config_menu" sequence="90" name="Configuration" parent="tech_menu_submittal"  groups="base.group_no_one" />
-        <menuitem id="project_contact_menu" name="Project Contact" parent="submittal_config_menu" action="action_project_contact"/>
-        <menuitem id="revision_documents_menu" name="Documents" parent="submittal_config_menu" action="action_documents"/>
-        <menuitem id="revision_delivery_menu" name="Delivery" parent="submittal_config_menu" action="action_delivery_details"/>
-        <menuitem id="submittal_menu" name="Submittals" parent="submittal_config_menu" action="action_submittals"/>
-        <menuitem id="revision_menu" name="Revisions" parent="submittal_config_menu" action="action_revision"/>
+        <menuitem id="project_contact_menu" sequence="10" name="Project Contact" parent="submittal_config_menu" action="action_project_contact"/>
+        <menuitem id="submittal_menu" name="Submittals" parent="submittal_config_menu" action="action_submittals"  sequence="20"/>
+        <menuitem id="revision_menu" name="Revisions" parent="submittal_config_menu" action="action_revision"  sequence="30"/>
+        <menuitem id="revision_documents_menu" name="Documents" parent="submittal_config_menu" action="action_documents"  sequence="40"/>
+        <menuitem id="documents_revision_menu" name="Document Revision" parent="submittal_config_menu" action="action_document_revisions"  sequence="50"/>
+        <menuitem id="revision_delivery_menu" name="Delivery" parent="submittal_config_menu" action="action_delivery_details"  sequence="60"/>
+
+
 
 
    </data>

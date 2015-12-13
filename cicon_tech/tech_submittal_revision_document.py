@@ -28,7 +28,9 @@ class SubmittalRevisionDocument(models.Model):
                 Create need to override to block creation of Document on new revision
                   if name already available then it should return id of existing record on current revision.
         """
-        _rec = self.search([('name', '=', vals.get('name')), ('submittal_id', '=', vals.get('submittal_id'))], limit=1)
+        _rec = self.search([('name', '=', vals.get('name')),
+                            ('submittal_id', '=', vals.get('submittal_id'))
+                            ('document_type_id','=', vals.get('document_type_id'))], limit=1)
         if _rec:
             return _rec
         else:
@@ -72,8 +74,8 @@ class SubmittalDocumentRevision(models.Model):
 
     _order = "name,revision_id"
 
-    _sql_constraints = [('uniq_doc_revision', 'UNIQUE(document_id,rev_no,revision_id)',
-                         'Unique Drawing Number per Submittal Revision')]
+    # _sql_constraints = [('uniq_doc_revision', 'UNIQUE(document_id,revision_id)',
+    #                      'Unique Drawing Number per Submittal Revision')]
 
     @api.model
     def create(self, vals):
