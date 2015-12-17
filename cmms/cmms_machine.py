@@ -1,6 +1,15 @@
 from openerp import models, fields, api, tools
 
 
+class CmmsMachineLocation(models.Model):
+    _name = 'cmms.machine.location'
+    _description = 'Machine Location'
+
+    name = fields.Char("Location" , required=True, help="Current Machine Location Ex: Factory 1,Factory 2")
+
+    _sql_constraints = [('uniq_location', 'UNIQUE(name)', "Location Must be unique")]
+
+
 class CmmsMachineType(models.Model):
     _name = "cmms.machine.type"
     _description = "Machine Type"
@@ -9,8 +18,6 @@ class CmmsMachineType(models.Model):
     name = fields.Char('Machine Type', size=64, help="Machine Type", required=True)
 
     _sql_constraint = [("unique_machine_type", "UNIQUE(name)", "Machine Type Must be Unique")]
-
-CmmsMachineType()
 
 
 class CmmsMachineCategory(models.Model):
@@ -21,8 +28,6 @@ class CmmsMachineCategory(models.Model):
     name = fields.Char('Machine Category', size=64, help="Machine Category", required=True)
 
     _sql_constraint = [("unique_machine_categ", "UNIQUE(name)", "Machine Category Must be Unique")]
-
-CmmsMachineCategory()
 
 
 class CmmsMachineGroup(models.Model):
@@ -36,8 +41,6 @@ class CmmsMachineGroup(models.Model):
 
     _sql_constraints = [("unique_group_code", "UNIQUE(code)", "Machine Group Code Must be Unique")]
 
-CmmsMachineGroup()
-
 
 class CmmsPmScheme(models.Model):
     _name = 'cmms.pm.scheme'
@@ -49,8 +52,6 @@ class CmmsPmScheme(models.Model):
     machine_ids = fields.One2many('cmms.machine','pm_scheme_id',"Machine")
 
     _sql_constraints = [('unique_scheme', 'unique(name)', 'Scheme Must be unique')]
-
-CmmsPmScheme()
 
 
 class CmmsMachine(models.Model):
@@ -88,15 +89,16 @@ class CmmsMachine(models.Model):
     unit = fields.Selection([('ton', 'TON'), ('nos', 'Numbers')], string="Unit")
     state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'), ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status', required=True)
     active = fields.Boolean('Active', default=True, required=True)
-    is_tag = fields.Boolean('Is Using Tag', help="Is Production using Tags On This Machine")
-    is_active = fields.Boolean('Is Active', help="Is Machine Was Active in CMMS Old ")
-    last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, Please Select a group to show !.")
-    pm_scheme_id = fields.Many2one('pm.scheme', string='PM Scheme')
+    is_active = fields.Boolean('Is Active', help="Is Machine Active or  Stand by")
+    last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, "
+                                                                            "Please Select a group to show !.")
+    pm_scheme_id = fields.Many2one('cmms.pm.scheme', string='PM Scheme')
     pm_task_ids = fields.One2many('cmms.machine.task.view', 'machine_id', readonly=True)
     # spare_part_ids = fields.One2many('cmms.store.invoice.line', 'machine_id', readonly=True, string="Parts")
     # job_order_ids = fields.One2many('cmms.job.order', 'machine_id', readonly=True, string="Job Orders")
     breakdown_count = fields.Integer('Breakdowns', compute=_job_order_count)
     parts_cost = fields.Float('Part Cost', compute=_job_order_count, digits=(10, 2))
+    location_id = fields.Many2one('cmms.machine.location', string="Location")
 
     _sql_constraint = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
 
@@ -109,9 +111,6 @@ class CmmsMachine(models.Model):
             self.last_machine_code = _machines.code
 
 
-CmmsMachine()
-
-
 class CmmsPmTaskMaster(models.Model):
     _name = "cmms.pm.task.master"
     _description = "Preventive Maintenance Tasks"
@@ -122,15 +121,12 @@ class CmmsPmTaskMaster(models.Model):
     pm_scheme_id = fields.Many2one('cmms.pm.scheme', 'PM Scheme', required=True)
     interval_id = fields.Many2one('cmms.pm.interval', "Interval")
     action_by = fields.Selection([('operator', 'Operator'), ('technician', 'Technician')], string='Action By', default='technician')
-    active = fields.Boolean('Is Active', default=True),
+    active = fields.Boolean('Is Active', default=True)
     material_required = fields.Text('Materials / Tools Required')
     approx_cost = fields.Float('Approx. Cost', digits=(10, 2), help="Approx. Cost to perform this Task")
     duration = fields.Float('Duration', digits=(4, 2), help="Approx. Duration to perform Task")
-    old_id = fields.Integer("Old Id")
 
     _order = 'pm_scheme_id,interval_id'
-
-CmmsPmTaskMaster()
 
 
 class CmmsMachineTaskView(models.Model):
@@ -179,8 +175,6 @@ class CmmsMachineTaskView(models.Model):
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
 
-
-CmmsMachineTaskView()
 
 
 

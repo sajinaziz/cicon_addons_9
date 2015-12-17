@@ -57,7 +57,7 @@
                                         <field name="reported_datetime"/>
                                     </group>
                                     <group>
-                                        <field name="priority"/>
+                                        <field name="priority" widget="priority"/>
                                         <field name="job_category_id"/>
                                    </group>
                                  </group>
@@ -194,7 +194,7 @@
             <field name="model">cmms.machine</field>
              <field name="inherit_id" ref="cmms_machine_form_view"/>
             <field name="arch" type="xml" >
-                <xpath expr="//header//div" postision="inside">
+                <xpath expr="//sheet//div" postision="inside">
                       <button name="%(action_cmms_job_order_form_view)d"
                                         type="action"
                                         class="oe_inline oe_stat_button"

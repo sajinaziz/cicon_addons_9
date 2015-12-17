@@ -50,5 +50,25 @@
         </t>
     </t>
     </template>
+
+    <template id="cmms_job_order_blank_template">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="cmms.cmms_external_layout">
+                <div class="page">
+                    <div class="row" style="border-bottom:1px" >
+                    <div class="text-center col-xs-4 col-xs-offset-4">
+                        <u> JOB ORDER ( <span t-field="o.job_order_type" /> ) </u>
+                    </div>
+                    <div class="text-center col-xs-2 col-xs-offset-2" style="border:1px solid" >
+                      <strong> <span t-field="o.name"  /></strong>
+                    </div>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </t>
+    </template>
 </data>
 </openerp>

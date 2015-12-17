@@ -150,7 +150,7 @@
             <field name="model">cmms.machine</field>
              <field name="inherit_id" ref="cmms_machine_form_view"/>
             <field name="arch" type="xml" >
-                <xpath expr="//header/div" postision="inside">
+                <xpath expr="//sheet/div" postision="inside">
                     <button name="%(action_cmms_store_invoice_line)d"
                                         type="action"
                                         class="oe_inline oe_stat_button"

@@ -31,21 +31,24 @@
             <field name="arch" type="xml" >
                 <form string="CMMS Machine">
                     <header>
-                        <div class="oe_right oe_button_box">
 
-                        </div>
                     </header>
                     <sheet>
+                         <div class="oe_right oe_button_box">
+
+                        </div>
                         <div class="oe_left">
                             <label for="code"/>
                             <h1> <field name="code"/> </h1>
-                            <label for="name"/>
-                            <h2> <field name="name"/> </h2>
                         </div>
+                        <group>
+                             <field name="name"/>
+                        </group>
 
                         <group>
                             <group>
                                 <field name="id" invisible="1"/>
+
                                 <field name="last_machine_code" readonly="1" attrs="{'invisible':[('id','!=',False)]}"/>
                                 <field name="type_id"/>
                                 <field name="category_id"/>
@@ -53,8 +56,9 @@
                             </group>
                             <group>
                                 <field name="company_id"/>
+                                <field name="location_id" options="{'no_open':True, 'no_create': True}"/>
                                 <field name="model"/>
-                                <field name="supplier_id" options=""/>
+                                <field name="supplier_id" options="{'no_open':True, 'no_create': True}"/>
                                 <field name="mfg_year"/>
                                 <field name="serial_no"/>
                             </group>
@@ -151,6 +155,23 @@
             </record>
 
 
+          <record model="ir.ui.view" id="cmms_machine_location_tree_view">
+            <field name="name">cmms.machine.location.tree</field>
+            <field name="model">cmms.machine.location</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml" >
+                <tree string="Location" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+             <record model="ir.actions.act_window" id="action_cmms_machine_location">
+                <field name="name" >Location</field>
+                 <field name="res_model">cmms.machine.location</field>
+            </record>
+
+
 
             <record model="ir.ui.view" id="cmms_machine_categ_view">
             <field name="name">cmms.machine.categ.tree</field>
@@ -239,6 +260,7 @@
 
 
 
+
             <menuitem name="Reports" parent="cmms_menu" id="cmms_report_menu" sequence="70"/>
 
             <menuitem name="Configuration" parent="cmms_menu" id="cmms_config_menu" sequence="99"/>
@@ -246,6 +268,8 @@
             <menuitem  parent="cmms_machine_config_menu" id="cmms_machine_type_menu" sequence="1" action="action_cmms_machine_type"/>
             <menuitem  parent="cmms_machine_config_menu" id="cmms_machine_categ_menu" sequence="2" action="action_cmms_machine_category"/>
             <menuitem  parent="cmms_machine_config_menu" id="cmms_machine_group_menu" sequence="3" action="action_cmms_machine_group"/>
+            <menuitem  parent="cmms_machine_config_menu" id="cmms_machine_location_menu" action="action_cmms_machine_location" sequence="4" />
+
 
      </data>
 </openerp>

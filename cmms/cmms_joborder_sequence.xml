@@ -2,10 +2,7 @@
 <openerp>
     <data noupdate="1">
         <!-- Sequences for Maintenance orders -->
-        <record id="sequence_cmms_job_order_pm" model="ir.sequence.type">
-            <field name="name">CMMS Preventive</field>
-            <field name="code">cmms.job.order.preventive</field>
-        </record>
+
 
         <record id="sequence_cmms_job_pm" model="ir.sequence">
             <field name="name">CMMS Preventive</field>
@@ -20,10 +17,6 @@
 
 
 
-        <record id="sequence_cmms_job_order_breakdown" model="ir.sequence.type">
-            <field name="name">CMMS Breakdown</field>
-            <field name="code">cmms.job.order.master.breakdown</field>
-        </record>
 
         <record id="sequence_cmms_job_breakdown" model="ir.sequence">
             <field name="name">CMMS Breakdown</field>
@@ -37,10 +30,6 @@
         </record>
 
 
-         <record id="sequence_cmms_job_order_general" model="ir.sequence.type">
-            <field name="name">CMMS General</field>
-            <field name="code">cmms.job.order.master.general</field>
-        </record>
 
         <record id="sequence_cmms_job_general" model="ir.sequence">
             <field name="name">CMMS General</field>
