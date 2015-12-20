@@ -21,51 +21,99 @@ class CmmsJobOrder(models.Model):
     _name = "cmms.job.order"
     _description = "CMMS Job Order"
 
+    #TODO : Implement Discuss module mail.thread
+
     #Inverse Sample for Job Order Code
     # def _set_job_code(self):
     #     for rec in self:
     #         if rec.job_order_code_id:
     #             rec.job_order_code_id.write({'created': True, 'cancelled': False})
 
-    job_order_code_id = fields.Many2one("cmms.job.order.code",   domain="[('job_order_type','=',job_order_type),('printed','=',True),('created','=',False),('cancelled','=',False)]" )
-    #name = fields.Char("Code",  related='job_order_code_id.name', store=True)
-    name = fields.Char("Code")
-    #job_order_type = fields.Selection(JOB_ORDER_TYPE, "JobOrderType", required=True, readonly=False, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+    job_order_code_id = fields.Many2one("cmms.job.order.code",
+                                        domain="[('job_order_type','=',job_order_type),('printed','=',True),"
+                                               "('created','=',False),('cancelled','=',False)]")
+    name = fields.Char("Code", required=True)
+
     job_order_type = fields.Selection(JOB_ORDER_TYPE, "JobOrderType", required=True)
+
     machine_id = fields.Many2one('cmms.machine', 'Machine', required=True, readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    machine = fields.Char('Machine Name', related='machine_id.name', store=False,readonly=True)
-    machine_type = fields.Many2one('cmms.machine.type', string='Machine Type', related='machine_id.type_id', store=False,readonly=True)
-    job_order_date = fields.Date('Job Order Date', required=True, readonly=True, states={'open': [('readonly', False)],'new': [('readonly', False)]})
-    breakdown_datetime = fields.Datetime('BreakdownTime', readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    reported_datetime = fields.Datetime('ReportedDate', readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    description = fields.Char(string='Description', size=200, readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    job_category_id = fields.Many2one('cmms.job.category', 'JobCategory', readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', related='machine_id.company_id', string="Company", store=True, readonly=True)
+
+    machine = fields.Char('Machine Name', related='machine_id.name', store=False, readonly=True)
+
+    machine_type = fields.Many2one('cmms.machine.type', string='Machine Type', related='machine_id.type_id', store=False, readonly=True)
+
+    job_order_date = fields.Date('Job Order Date', required=True, readonly=True,
+                                 states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    breakdown_datetime = fields.Datetime('BreakdownTime', readonly=True,
+                                         states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    reported_datetime = fields.Datetime('ReportedDate', readonly=True,
+                                        states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    description = fields.Char(string='Description', size=200, readonly=True,
+                              states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    job_category_id = fields.Many2one('cmms.job.category', 'JobCategory', readonly=True,
+                                      states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    company_id = fields.Many2one('res.company', related='machine_id.company_id', string="Company",
+                                 store=True, readonly=True)
+
     state = fields.Selection([('new', 'New'), ('open', 'Pending'), ('observation', 'Observation'),
                               ('waiting_info', 'Waiting For Technical Info'),
                               ('waiting_parts', 'Waiting For Spare Parts'),
                               ('cancel', 'Cancelled'),
                               ('done', 'Completed')], 'State', readonly=False, default='new')
 
-    reported_by = fields.Char("ReportedBy", size=50, readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    foreman = fields.Char('ForemanIncharge', size=50, readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    technician = fields.Char('MaintenanceIncharge', size=50, readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    reason = fields.Text('Reason', size=500, readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    corrective_action = fields.Text('Action', size=500, readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    service = fields.Boolean('Service Assistance', readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    priority = fields.Selection([('low', 'LOW PRIORITY'), ('normal', 'PRIORITY REPAIR'), ('high','PRIORITY NEXT DAY'), ('highest','URGENT REPAIR')], "Priority", readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    # completed_date = fields.Datetime('Completed Date', readonly=True,states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    attended_by = fields.Char('AttendedBy', size=100, readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    work_start_datetime = fields.Datetime('WorkStartDateTime', readonly =True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
-    work_end_datetime = fields.Datetime('WorkEndDateTime', readonly=True, states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+    reported_by = fields.Char("Reported By", size=50, readonly=True,
+                              states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    foreman = fields.Char('Foreman In charge', size=50, readonly=True,
+                          states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    technician = fields.Char('MaintenanceIncharge', size=50, readonly=True,
+                             states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    reason = fields.Text('Reason', size=500, readonly=True,
+                         states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    corrective_action = fields.Text('Action', size=500, readonly=True,
+                                    states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    service = fields.Boolean('Service Assistance', readonly=True,
+                             states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    priority = fields.Selection([('low', 'LOW PRIORITY'), ('normal', 'PRIORITY REPAIR'),
+                                 ('high','PRIORITY NEXT DAY'), ('highest','URGENT REPAIR')], "Priority", readonly=True,
+                                states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    attended_by = fields.Char('AttendedBy', size=100, readonly=True,
+                              states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    work_start_datetime = fields.Datetime('WorkStartDateTime', readonly =True,
+                                          states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
+    work_end_datetime = fields.Datetime('WorkEndDateTime', readonly=True,
+                                        states={'open': [('readonly', False)], 'new': [('readonly', False)]})
+
     sch_pm_task_ids = fields.One2many('cmms.pm.task.job.order.line', 'job_order_id', string="PM Tasks")
-    old_id = fields.Integer('OLD ID')
-    spare_parts_ids = fields.One2many('cmms.store.invoice.line','job_order_id', string="Spare Parts", readonly=True)
+
+    spare_parts_ids = fields.One2many('cmms.store.invoice.line', 'job_order_id', string="Spare Parts", readonly=True)
 
     _order = 'job_order_date desc'
 
-    # _sql_constraints = [("unique_code", "unique(job_order_code_id)", "Job Order Code must be Unique"), ("unique_name", "unique(name)", "Job Order must be Unique"),
-    #     ("unique_machine_job", "unique(machine_id,job_order_date,job_order_type)", "Job Order Machine/Day/Job Type")]
+    _sql_constraints = [("unique_code", "unique(name)", "Job Order Code must be Unique"),
+                        ]
+
+    #TODO: Check if it is practical
+    #("unique_machine_job", "unique(machine_id,job_order_date,job_order_type)", "Job Order Machine/Day/Job Type")
+
+    @api.onchange('job_order_code_id')
+    def _set_code(self):
+        if self.job_order_code_id:
+            self.name = self.job_order_code_id
+
 
     @api.onchange('job_order_type')
     def _get_job_code(self):

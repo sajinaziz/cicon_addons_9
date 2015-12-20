@@ -32,12 +32,17 @@ class CmmsJobOrderMasterWizard(models.TransientModel):
                 'job_order_type': self.job_order_type,
                 'company_id': self.env.user.company_id.id
             }
-            _seq_obj = self.env['ir.sequence']
-            if self.job_order_type == 'breakdown':
-                _job.update({'name': _seq_obj.get('cmms.job.order.master.breakdown')})
-            elif self.job_order_type == 'general':
-                _job.update({'name': _seq_obj.get('cmms.job.order.master.general')})
+
+            _seq_obj_breakdown = self.env['ir.sequence'].search([('company_id', '=', self.env.user.company_id.id),
+                                                                 ('code', '=', 'cmms.job.order.master.breakdown')])
+            _seq_obj_gen = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.master.general'),
+                                                           ('company_id', '=', self.env.user.company_id.id)])
+            if self.job_order_type == 'breakdown' and _seq_obj_breakdown:
+                _job.update({'name': _seq_obj_breakdown.next_by_id()})
+            elif self.job_order_type == 'general' and _seq_obj_gen:
+                _job.update({'name': _seq_obj_gen.next_by_id()})
             _j_ids.append(_job_obj.create(_job))
+
         return True
 
 CmmsJobOrderMasterWizard()

@@ -26,9 +26,11 @@ class CmmsPmGenerateWizard(models.TransientModel):
                 _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
                 _task_ids = _m_sch_ids.mapped('pm_task_ids')
                 _pm_task_list = map(lambda x: dict(pm_task_id=x), _task_ids.ids)
+                _seq_obj_pm = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.preventive'),
+                                                           ('company_id', '=', self.env.user.company_id.id)])
                 _pm_job_order = {
                     'machine_id': m.id,
-                    'name': self.env['ir.sequence'].get('cmms.job.order.preventive') or '/',
+                    'name': _seq_obj_pm.next_by_id(),
                     'job_order_type': 'preventive',
                     'job_order_date': self.pm_date,
                     'state': 'open',

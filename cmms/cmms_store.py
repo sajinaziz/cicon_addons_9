@@ -15,10 +15,10 @@ CmmsSparePartType()
 class CmmsStoreInvoice(models.Model):
     _name = 'cmms.store.invoice'
     _description = "Store Invoice"
-    _rec_name = 'qb_ref'
+    _rec_name = 'inv_id'
 
     qb_ref = fields.Char('QB Reference')
-    inv_id = fields.Integer("ID")
+    inv_id = fields.Integer("Invoice ID")
     inv_ref = fields.Char("Reference", required=True)
     inv_date = fields.Date("Date", required=True)
     inv_name = fields.Char('Name')
@@ -117,28 +117,30 @@ class CmmsStoreInvoiceLine(models.Model):
 
     qb_line_ref = fields.Char('QB Line Reference')
     invoice_id = fields.Many2one('cmms.store.invoice', ondelete='cascade', string='Invoice')
+    invoice_date = fields.Date('Date', related='invoice_id.inv_date', store=True)
     product_id = fields.Many2one('product.product', string='Product')
     prod_name = fields.Char('Product Name', index=True)
     prod_desc = fields.Char('Description')
     quantity = fields.Float('Quantity')
     product_uom_id = fields.Many2one('product.uom', string='Unit')
     unit_price = fields.Float('Unit Price')
-    amount = fields.Float("Amount", compute=_total_amount)
+    sale_price = fields.Float('Total Amount')
+    amount = fields.Float("Amount", compute=_total_amount, store=True)
     job_code = fields.Char('Job Code', compute=_set_job_code)
     job_order_id = fields.Many2one('cmms.job.order', string="Job order", compute=_set_job_order, store=True)
     machine_id = fields.Many2one('cmms.machine', related='job_order_id.machine_id', string="Machine", store=True)
     spare_part_type_id = fields.Many2one('cmms.spare.part.type', string="Part Type")
 
-    @api.v7 # Server Action for re-construct job order link
-    def set_job_order(self, cr, uid, ids, context=None):
-        if ids:
-            lines = self.browse(cr, uid, ids)
-            for rec in lines:
-                if rec.job_code:
-                    _job_obj = self.pool['cmms.job.order']
-                    _job = _job_obj.search(cr, uid, [('name', '=', rec.job_code)], limit=1)
-                    if _job:
-                        rec.write({'job_order_id': _job[0]})
+    # @api.v7 # Server Action for re-construct job order link
+    # def set_job_order(self, cr, uid, ids, context=None):
+    #     if ids:
+    #         lines = self.browse(cr, uid, ids)
+    #         for rec in lines:
+    #             if rec.job_code:
+    #                 _job_obj = self.pool['cmms.job.order']
+    #                 _job = _job_obj.search(cr, uid, [('name', '=', rec.job_code)], limit=1)
+    #                 if _job:
+    #                     rec.write({'job_order_id': _job[0]})
 
 CmmsStoreInvoiceLine()
 

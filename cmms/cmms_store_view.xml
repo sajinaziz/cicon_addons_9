@@ -52,6 +52,9 @@
     </record>
 
 
+
+
+
         <record model="ir.ui.view" id="cmms_store_invoice_line_tree">
             <field name="name">cmms.store.invoice.line.tree</field>
             <field name="model">cmms.store.invoice.line</field>
@@ -59,7 +62,8 @@
                 <tree string="Store Invoice Line">
                     <field name="invoice_id"/>
                       <field name="qb_line_ref" />
-                     <field name="product_id"/>
+                     <field name="product_id" invisible="1"/>
+                    <field name="invoice_date"/>
                      <field name="prod_name"/>
                      <field name="prod_desc"/>
                      <field name="job_order_id"/>
@@ -71,6 +75,33 @@
                 </tree>
             </field>
         </record>
+
+
+         <record model="ir.ui.view" id="cmms_store_invoice_line_pivot">
+            <field name="name">CMMS Expense</field>
+            <field name="model">cmms.store.invoice.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Invoice Line">
+                    <field name="machine_id" type="row"/>
+                    <field name="spare_part_type_id" type="col"/>
+                    <field name="amount"  type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="cmms_store_invoice_line_graph">
+            <field name="name"> Expense Graph</field>
+            <field name="model">cmms.store.invoice.line</field>
+            <field name="arch" type="xml">
+                <graph string="Expense" type="bar">
+                    <field name="spare_part_type_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+
 
           <record model="ir.ui.view" id="cmms_store_invoice_line_search">
 			  <field name="name">cmms.store.invoice.line.search</field>
@@ -126,6 +157,7 @@
          <record model="ir.actions.act_window" id="action_cmms_store_invoice_line">
             <field name="name" >Store Invoice Line</field>
             <field name="res_model">cmms.store.invoice.line</field>
+             <field name="view_mode">tree,form,pivot,graph</field>
         </record>
 
          <record model="ir.ui.view" id="cmms_spare_part_type_tree">
@@ -137,6 +169,8 @@
                 </tree>
             </field>
         </record>
+
+
 
 
          <record model="ir.actions.act_window" id="action_cmms_spare_part_type">
