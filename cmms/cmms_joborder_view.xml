@@ -281,7 +281,10 @@
         <menuitem name="Break Down" parent="menu_job_order" id="cmms_job_order_breakdown" action ="action_cmms_job_order_form_view" sequence="1" />
         <menuitem name="Preventive" parent="menu_job_order" id="cmms_job_order_pm" sequence="2"/>
         <menuitem name="PM Job Orders" parent="cmms_job_order_pm" id="cmms_pm_job_order" action="action_cmms_job_order_pm_view" sequence="1" />
-        <menuitem name="Job Order List" parent="menu_job_order" id="cmms_job_list" action ="action_cmms_job_order_master" sequence="10" />
+
+        <menuitem name="Job Order Forms" parent="menu_job_order" id="cmms_job_form_list"  sequence="10" />
+        <menuitem name="Job Order List" parent="cmms_job_form_list" id="cmms_job_list" action ="action_cmms_job_order_master" sequence="10" />
+
         <menuitem name="General" parent="menu_job_order" id="cmms_job_order_general" action ="action_cmms_job_order_general_view"  sequence="3" />
         <menuitem name="All" parent="menu_job_order" id="cmms_job_order_all" action ="action_cmms_job_order_all_view"  sequence="5" />
 

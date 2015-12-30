@@ -72,7 +72,7 @@ class CmmsJobOrder(models.Model):
     foreman = fields.Char('Foreman In charge', size=50, readonly=True,
                           states={'open': [('readonly', False)], 'new': [('readonly', False)]})
 
-    technician = fields.Char('MaintenanceIncharge', size=50, readonly=True,
+    technician = fields.Char('Maintenance In charge', size=50, readonly=True,
                              states={'open': [('readonly', False)], 'new': [('readonly', False)]})
 
     reason = fields.Text('Reason', size=500, readonly=True,
@@ -91,10 +91,10 @@ class CmmsJobOrder(models.Model):
     attended_by = fields.Char('AttendedBy', size=100, readonly=True,
                               states={'open': [('readonly', False)], 'new': [('readonly', False)]})
 
-    work_start_datetime = fields.Datetime('WorkStartDateTime', readonly =True,
+    work_start_datetime = fields.Datetime('Work Started', readonly =True,
                                           states={'open': [('readonly', False)], 'new': [('readonly', False)]})
 
-    work_end_datetime = fields.Datetime('WorkEndDateTime', readonly=True,
+    work_end_datetime = fields.Datetime('Work End', readonly=True,
                                         states={'open': [('readonly', False)], 'new': [('readonly', False)]})
 
     sch_pm_task_ids = fields.One2many('cmms.pm.task.job.order.line', 'job_order_id', string="PM Tasks")

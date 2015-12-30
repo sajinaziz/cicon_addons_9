@@ -26,9 +26,22 @@ class CmmsStoreInvoice(models.Model):
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
     invoice_line_ids = fields.One2many('cmms.store.invoice.line', 'invoice_id', string="Invoice Lines")
 
-    _sql_constraints = [('uniq_name', 'UNIQUE(qb_ref,company_id)', 'Unique Reference Per Company')]
+    _sql_constraints = [('uniq_name', 'UNIQUE(qb_ref)', 'Unique Reference')]
 
     _order = 'inv_date desc'
+
+    @api.model
+    def get_last_updated_datetime(self):
+        """To Get Last updated Da """
+        _updated_datetime = ''
+        qry = "SELECT MAX(edited_date_time) FROM cmms_store_invoice WHERE company_id = %s" %(self.env.user.company_id.id)
+        self.env.cr.execute(qry)
+        last_updated = self.env.cr.fetchone()
+        if last_updated:
+            _updated_datetime = last_updated[0]
+        return _updated_datetime
+
+
 
     # @api.model
     # def load(self,  fields, data):
@@ -130,6 +143,7 @@ class CmmsStoreInvoiceLine(models.Model):
     job_order_id = fields.Many2one('cmms.job.order', string="Job order", compute=_set_job_order, store=True)
     machine_id = fields.Many2one('cmms.machine', related='job_order_id.machine_id', string="Machine", store=True)
     spare_part_type_id = fields.Many2one('cmms.spare.part.type', string="Part Type")
+    parent_product_name = fields.Char('Parent Product')
 
     # @api.v7 # Server Action for re-construct job order link
     # def set_job_order(self, cr, uid, ids, context=None):
@@ -141,6 +155,8 @@ class CmmsStoreInvoiceLine(models.Model):
     #                 _job = _job_obj.search(cr, uid, [('name', '=', rec.job_code)], limit=1)
     #                 if _job:
     #                     rec.write({'job_order_id': _job[0]})
+
+    _sql_constraints = [('uniq_name', 'UNIQUE(qb_line_ref)', 'Unique Line Reference')]
 
 CmmsStoreInvoiceLine()
 
