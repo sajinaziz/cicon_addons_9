@@ -3,10 +3,6 @@
     <data>
 
 
-
-
-
-
         <record model="ir.ui.view" id="cmms_job_order_form_view">
             <field name="name">cmms.job_order.form</field>
             <field name="model">cmms.job.order</field>
@@ -15,18 +11,7 @@
                  <form string="CMMS Job Order" >
                      <header>
                          <button name="print_job_order" string="Print" type="object" class="oe_highlight"/>
-                         <button name="set_open" string="Open" states="done,cancel,observation" type="object" help="Status Will reset to open"/>
-                         <button name="set_completed" string="Completed" states="open,observation,waiting_info,waiting_parts" type="object" help="Status Will reset to Completed (Read Only)" class="oe_highlight" />
-                         <button name="set_observation" string="Observation"
-                                 states="open,waiting_parts,waiting_info"
-                                 type="object"
-                                 help="Status Will reset to Observation (Read Only)" class="oe_highlight" />
-                         <button name="set_wait_parts" string="Pending Spare parts" states="open"
-                                 type="object" help="Status Will reset to Waiting Spare parts (Read Only)" class="oe_highlight" />
-                         <button name="set_wait_info" string="Pending Technical Info" states="open"
-                                 type="object" help="Status Will reset to Pending Technical Info (Read Only)" class="oe_highlight" />
-                         <button name="set_cancel" string="Cancel" confirm="Confirm Job Order Cancel?" states="open" type="object" help="Status Will reset to Cancelled" />
-                         <field name="state" widget="statusbar" statusbar_visible="open,observation,done"/>
+                         <field name="status_id" widget="statusbar" clickable="True" />
                      </header>
                      <sheet>
                          <field name="id" invisible="True"/>
@@ -57,7 +42,7 @@
                                         <field name="reported_datetime"/>
                                     </group>
                                     <group>
-                                        <field name="priority" widget="priority"/>
+                                        <field name="priority" widget="radio"/>
                                         <field name="job_category_id"/>
                                    </group>
                                  </group>
@@ -67,11 +52,12 @@
                                     </group>
                                  </page>
                                  <page string="Job Details">
-                                     <group string="Work information">
+                                     <group string="Work Information">
                                         <group>
                                             <!--<field name="completed_date"/>-->
                                             <field name="work_start_datetime"/>
                                             <field name="work_end_datetime"/>
+                                            <field name="state"/>
                                          </group>
                                          <group>
                                             <field name="foreman"/>
@@ -226,10 +212,7 @@
             </field>
         </record>
 
-        #TODO Add Job Category in Tree (Job Order Config Menu)
-
-
-         <record model="ir.ui.view" id="cmms_job_order_category_tree">
+        <record model="ir.ui.view" id="cmms_job_order_category_tree">
             <field name="name">cmms.job.category.tree</field>
             <field name="model">cmms.job.category</field>
             <field name="arch" type="xml" >
@@ -239,6 +222,24 @@
             </field>
         </record>
 
+
+
+         <record model="ir.ui.view" id="cmms_job_order_status_tree">
+            <field name="name">cmms.job.order.status.tree</field>
+            <field name="model">cmms.job.order.status</field>
+            <field name="arch" type="xml" >
+                <tree string="Job Order Status" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" />
+                    <field name="state_name"/>
+               </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_cmms_job_order_status">
+            <field name="name" >Job Order Status</field>
+            <field name="res_model">cmms.job.order.status</field>
+        </record>
 
          <!--<record model="ir.ui.view" id="cmms_job_order_code_form_view">-->
             <!--<field name="name">cmms.job_order_code.form</field>-->
@@ -290,6 +291,7 @@
 
         <menuitem name="Job Order Config"  parent="cmms_config_menu" id="cmms_job_order_group_menu" sequence="3"/>
         <menuitem  parent="cmms_job_order_group_menu" id="cmms_job_categ_menu" sequence="1" action="action_cmms_job_order_category"/>
+        <menuitem  parent="cmms_job_order_group_menu" id="cmms_job_status_menu" sequence="2" action="action_cmms_job_order_status"/>
 
 
     </data>

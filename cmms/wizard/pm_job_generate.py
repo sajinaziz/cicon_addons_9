@@ -7,7 +7,7 @@ class CmmsPmGenerateWizard(models.TransientModel):
     _description = "PM Generator"
 
     pm_date = fields.Date('PM Date', required=True, default=fields.Date.context_today)
-    pm_schedule_ids = fields.Many2many('cmms.pm.schedule.master', string="Schedule", store=False ,readonly=True)
+    pm_schedule_ids = fields.Many2many('cmms.pm.schedule.master', string="Schedule", store=False, readonly=True)
 
     @api.onchange('pm_date')
     def date_change(self):
@@ -23,20 +23,25 @@ class CmmsPmGenerateWizard(models.TransientModel):
         if _sch_recs:
             _machines = _sch_recs.mapped('machine_ids')
             for m in _machines:
-                _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
-                _task_ids = _m_sch_ids.mapped('pm_task_ids')
-                _pm_task_list = map(lambda x: dict(pm_task_id=x), _task_ids.ids)
-                _seq_obj_pm = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.preventive'),
-                                                           ('company_id', '=', self.env.user.company_id.id)])
-                _pm_job_order = {
-                    'machine_id': m.id,
-                    'name': _seq_obj_pm.next_by_id(),
-                    'job_order_type': 'preventive',
-                    'job_order_date': self.pm_date,
-                    'state': 'open',
-                    'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_task_list)
-                }
-                _job_obj.create(_pm_job_order)
+                _exist = self.env['cmms.job.order'].search([('machine_id', '=', m.id),
+                                                            ('job_order_type', '=', 'preventive'),
+                                                            ('job_order_date', '=', self.pm_date)], limit=1)
+                if not _exist:
+                    _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
+                    _task_ids = _m_sch_ids.mapped('pm_task_ids')
+                    _pm_task_list = map(lambda x: dict(pm_task_id=x), _task_ids.ids)
+                    _seq_obj_pm = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.preventive'),
+                                                               ('company_id', '=', self.env.user.company_id.id)])
+                    _pm_job_order = {
+                        'machine_id': m.id,
+                        'name': _seq_obj_pm.next_by_id(),
+                        'job_order_type': 'preventive',
+                        'job_order_date': self.pm_date,
+                        'state': 'open',
+                        'description': 'Preventive Maintenance',
+                        'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_task_list)
+                    }
+                    _job_obj.create(_pm_job_order)
         return True
 
 
