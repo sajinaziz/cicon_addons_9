@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_job_order_code_generate" model="ir.actions.act_window">
-            <field name="name" >Job Order Code</field>
+            <field name="name" >Generate Form</field>
             <field name="res_model">cmms.job.order.master.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -30,7 +30,7 @@
 
 
 
-        <menuitem  parent="cmms_job_order_group_menu" id="cmms_job_order_code_menu" sequence="1" action="action_job_order_code_generate"/>
+        <menuitem  parent="cmms_job_form_list" id="cmms_job_order_code_menu" sequence="1" action="action_job_order_code_generate"/>
 
          <!--<record id="action_cmms_job_master_wizard" model="ir.actions.act_window">-->
             <!--<field name="name">Generate Job</field>-->

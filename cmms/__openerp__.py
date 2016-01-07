@@ -25,7 +25,7 @@ Required modules:
     "author": "@ CICON",
     "website": "http://www.cicondubai.ae/",
     "category": "Enterprise Maintenance Management System",
-    "depends": ['base', 'product'],
+    "depends": ['base', 'product', 'mail'],
     "data": ['cmms_machine_view.xml',
              'cmms_report.xml',
              'views/cmms_header.xml',

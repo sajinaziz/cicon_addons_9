@@ -19,25 +19,23 @@
             name="cmms.cmms_pm_plan_report_template"
     />
 
-
-         <report
+     <report
             id="report_job_order_cmms"
             string="Job Order"
             model="cmms.job.order"
             report_type="qweb-pdf"
             file="cmms.job_order_form_view"
             name="cmms.cmms_job_order_template"
-        />
+    />
 
-
-         <report
+     <report
             id="report_job_order_blank_cmms"
             string="Job Order Form"
             model="cmms.job.order.code"
             report_type="qweb-pdf"
             file="cmms.job_order_form_view"
             name="cmms.cmms_job_order_blank_template"
-        />
+     />
 
 
        <!--<report id="report_cmms_machine_status_webkit"-->

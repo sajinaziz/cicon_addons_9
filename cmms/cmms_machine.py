@@ -58,6 +58,7 @@ class CmmsMachine(models.Model):
     _name = 'cmms.machine'
     _description = 'CMMS Machines'
     _rec_name = 'code'
+    _inherit = ['mail.thread']
 
     def get_user_company(self):
         return self.env.user.company_id.id
@@ -72,33 +73,36 @@ class CmmsMachine(models.Model):
                     self.breakdown_count = r['job_order_type_count']
             self.parts_cost = sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount'))
 
-    code = fields.Char('Code', size=10, help="Machine Code", required=True)
+    code = fields.Char('Code', size=10, help="Machine Code", required=True, track_visibility='always')
     name = fields.Char('Name', help="Machine Name", required=True)
-    type_id = fields.Many2one('cmms.machine.type',  string='Type', ondelete="restrict", required=True)
-    category_id = fields.Many2one('cmms.machine.category',  string='Category', ondelete="restrict", required=True)
-    group_id = fields.Many2one('cmms.machine.group',  string='Group', ondelete="restrict", required=True)
-    company_id = fields.Many2one('res.company', string='Company', ondelete='restrict', required=True, default= get_user_company)
-    model = fields.Char('Model', size=50, help="Machine Model")
+    type_id = fields.Many2one('cmms.machine.type',  string='Type', ondelete="restrict", required=True, track_visibility='onchange')
+    category_id = fields.Many2one('cmms.machine.category',  string='Category', ondelete="restrict", required=True, track_visibility='onchange')
+    group_id = fields.Many2one('cmms.machine.group',  string='Group', ondelete="restrict", required=True, track_visibility='onchange')
+    company_id = fields.Many2one('res.company', string='Company', ondelete='restrict', required=True,
+                                 default= get_user_company, track_visibility='onchange')
+    model = fields.Char('Model', size=50, help="Machine Model", track_visibility='onchange')
     supplier_id = fields.Many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]", help="Supplier")
     mfg_year = fields.Char('MFG Year', size=50, help="Manufacturing Year")
-    serial_no = fields.Char('Serial No', size=50, help="Serial No")
+    serial_no = fields.Char('Serial No', size=50, help="Serial No", track_visibility='onchange')
     note = fields.Text('Notes', size=50, help="Machine Note")
     set_code = fields.Char('Set Code', size=8, help="If machine is Part of  Set")
-    condition = fields.Selection([('working', 'WORKING'), ('not_working', 'NOT WORKING')], 'Condition', required=True)
+    condition = fields.Selection([('working', 'WORKING'), ('not_working', 'NOT WORKING')], 'Condition', required=True, track_visibility='onchange')
     is_machinery = fields.Boolean('Is Machinery', help="If it is real Machine", default=True, required=True)
     unit = fields.Selection([('ton', 'TON'), ('nos', 'Numbers')], string="Unit")
-    state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'), ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status', required=True)
+    state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'),
+                              ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status',
+                             required=True, track_visibility='onchange')
     active = fields.Boolean('Active', default=True, required=True)
-    is_active = fields.Boolean('Is Active', help="Is Machine Active or  Stand by")
+    is_active = fields.Boolean('Is Active', help="Is Machine Active or  Stand by", track_visibility='onchange')
     last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, "
                                                                             "Please Select a group to show !.")
-    pm_scheme_id = fields.Many2one('cmms.pm.scheme', string='PM Scheme')
+    pm_scheme_id = fields.Many2one('cmms.pm.scheme', string='PM Scheme', track_visibility='onchange')
     pm_task_ids = fields.One2many('cmms.machine.task.view', 'machine_id', readonly=True)
     # spare_part_ids = fields.One2many('cmms.store.invoice.line', 'machine_id', readonly=True, string="Parts")
     # job_order_ids = fields.One2many('cmms.job.order', 'machine_id', readonly=True, string="Job Orders")
     breakdown_count = fields.Integer('Breakdowns', compute=_job_order_count)
     parts_cost = fields.Float('Part Cost', compute=_job_order_count, digits=(10, 2))
-    location_id = fields.Many2one('cmms.machine.location', string="Location")
+    location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
 
     _sql_constraint = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
 
@@ -166,7 +170,6 @@ class CmmsMachineTaskView(models.Model):
         group_by_str = """ORDER BY T.interval_id """
         return group_by_str
 
-    @api.v7
     def init(self, cr):
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (

@@ -20,8 +20,7 @@ CmmsJobCategory()
 class CmmsJobOrder(models.Model):
     _name = "cmms.job.order"
     _description = "CMMS Job Order"
-
-    #TODO : Implement Discuss module mail.thread
+    _inherit = ['mail.thread']
 
     #Inverse Sample for Job Order Code
     # def _set_job_code(self):
@@ -38,71 +37,50 @@ class CmmsJobOrder(models.Model):
                                         domain="[('job_order_type','=',job_order_type),('printed','=',True),"
                                                "('created','=',False),('cancelled','=',False)]")
     name = fields.Char("Code", required=True)
-
     job_order_type = fields.Selection(JOB_ORDER_TYPE, "JobOrderType", required=True)
-
     machine_id = fields.Many2one('cmms.machine', 'Machine', required=True, readonly=True, states={'open': [('readonly', False)]})
-
     machine = fields.Char('Machine Name', related='machine_id.name', store=False, readonly=True)
-
     machine_type = fields.Many2one('cmms.machine.type', string='Machine Type', related='machine_id.type_id', store=False, readonly=True)
-
     job_order_date = fields.Date('Job Order Date', required=True, readonly=True,
-                                 states={'open': [('readonly', False)]})
-
+                                 states={'open': [('readonly', False)]}, track_visibility='onchange')
     breakdown_datetime = fields.Datetime('Breakdown Time', readonly=True,
                                          states={'open': [('readonly', False)]})
-
     reported_datetime = fields.Datetime('Reported Date', readonly=True,
                                         states={'open': [('readonly', False)]})
-
     description = fields.Char(string='Description', size=200, readonly=True,
                               states={'open': [('readonly', False)]})
-
     job_category_id = fields.Many2one('cmms.job.category', 'Job Category', readonly=True,
                                       states={'open': [('readonly', False)]})
-
     company_id = fields.Many2one('res.company', related='machine_id.company_id', string="Company",
                                  store=True, readonly=True)
-
     reported_by = fields.Char("Reported/Operated By", size=50, readonly=True,
                               states={'open': [('readonly', False)]})
-
     foreman = fields.Char('Foreman In charge', size=50, readonly=True,
                           states={'open': [('readonly', False)]})
-
     technician = fields.Char('Maintenance In charge', size=50, readonly=True,
                              states={'open': [('readonly', False)]})
-
     reason = fields.Text('Reason', size=500, readonly=True,
                          states={'open': [('readonly', False)]})
-
     corrective_action = fields.Text('Action', size=500, readonly=True,
                                     states={'open': [('readonly', False)]})
-
     service = fields.Boolean('Service Assistance', readonly=True,
                              states={'open': [('readonly', False)]})
-
     priority = fields.Selection([('low', 'LOW PRIORITY'), ('normal', 'PRIORITY REPAIR'),
                                  ('high', 'PRIORITY NEXT DAY'), ('highest', 'URGENT REPAIR')], "Priority", readonly=True,
-                                states={'open': [('readonly', False)]}, default='low')
-
+                                states={'open': [('readonly', False)]}, default='low', track_visibility='onchange')
     attended_by = fields.Char('Attended By', size=100, readonly=True,
                               states={'open': [('readonly', False)]})
 
     work_start_datetime = fields.Datetime('Work Started', readonly=True,
                                           states={'open': [('readonly', False)]})
-
     work_end_datetime = fields.Datetime('Work End', readonly=True,
                                         states={'open': [('readonly', False)]})
 
-    status_id = fields.Many2one('cmms.job.order.status', string="Status", default=_get_default_status)
-
+    status_id = fields.Many2one('cmms.job.order.status', string="Status", default=_get_default_status, track_visibility='onchange')
     state = fields.Selection(related='status_id.state_name', string="State",
                              store=True, readonly=True)
 
     sch_pm_task_ids = fields.One2many('cmms.pm.task.job.order.line', 'job_order_id', string="PM Tasks")
-
     spare_parts_ids = fields.One2many('cmms.store.invoice.line', 'job_order_id', string="Spare Parts", readonly=True)
 
     _order = 'job_order_date desc'
@@ -152,6 +130,7 @@ class CmmsJobOrderStatus(models.Model):
                               ('cancel', 'Cancelled'),
                               ('done', 'Completed')], 'State', default='open', required=True)
     sequence = fields.Integer('Sequence')
+    fold = fields.Boolean('Fold', default=False)
 
     _order = 'sequence'
 
@@ -185,7 +164,8 @@ class CmmsPmTaskJobOrderLine(models.Model):
     interval_id = fields.Many2one('cmms.pm.interval', related='pm_task_id.interval_id', string='Interval', store=False, readonly=True)
     machine_id = fields.Many2one('cmms.machine', ralated='job_order_id.machine_id', string="Machine", store=False)
     date_completed = fields.Date('Completed Date', required=False, readonly=True, states={'done': [('readonly', False), ('required', True)]})
-    state = fields.Selection([('pending', 'Pending'), ('done', 'Done')], string="State", default='pending')
+    state = fields.Selection([('pending', 'Pending'), ('done', 'Done'), ('cancel', 'Cancelled')],
+                             string="State", default='pending')
     remarks = fields.Char('Remarks')
 
     @api.onchange('state')

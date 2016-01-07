@@ -11,7 +11,9 @@
                  <form string="CMMS Job Order" >
                      <header>
                          <button name="print_job_order" string="Print" type="object" class="oe_highlight"/>
-                         <field name="status_id" widget="statusbar" clickable="True" />
+                         <field name="status_id" widget="statusbar"  options="{'fold_field': 'fold'}" clickable="True"  />
+                         <!--<button name="done_job_order" string="Done" type="object" class="oe_highlight" attrs="{'invisible':[('job_order_type','in',('preventive'))]}"/>-->
+                         <!--<button name="cancel_job_order" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible':[('job_order_type','in',('preventive'))]}"/>-->
                      </header>
                      <sheet>
                          <field name="id" invisible="True"/>
@@ -91,6 +93,10 @@
                                  </page>
                              </notebook>
                      </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
                  </form>
             </field>
         </record>
@@ -100,10 +106,10 @@
             <field name="model">cmms.job.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml" >
-                <tree string="Job Order">
+                <tree decoration-warning="state in ('pending')">
                     <field name="name" string="Code" />
                     <field name="machine_id"/>
-                    <field name="reported_datetime"/>
+                    <field name="job_order_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -232,6 +238,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name" />
                     <field name="state_name"/>
+                    <field name="fold" />
                </tree>
             </field>
         </record>
