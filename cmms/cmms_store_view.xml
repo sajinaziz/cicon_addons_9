@@ -127,23 +127,23 @@
 
 
 
-          <record id="action_recon_job_order" model="ir.actions.server">
-            <field name="name">Re-Check Job Order</field>
-            <field name="model_id" ref="model_cmms_store_invoice_line"/>
-            <field name="state">code</field>
-            <field name="code">
-                self.set_job_order(cr,uid,context.get('active_ids'),context=context)
-            </field>
-        </record>
+          <!--<record id="action_recon_job_order" model="ir.actions.server">-->
+            <!--<field name="name">Re-Check Job Order</field>-->
+            <!--<field name="model_id" ref="model_cmms_store_invoice_line"/>-->
+            <!--<field name="state">code</field>-->
+            <!--<field name="code">-->
+                <!--self.set_job_order(cr,uid,context.get('active_ids'),context=context)-->
+            <!--</field>-->
+        <!--</record>-->
 
-        <record model="ir.values" id="action_recon_job_order_key">
-            <field name="name">Re-Calculate - Job Order</field>
-            <field name="action_id" ref="action_recon_job_order" />
-            <field name="value" eval="'ir.actions.server,' + str(ref('action_recon_job_order'))" />
-            <field name="key">action</field>
-            <field name="model">cmms.store.invoice.line</field>
-            <field name="key2">client_action_multi</field>
-        </record>
+        <!--<record model="ir.values" id="action_recon_job_order_key">-->
+            <!--<field name="name">Re-Calculate - Job Order</field>-->
+            <!--<field name="action_id" ref="action_recon_job_order" />-->
+            <!--<field name="value" eval="'ir.actions.server,' + str(ref('action_recon_job_order'))" />-->
+            <!--<field name="key">action</field>-->
+            <!--<field name="model">cmms.store.invoice.line</field>-->
+            <!--<field name="key2">client_action_multi</field>-->
+        <!--</record>-->
 
 
 
@@ -158,6 +158,7 @@
             <field name="name" >Store Invoice Line</field>
             <field name="res_model">cmms.store.invoice.line</field>
              <field name="view_mode">tree,form,pivot,graph</field>
+             <field name="context">{'search_default_this_month': 1}</field>
         </record>
 
          <record model="ir.ui.view" id="cmms_spare_part_type_tree">

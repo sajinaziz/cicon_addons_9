@@ -36,7 +36,7 @@ class CmmsJobOrder(models.Model):
     job_order_code_id = fields.Many2one("cmms.job.order.code",
                                         domain="[('job_order_type','=',job_order_type),('printed','=',True),"
                                                "('created','=',False),('cancelled','=',False)]")
-    name = fields.Char("Code", required=True)
+    name = fields.Char("Code", required=True, track_visibility='always')
     job_order_type = fields.Selection(JOB_ORDER_TYPE, "JobOrderType", required=True)
     machine_id = fields.Many2one('cmms.machine', 'Machine', required=True, readonly=True, states={'open': [('readonly', False)]})
     machine = fields.Char('Machine Name', related='machine_id.name', store=False, readonly=True)

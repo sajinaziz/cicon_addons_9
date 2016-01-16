@@ -164,6 +164,7 @@
             <field name="arch" type="xml" >
                 <tree string="Location" editable="bottom">
                     <field name="name"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>

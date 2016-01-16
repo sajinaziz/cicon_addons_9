@@ -106,11 +106,12 @@
             <field name="model">cmms.job.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml" >
-                <tree decoration-warning="state in ('pending')">
-                    <field name="name" string="Code" />
+                <tree>
+                    <field name="name" string="Code"/>
                     <field name="machine_id"/>
                     <field name="job_order_date"/>
-                    <field name="state"/>
+                    <field name="status_id"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>

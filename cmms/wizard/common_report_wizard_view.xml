@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="cmms_common_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">CMMS Report</field>
+            <field name="model">cmms.common.report.wizard</field>
+            <field name="arch" type="xml">
+            <form string="CMMS Report">
+                <group>
+                    <field name="report_list"/>
+                    <field name="start_date" />
+                    <field name="end_date"/>
+                </group>
+                <footer>
+                	<button name="show_report" string="Show Report" type="object" class="oe_highlight" />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+
+        <record id="action_expense_summary_report" model="ir.actions.act_window">
+            <field name="name" >Expense Summary Reports</field>
+            <field name="res_model">cmms.common.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_report_list': 'expense_summary'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Inventory Reports" parent="cmms_report_menu" id="cmms_menu_inventory_report" />
+        <menuitem name="Expense Summary" parent="cmms_menu_inventory_report" id="cmms_menu_expense_summary" action="action_expense_summary_report"/>
+
+    </data>
+</odoo>
+
+

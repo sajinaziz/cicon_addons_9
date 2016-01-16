@@ -14,4 +14,5 @@ class CmmsSparePartTypeWizard(models.TransientModel):
             _line = self.env['cmms.store.invoice.line'].search([('id', 'in', self._context.get('invoice_line_ids'))])
             _line.write({'spare_part_type_id': self.part_type_id.id})
         return True
+
 CmmsSparePartTypeWizard()

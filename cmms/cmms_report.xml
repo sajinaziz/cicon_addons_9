@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <!--<report-->
-            <!--id="report_cmms_machine"-->
-            <!--string="Machine Status"-->
-            <!--model="cmms.machine"-->
-            <!--report_type="qweb-pdf"-->
-            <!--file="cmms.report_machine_status"-->
-            <!--name="cmms.report_machine_status"-->
-        <!--/>-->
+        <report
+            id="report_cmms_machine"
+            string="Machine Status"
+            model="cmms.machine"
+            report_type="qweb-pdf"
+            file="cmms.report_machine_status"
+            name="cmms.report_machine_status_template"
+        />
 
      <report
             id="report_pm_plan_cmms"
@@ -37,14 +37,25 @@
             name="cmms.cmms_job_order_blank_template"
      />
 
+     <report
+       id="report_inventory_expense_summary"
+       string="Expense Summary"
+       model="cmms.common.report.wizard"
+       report_type="qweb-pdf"
+       file="cmms.inventory_expense_reports"
+       name="cmms.cmms_inventory_expense_report_summary"
+     />
 
-       <!--<report id="report_cmms_machine_status_webkit"-->
-            <!--name="cmms.machine.status.webkit"-->
-            <!--auto="False"-->
-            <!--model="cmms.machine"-->
-            <!--file="cmms/report/machine_status.mako"-->
-            <!--string="Machine Status Webkit"-->
-            <!--report_type="webkit"/>-->
+
+     <report
+       id="report_job_order_detail"
+       string="Job Order Report"
+       model="cmms.job.order"
+       report_type="qweb-pdf"
+       file="cmms.job_order_report.xml"
+       name="cmms.job_order_report_template"
+     />
+
 
     </data>
-</openerp>
+</odoo>

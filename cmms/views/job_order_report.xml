@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="job_order_report_template">
+     <t t-call="report.html_container">
+         <t t-call="cmms.cmms_internal_layout"/>
+            <div class="page">
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <th>Sno. </th>
+                            <th>Code </th>
+                            <th>Date </th>
+                            <th>Machine </th>
+                            <th>Cause</th>
+                            <th>Corrective Action</th>
+                            <th>Technician</th>
+                            <th>Priority</th>
+                            <th>Category</th>
+                            <th>Work Time</th>
+                            <th>Amount</th>
+                            <th>Status </th>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr>
+                                   <td> <span t-esc="o_index +1"/> </td>
+                                   <td> <span t-field="o.name"/> </td>
+                                   <td> <span t-field="o.job_order_date"/> </td>
+                                   <td> <span t-field="o.machine_id.code"/> </td>
+                                   <td> <span t-field="o.reason"/> </td>
+                                   <td> <span t-field="o.corrective_action"/> </td>
+                                   <td> <span t-field="o.attended_by"/> </td>
+                                   <td> <span t-field="o.priority"/> </td>
+                                   <td> <span t-field="o.job_category_id.name"/> </td>
+                                   <td> </td>
+                                   <td> </td>
+                                   <td> <span t-field="o.status_id.name"/> </td>
+                                </tr>
+                            </t>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+         </t>
+    </template>
+</data>
+</odoo>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

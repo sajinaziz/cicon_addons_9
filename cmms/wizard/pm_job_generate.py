@@ -22,7 +22,7 @@ class CmmsPmGenerateWizard(models.TransientModel):
         _sch_recs = _sch_obj.search([('next_date', '=', self.pm_date)])
         if _sch_recs:
             _machines = _sch_recs.mapped('machine_ids')
-            for m in _machines:
+            for m in _machines.sorted(key=lambda r: r.code):
                 _exist = self.env['cmms.job.order'].search([('machine_id', '=', m.id),
                                                             ('job_order_type', '=', 'preventive'),
                                                             ('job_order_date', '=', self.pm_date)], limit=1)

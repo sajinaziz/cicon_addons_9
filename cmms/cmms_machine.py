@@ -5,7 +5,8 @@ class CmmsMachineLocation(models.Model):
     _name = 'cmms.machine.location'
     _description = 'Machine Location'
 
-    name = fields.Char("Location" , required=True, help="Current Machine Location Ex: Factory 1,Factory 2")
+    name = fields.Char("Location", required=True, help="Current Machine Location Ex: Factory 1,Factory 2")
+    company_id = fields.Many2one('res.company', 'Company')
 
     _sql_constraints = [('uniq_location', 'UNIQUE(name)', "Location Must be unique")]
 
@@ -105,6 +106,8 @@ class CmmsMachine(models.Model):
     location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
 
     _sql_constraint = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
+
+    _order = 'set_code'
 
     @api.onchange('group_id')
     def onchange_group_id(self):
