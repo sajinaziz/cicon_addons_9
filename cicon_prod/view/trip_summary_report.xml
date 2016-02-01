@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="cicon_steel_trip_summary_template">
+
+     <style type="text/css">
+        th {color:red;}
+     </style>
+
+    <t t-call="report.html_container">
+        <!--<t t-call="cicon_prod.cicon_prod_external_layout"/>-->
+        <div class="header" >
+
+            This Is Header
+        </div>
+        <div class="page">
+              <div class="oe_structure"/>
+            <t t-set="p" t-value="1"/>
+              <!--<table class="table table-bordered">-->
+                  <!--<caption> <h3 > Trip Summary Steel(Straight Bar &amp; Cut &amp; Bend)</h3>  </caption>-->
+                  <!--<thead>-->
+                      <!--<th>Sn </th>-->
+                      <!--<th>Customer</th>-->
+                      <!--<th>Project</th>-->
+                      <!--<th>Date &amp; Time</th>-->
+                      <!--<th>Truck</th>-->
+                      <!--<th>Driver</th>-->
+                      <!--<th>Transport</th>-->
+                      <!--<th>WB Weight</th>-->
+                      <!--<th>DO Weight</th>-->
+                      <!--<th>DO Weight Sum</th>-->
+                  <!--</thead>-->
+                  <!--<tbody>-->
+                      <!--<t t-value="w">-->
+                        <!--<t t-set="w" t-value="1"/>-->
+                         <!--<tr t-foreach="docs" t-as="o">-->
+
+                         <!--<td> <span t-esc="o_index +1"/> </td>-->
+                         <!--<td> <span t-field="o.customer"/> </td>-->
+                         <!--<td> <span t-field="o.project"/> </td>-->
+                         <!--<td> <span t-field="o.trip_date_time" t-field-options='{"format": "dd-MMM-yyyy hh:mm"}' /> </td>-->
+                         <!--<td> <span t-field="o.truck_no"/> </td>-->
+                         <!--<td> <span t-field="o.driver"/> </td>-->
+                         <!--<td> <span t-field="o.transport"/> </td>-->
+                         <!--<td> <span t-field="o.wb_weight"/> </td>-->
+                         <!--<td> <span t-field="o.do_weight"/> </td>-->
+                         <!--<t t-set="w" t-value="w +o.do_weight"/>-->
+                         <!--<td>  <span t-esc="round(6.2/9,2)"/> </td>-->
+                        <!--</tr>-->
+                          <!--<tr>-->
+                              <!--<td> <span t-raw="w"/> </td>-->
+                          <!--</tr>-->
+
+                      <!--</t>-->
+
+
+
+                  <!--</tbody>-->
+
+            <!--</table>-->
+            <table class="table table-bordered">
+            <thead>
+            </thead>
+              <tbody>
+            <tr>
+            <t t-foreach="docs" t-as="item">
+
+                    <td><span t-esc="item.name"/></td>
+                    <td><span t-esc="item.customer"/></td>
+                    <t t-if="item_odd">
+                        &lt;/tr &gt;
+                        &lt;tr &gt;
+                    </t>
+            </t>
+            </tr>
+                </tbody>
+            </table>
+
+
+                <p t-esc="sum([x.wb_weight for x in docs])"/> <!--Product -->
+
+
+            <!--<t t-foreach="docs" t-as="o">-->
+                <!--<p>-->
+                    <!--<t t-set="emp_count" t-value="o.run_sql('select COUNT(*) from hr_employee')"/>-->
+                    <!--<t t-set="latest_partner" t-value="o.run_sql('select id, name from res_partner  order by id DESC limit 10')"/>-->
+                    <!--<p > Employees: <span t-esc="emp_count" /> </p>-->
+                     <!--<t t-foreach="latest_partner" t-as="part">-->
+                         <!--<p> Customer - <span t-esc="part_index"/>:  <span t-esc="part"/>  </p>-->
+                     <!--</t>-->
+                <!--</p>-->
+            <!--</t>-->
+
+            <div >
+               This is footer1
+            </div>
+
+        </div>
+
+        <div class="footer text-center">
+            This is footer2
+            <!--<span t-esc="datetime.datetime.now() + relativedelta(hours=+4,minutes=+5)"/>-->
+
+
+        </div>
+    </t>
+</template>
+</data>
+
+</openerp>
+
