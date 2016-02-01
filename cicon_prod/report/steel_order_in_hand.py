@@ -66,19 +66,19 @@ class cicon_steel_order_in_hand(models.AbstractModel): # Report File Name
         _res = dict(records=_customer_project_list, grand_total=_grand_total, diameters=_dia_vals) # Assign to parent Dictionary with then three Keys.
         return _res
 
-
-class trip_summary_reprt(models.AbstractModel): # Report File Name
-    _name = 'report.cicon_prod.cicon_steel_trip_summary_template'
-
-    @api.multi
-    def render_html(self, data=None):
-        report_obj = self.env['report']
-        report = report_obj._get_report_from_name('cicon_prod.cicon_steel_trip_summary_template')
-        rml = report_sxw.rml_parse(self._cr, self._uid, 'cicon_steel_trip_summary_template')
-        docargs = {
-            'doc_ids': self.ids,
-            'doc_model': report.model,
-            'docs': self.env[report.model].search([('id', 'in', self._ids)]),
-            'formatLang': rml.formatLang,
-        }
-        return report_obj.render('cicon_prod.cicon_steel_trip_summary_template', docargs)
+#
+# class trip_summary_reprt(models.AbstractModel): # Report File Name
+#     _name = 'report.cicon_prod.cicon_steel_trip_summary_template'
+#
+#     @api.multi
+#     def render_html(self, data=None):
+#         report_obj = self.env['report']
+#         report = report_obj._get_report_from_name('cicon_prod.cicon_steel_trip_summary_template')
+#         rml = report_sxw.rml_parse(self._cr, self._uid, 'cicon_steel_trip_summary_template')
+#         docargs = {
+#             'doc_ids': self.ids,
+#             'doc_model': report.model,
+#             'docs': self.env[report.model].search([('id', 'in', self._ids)]),
+#             'formatLang': rml.formatLang,
+#         }
+#         return report_obj.render('cicon_prod.cicon_steel_trip_summary_template', docargs)

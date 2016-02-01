@@ -172,9 +172,8 @@ class CiconProdOrder(models.Model):
                     }
         return {'warning': _warn}
 
-
-    # @api.one
-    # @api.constrains('product_lines', 'contract_id')
+    @api.one
+    @api.constrains('product_lines', 'contract_id')
     def _check_lines_qty(self):
         res = True
         _warn = ''
