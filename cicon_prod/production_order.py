@@ -123,6 +123,11 @@ class cicon_prod_plan(models.Model):
     _name = 'cicon.prod.plan'
     _description = "CICON Production Plan"
 
+    @api.multi
+    @api.depends('plan_date')
+    def name_get(self):
+        return [(r.id, (r.plan_date + '/' + str(r.work_shift).upper())) for r in self]
+
     plan_date = fields.Date('Plan Date', required=True, default=fields.Date.context_today)
     work_shift = fields.Selection([('day','Day'),('night','Night')], required=True, string="Work Shift")
     prod_order_ids = fields.One2many('cicon.prod.order','plan_id', string="Orders")
