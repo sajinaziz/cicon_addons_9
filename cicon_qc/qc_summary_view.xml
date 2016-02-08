@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+
+        <record model="ir.ui.view" id="cic_qc_summary_tree_view">
+			<field name="name">cic.qc.summary.tree</field>
+			<field name="model">cic.qc.summary</field>
+			<field name="arch" type="xml" >
+				<tree string="CICON QC Summary">
+					<field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="name" />
+                    <field name="dn_date"/>
+                    <field name="delivery_date"/>
+				</tree>
+			</field>
+		</record>
+
+
+
+
+
+         <record model="ir.ui.view" id="cic_qc_cert_line_tree_view">
+			<field name="name">cic.qc.cert.line.tree</field>
+			<field name="model">cic.qc.cert.line</field>
+			<field name="arch" type="xml" >
+				<tree string="Mill Certificates" editable="bottom">
+                    <field name="dia_attrib_value_id" options="{'no_create':True,'no_open':True}" />
+                    <field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True}"/>
+                    <field name="certificate_ids" widget="many2many_tags"/>
+                    <field name="quantity" />
+				</tree>
+			</field>
+		</record>
+
+
+
+         <record model="ir.ui.view" id="cic_qc_summary_tree_form">
+			<field name="name">cic.qc.summary.form</field>
+			<field name="model">cic.qc.summary</field>
+			<field name="arch" type="xml" >
+                <form string="Customer Order" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id" options="{'no_create':True,'no_open':True}"/>
+                            <field name="project_id" options="{'no_create':True,'no_open':True}"/>
+                            <field name="dn_date"/>
+                            <field name="delivery_date"/>
+                            <field name="wb_ticket"/>
+                            <field name="loading_list"/>
+                            <field name="company_id" options="{'no_create': True,'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="dn_line_ids">
+                                <tree editable="bottom">
+                                    <field name="dn_no"/>
+                                    <field name="order_code_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <notebook>
+                            <page string="Certificates">
+                                <field name="certificate_line_ids"/>
+                            </page>
+                            <!--<page string="Heat Nos">-->
+                                <!--<field name="heat_number_ids"/>-->
+                            <!--</page>-->
+                            <page string="Order Codes">
+                                <field name="order_codes"/>
+                            </page>
+
+                            <page string="Heat Numbers">
+                                <field name="heat_numbers"/>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+		</record>
+
+
+         <record model="ir.ui.view" id="cic_qc_summary_search">
+			<field name="name">cic.qc.summary.search</field>
+			<field name="model">cic.qc.summary</field>
+			<field name="arch" type="xml" >
+                <search string="QC Summary" >
+                    <field name="name"/>
+                    <field name="partner_id" widget="selection"/>
+                    <field name="project_id" widget="selection" />
+                    <field name="dn_line_ids" />
+                    <field name="order_codes"/>
+                    <field name="heat_numbers"/>
+                </search>
+
+			</field>
+        </record>
+
+
+
+        <!--:For Import data Only -->
+        <!--<record model="ir.ui.view" id="cic_qc_mill_cert_tree_view">-->
+			<!--<field name="name">cic.qc.mill.cert.tree</field>-->
+			<!--<field name="model">cic.qc.mill.cert</field>-->
+			<!--<field name="arch" type="xml" >-->
+				<!--<tree string="Mill Certificates">-->
+                    <!--<field name="name"/>-->
+
+				<!--</tree>-->
+			<!--</field>-->
+		<!--</record>-->
+
+
+        <!--For Import data Only -->
+         <!--<record model="ir.ui.view" id="cic_order_code_tree_view">-->
+			<!--<field name="name">cic.order.code.tree</field>-->
+			<!--<field name="model">cic.qc.order.code</field>-->
+			<!--<field name="arch" type="xml" >-->
+				<!--<tree string="Order Codes">-->
+                    <!--<field name="name"/>-->
+				<!--</tree>-->
+			<!--</field>-->
+		<!--</record>-->
+
+        <record model="ir.actions.act_window" id="action_cic_qc_summary">
+            <field name="name" >QC Summary Sheet</field>
+            <field name="res_model">cic.qc.summary</field>
+       </record>
+
+
+
+        <!--<record model="ir.actions.act_window" id="action_cic_qc_mill_cert">-->
+            <!--<field name="name" >QC Mill Certificates</field>-->
+            <!--<field name="res_model">cic.qc.mill.cert</field>-->
+       <!--</record>-->
+
+         <!--<record model="ir.actions.act_window" id="action_cic_qc_order_code">-->
+            <!--<field name="name" >Order Code</field>-->
+            <!--<field name="res_model">cic.qc.order.code</field>-->
+       <!--</record>-->
+
+
+        <menuitem name="QA / QC"  parent="cicon_prod.cicon_menu" id="cicon_menu_qa_qc" ></menuitem>
+
+        <menuitem  parent="cicon_menu_qa_qc" id="cic_qc_summary_sheet_menu" action="action_cic_qc_summary" sequence="1"></menuitem>
+
+        <!--<menuitem  parent="cicon_menu_qa_qc" id="cic_qc_mill_cert_menu" action="action_cic_qc_mill_cert" sequence="3"></menuitem>-->
+
+        <!--<menuitem  parent="cicon_menu_qa_qc" id="cic_qc_order_code_menu" action="action_cic_qc_order_code" sequence="4"></menuitem>-->
+
+
+    </data>
+
+</openerp>
