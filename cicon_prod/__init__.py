@@ -4,6 +4,7 @@ import production_order
 import wizard
 import report
 import contract_lpo
+import delivery_order
 # import cicon_logistics
 
 

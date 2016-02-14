@@ -14,6 +14,7 @@
                     <field name="description"/>
                     <field name="remarks"/>
                     <field name="required_date"/>
+                    <field name="template_ids"/>
                     <field name="total_tonnage" sum="Total"/>
                     <field name="state"/>
                     <button name="set_deliver" states="pending,progress,hold" confirm="Confirm  Delivered ?" string="Delivered" type="object"  icon="gtk-redo" groups="cicon_prod.group_prod_delivery_user"/>
