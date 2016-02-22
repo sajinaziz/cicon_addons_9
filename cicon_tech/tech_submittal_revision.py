@@ -2,6 +2,17 @@ from openerp import models, fields, api
 from openerp.exceptions import UserError
 
 
+class SumittalRevisionReason(models.Model):
+    _name = 'tech.submittal.revision.reason'
+    _description = "Revision Reason"
+
+    name = fields.Char("Reason", required=True)
+
+    _sql_constraints = [('unique_reason', 'unique(name)', ' Revision Reason Should be Unique')]
+
+SumittalRevisionReason()
+
+
 class SubmittalRevision(models.Model):
     """Submittal Revisions Information
         Note: Submittal_id inherited from tech.submittal using delegation inheritance
@@ -86,6 +97,7 @@ class SubmittalRevision(models.Model):
     # Show Delivery Quantity Warning in case if more than the BBS
     qty_warning = fields.Char(type='char', string="Warning", readonly=True)
     total_draft_time = fields.Float(compute=total_delivery, string="Drafting Time", store=False)
+    reason_id = fields.Many2one('tech.submittal.revision.reason', string="Reason")
 
     _order = 'submittal_date desc'
 

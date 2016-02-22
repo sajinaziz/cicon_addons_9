@@ -26,7 +26,6 @@ class DrawingRegister(models.Model):
     delivered_qty = fields.Float(string="Delivered Qty", readonly=True)
     balance_qty = fields.Float(string="Balance Qty", readonly=True)
 
-    @api.v7
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'tech_drawing_register')
         cr.execute("""

@@ -54,6 +54,7 @@
                         <!--<field name="submittal_count" invisible="True" attrs="{'readonly':[('parent_id','!=',False)]}"/>-->
                         <field name="submittal_id"   invisible="True" attrs="{'required':[('parent_id','!=',False)]}"/>
                         <field name="company_id" invisible="1" />
+                        <field name="revision_number" invisible="1"/>
                     </group>
                     <group col='4' span="2">
                         <field name="site_ref_no"/>
@@ -71,6 +72,7 @@
                         <!--<field name="signed_by" domain="[('sign_authority','=',True),('company_id','child_of',[company_id])]"/>-->
                         <!--<field name="signed_by" domain="[('id','in',allowed_signing_ids[0][2])]"  />-->
                         <field name="signed_by" options="{'no_open':True,'no_create':True}"/>
+                        <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>
                         <!--<field name="allowed_signing_ids" invisible="1" />-->
                     </group>
                     <!--<group>-->
@@ -248,6 +250,17 @@
         </field>
     </record>
 
+
+
+    <record model="ir.ui.view" id="tech_submittal_revision_reason_tree_view">
+        <field name="name">tech.submittal.revision.reason.tree</field>
+        <field name="model">tech.submittal.revision.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Revision Reason" editable="bottom">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
 
 
 </data>

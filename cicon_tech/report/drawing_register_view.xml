@@ -32,15 +32,15 @@
             <field name="model">tech.drawing.register</field>
             <field name="arch" type="xml">
                 <search string="Drawing">
-                    <group expand="0" string="Group By...">
-                        <filter string="Submitted By" name="group_dwg_submitted_by" icon="terp-personal" domain="[]"  context="{'group_by':'submitted_by'}"/>
-                        <filter string="job Site" name="group_project_id" icon="terp-personal" domain="[]"  context="{'group_by':'job_site_id'}"/>
-                        <filter string="Submittal" name="group_drawing_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>
-                    </group>
-                    <field name="job_site_id" select="1" widget="selection">
-                        <filter domain="[('job_site_id','=',job_site_id)]"  help="Project" icon="terp-project"/>
-                        <filter name="current_month" string="This Month" domain="[('submitted_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>
-                    </field>
+                    <!--<group expand="0" string="Group By...">-->
+                        <!--<filter string="Submitted By" name="group_dwg_submitted_by" icon="terp-personal" domain="[]"  context="{'group_by':'submitted_by'}"/>-->
+                        <!--<filter string="job Site" name="group_project_id" icon="terp-personal" domain="[]"  context="{'group_by':'job_site_id'}"/>-->
+                        <!--<filter string="Submittal" name="group_drawing_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>-->
+                    <!--</group>-->
+                    <field name="job_site_id" select="1" widget="selection"/>
+                    <filter domain="[('job_site_id','=',job_site_id)]"  help="Project" icon="terp-project"/>
+                    <filter name="current_month" string="This Month" domain="[('submitted_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>
+
                     <!--
                     <field name="revision_id" select="1" widget="selection">
                         <filter domain="[('revision_id','=',revision_id)]" help="Submittal Revision" icon="terp-submittal"/>
@@ -55,7 +55,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="search_drawing_register"/>
-            <field name="context">{"search_default_current_month" :1, "search_default_group_drawing_submittal_id":1}</field>
+            <field name="context">{"search_default_current_month":1}</field>
         </record>
 
 

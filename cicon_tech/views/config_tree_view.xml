@@ -34,6 +34,11 @@
             <field name="res_model">tech.submittal.revision</field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_revision_reason">
+            <field name="name">Revision Reason</field>
+            <field name="res_model">tech.submittal.revision.reason</field>
+        </record>
+
 
         <menuitem id="submittal_config_menu" sequence="90" name="Configuration" parent="tech_menu_submittal"  groups="base.group_no_one" />
         <menuitem id="project_contact_menu" sequence="10" name="Project Contact" parent="submittal_config_menu" action="action_project_contact"/>
@@ -42,6 +47,7 @@
         <menuitem id="revision_documents_menu" name="Documents" parent="submittal_config_menu" action="action_documents"  sequence="40"/>
         <menuitem id="documents_revision_menu" name="Document Revision" parent="submittal_config_menu" action="action_document_revisions"  sequence="50"/>
         <menuitem id="revision_delivery_menu" name="Delivery" parent="submittal_config_menu" action="action_delivery_details"  sequence="60"/>
+        <menuitem id="revision_reason_menu"  parent="submittal_config_menu" action="action_revision_reason"  sequence="70"/>
 
 
 
