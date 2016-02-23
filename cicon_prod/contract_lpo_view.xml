@@ -319,10 +319,9 @@
 
 
       <record model="ir.actions.act_window" id="action_cicon_prod_contract">
-            <field name="name" >Contracts</field>
+            <field name="name" >Contracts / LPO</field>
             <field name="res_model">cicon.contract</field>
       </record>
-
 
 
 

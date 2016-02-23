@@ -162,7 +162,7 @@
                 <field name="customer_order_id" widget="selection"/>
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer'])]"/>
-
+                <!--#TODO: Search by Product Template-->
                 <filter name="delivered" string="Delivered" domain="[('state','in',['delivered','cancel'])]"/>
                 <group expand="0" string="Group By...">
                     <filter string="Customer Order" name="group_order_customer" icon="terp-folder-violet" domain="[]" context="{'group_by':'customer_order_id'}"/>
@@ -250,7 +250,6 @@
 			<field name="model">cicon.prod.plan</field>
 			<field name="arch" type="xml">
                 <form string="Production Plan">
-                    <sheet>
                         <group col="4">
                             <field name="plan_date"/>
                             <field name="work_shift"/>
@@ -260,21 +259,21 @@
                             <page string="Orders">
                                 <field name="prod_order_ids" widget="many2many">
                                     <tree editable="bottom">
-                                          <field name="partner_id"/>
-                                          <field name="project_id"/>
-                                          <field name="customer_order_id"/>
-                                          <field name="name"/>
-                                          <field name="description"/>
+                                          <field name="partner_id" readonly="1"/>
+                                          <field name="project_id" readonly="1"/>
+                                          <field name="customer_order_id" readonly="1"/>
+                                          <field name="name" readonly="1"/>
+                                          <field name="description" readonly="1"/>
+                                          <field name="required_date" readonly="1"/>
+                                          <field name="total_tonnage" sum="Total" />
+                                          <field name="load" />
                                           <field name="remarks"/>
-                                          <field name="required_date"/>
-                                          <field name="total_tonnage" sum="Total"/>
-                                        <field name="state"/>
+                                          <field name="state" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>
 
                         </notebook>
-                    </sheet>
 
                 </form>
 			</field>
@@ -286,12 +285,19 @@
             <field name="res_model">cicon.prod.plan</field>
        </record>
 
+            <record model="ir.actions.act_window" id="action_cicon_prod_order_planning">
+            <field name="name" >Order Planning</field>
+            <field name="res_model">cicon.prod.order</field>
+       </record>
+
 
         <menuitem name="Production"  parent="cicon_menu" id="cicon_menu_prod_order" sequence="2" />
         <menuitem  parent="cicon_menu_prod_order" id="cicon_prod_orders" action="action_cicon_prod_order" sequence="20"/>
         <!--<menuitem  parent="cicon_menu_prod_order" id="menu_cicon_prod_order_lines" action="action_cicon_prod_order_line"></menuitem>-->
-        <menuitem name="Reports"  parent="cicon_menu" id="cicon_menu_report" sequence="3" />
-        <menuitem name="Production Plan"  parent="cicon_menu_prod_order" id="cicon_menu_prod_plan" action="action_cicon_prod_plan" sequence="30"/>
+        <menuitem name="Reports"  parent="cicon_menu" id="cicon_menu_report" sequence="50" />
+        <menuitem name="Planning"  parent="cicon_menu_prod_order" id="cicon_menu_planning" sequence="30"/>
+        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_plan" action="action_cicon_prod_plan" sequence="10"/>
+        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20"/>
 
 
     </data>

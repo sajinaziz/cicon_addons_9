@@ -22,6 +22,7 @@
         'report/order_analysis_report_view.xml',
         'view/cicon_prod_view.xml',
         'delivery_order_view.xml',
+        'wizard/prod_planning_wizard_view.xml'
         ],
     "description": "CICON Production Management",
     "init_xml": [],
