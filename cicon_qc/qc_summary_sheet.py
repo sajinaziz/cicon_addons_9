@@ -1,7 +1,8 @@
 from openerp import models,  fields, api
 from datetime import time
 
-class cic_qc_summary(models.Model):
+
+class QcSummary(models.Model):
     _name = 'cic.qc.summary'
     _description = "QC Summary Sheet"
 
@@ -55,12 +56,12 @@ class cic_qc_summary(models.Model):
         _qc_summary_seq = self.env['ir.sequence'].search([('company_id', '=', self.env.user.company_id.id),
                                                           ('code', '=', 'cic.qc.summary.seq')])
         vals.update({'name': _qc_summary_seq.next_by_id() or time.strftime('%Y/%m/%d/%H/%M')})
-        return super(cic_qc_summary, self).create(vals)
+        return super(QcSummary, self).create(vals)
 
-cic_qc_summary()
+QcSummary()
 
 
-class cic_qc_cert_line(models.Model):
+class QcCertLine(models.Model):
     _name = 'cic.qc.cert.line'
     _description = 'CICON Certificates Note'
 
@@ -72,12 +73,12 @@ class cic_qc_cert_line(models.Model):
 
     _sql_constraints = [('uniq_line', 'UNIQUE(qc_summary_id,dia_attrib_value_id,origin_attrib_value_id)', 'Cert Line Name Must be Unique')]
 
-cic_qc_cert_line()
+QcCertLine()
 
 
 
 
-class cic_qc_dn_line(models.Model):
+class QcDnLine(models.Model):
     _name = 'cic.qc.dn.line'
     _description = 'CICON Delivery Note'
     _rec_name = 'dn_no'
@@ -88,20 +89,21 @@ class cic_qc_dn_line(models.Model):
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(dn_no)', 'DN  Must be Unique')]
 
-cic_qc_dn_line()
+QcDnLine()
 
 
-class cic_qc_order_code(models.Model):
+class QcOrderCode(models.Model):
     _name = 'cic.qc.order.code'
     _description = 'CICON Order Code'
 
     name = fields.Char('Order Code', size=12)
 
     _sql_constraints = [('uniq_order_code', 'UNIQUE(name)', 'Order Code Must be Unique')]
-cic_qc_order_code()
+
+QcCertLine()
 
 
-class cic_qc_cert_type(models.Model):
+class QcCertType(models.Model):
     _name = 'cic.qc.cert.type'
     _description = "CICON Mill Certificate Type"
 
@@ -109,42 +111,64 @@ class cic_qc_cert_type(models.Model):
 
     _sql_constraints = [('uniq_cert_type', 'UNIQUE(name)', 'Certificate Type Must be Unique')]
 
-cic_qc_cert_type()
+QcCertType()
 
 
-class cic_qc_mill_cert_file(models.Model):
+class QcMillCertFile(models.Model):
     _name = 'cic.qc.mill.cert.file'
     _description = "CICON Mill Certificate file"
 
-    name = fields.Char('Page Number', size=32, required=True)
-    cert_type = fields.Many2one('cic.qc.cert.type', string="Certificate Type", required=True)
+    name = fields.Char('Certificate Number', index=True, size=32, required=True)
+    supplier_id = fields.Many2one('res.partner', domain=[('supplier', '=', True)], required=True, string= 'Supplier Id')
+    page_number = fields.Char('Page Number')
+    description = fields.Char('Description')
+    cert_type_id = fields.Many2one('cic.qc.cert.type', string="Certificate Type", required=True)
     issued_date = fields.Date('Issued Date', required=True)
     product_template = fields.Many2one('product.template', string="Product Template", required=True)
-    dia_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Diameter' )]", string='Diameter')
-    origin_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
-    length_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Length' )]",
-                                             string='Length')
-    certificates_ids = fields.One2many('cic.qc.mill.cert', 'cert_file_id', string='Certificates', required=True)
+    origin_attrib_value_id = fields.Many2one('product.attribute.value',
+                                             domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
+    certificates_ids = fields.One2many('cic.qc.mill.cert.line', 'cert_file_id', string='Certificates', required=True)
+    file_path = fields.Char('File Path ')
 
-cic_qc_mill_cert_file()
+    _sql_constraints = [('unique_name', 'UNIQUE(supplier_id,name)', 'Certificate Number must be Unique')]
 
 
-class cic_qc_mill_cert(models.Model):
-    _name = 'cic.qc.mill.cert'
-    _description = 'CICON Mill Certificates'
+QcMillCertFile()
 
-    name = fields.Char('Heat Numbers', size=64, required=True)
+
+# class QcMillHeatNumber(models.Model):
+#     _name = 'cic.qc.mill.heat.number'
+#     _description = "CICON Mill Heat Numbers"
+#
+#
+#     cert_line_id = fields.Many2one('cic.qc.mill.cert.line', string='cic.qc.mill.cert.line', ondelete='cascade')
+#     cert_file_id = fields.Many2one('cic.qc.mill.cert.file', string='Certificate File',
+#                                    related="cert_line_id.cert_file_id", readonly=True, store=False)
+#
+#     _sql_constraints = [('unique_name', 'UNIQUE(cert_line_id,name)', 'Heat Number must be Unique')]
+#
+# QcMillHeatNumber()
+
+
+class QcMillCertLine(models.Model):
+    _name = 'cic.qc.mill.cert.line'
+    _description = 'CICON Mill Certificate Line'
+    _rec_name = 'cert_file_id'
+
+    name = fields.Char("Heat Number", index=True, required=True)
     cert_file_id = fields.Many2one('cic.qc.mill.cert.file', string='Certificate File', ondelete='cascade')
-    dia_attrib_value_id = fields.Many2one('product.attribute.value', related="cert_file_id.dia_attrib_value_id", store=True ,
-                                          string='Diameter', readonly=True)
-    origin_attrib_value_id = fields.Many2one('product.attribute.value', related="cert_file_id.origin_attrib_value_id",
-                                             store=True,string='Origin', readonly=True)
-    length_attrib_value_id = fields.Many2one('product.attribute.value', related="cert_file_id.length_attrib_value_id",
-                                             store=True, string="Length", readonly=True)
+    product_template = fields.Many2one('product.template', related='cert_file_id.product_template',
+                                       string="Product Template",  store=True, readonly=True)
+    origin_attrib_value_id = fields.Many2one('product.attribute.value', related='cert_file_id.origin_attrib_value_id',
+                                             store=True, readonly=True, string='Origin')
+    dia_attrib_value_id = fields.Many2one('product.attribute.value', required=True,
+                                          domain="[('attribute_id.name','=','Diameter')]", string='Diameter')
+    length_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Length')]",
+                                             string='Length')
 
-    _sql_constraints = [('uniq_summary', 'UNIQUE(name,cert_file_id)', 'Summary Name Must be Unique')]
+    _sql_constraints = [('uniq_cert', 'UNIQUE(name,cert_file_id)', 'Summary Name Must be Unique')]
 
-cic_qc_mill_cert()
+QcMillCertLine()
 
 
 
