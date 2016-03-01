@@ -68,7 +68,8 @@ class QcCertLine(models.Model):
     qc_summary_id = fields.Many2one('cic.qc.summary', string='QC Summary', required=True, ondelete='cascade')
     dia_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Diameter' )]", string='Diameter')
     origin_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
-    certificate_ids = fields.Many2many('cic.qc.mill.cert.line',  'cert_line_id', 'cert_id', string='Heat Numbers')
+    certificate_ids = fields.Many2many('cic.qc.mill.cert.line', 'qc_summary_cert_line_mill_cert_line_rel',
+                                       'cert_line_id', 'mill_cert_id', string='Heat Numbers')
     quantity = fields.Float('Remarks', digits=(10, 3))
 
     _sql_constraints = [('uniq_line', 'UNIQUE(qc_summary_id,dia_attrib_value_id,origin_attrib_value_id)', 'Cert Line Name Must be Unique')]

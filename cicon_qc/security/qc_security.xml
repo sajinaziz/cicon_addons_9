@@ -2,6 +2,7 @@
 <openerp>
     <data noupdate="1">
 
+
         <record id="group_qc_user" model="res.groups">
             <field name="name">CICON QC User</field>
             <field name="category_id" ref="cicon_prod.module_cicon_prod"/>
