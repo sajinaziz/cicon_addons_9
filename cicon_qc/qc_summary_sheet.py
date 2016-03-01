@@ -10,7 +10,7 @@ class QcSummary(models.Model):
     @api.depends('dn_line_ids', 'certificate_line_ids')
     def _get_order_codes(self):
         self.order_codes = self.env['cic.qc.order.code']
-        self.heat_numbers = self.env['cic.qc.mill.cert']
+        self.heat_numbers = self.env['cic.qc.mill.cert.line']
         _code_ids = []
         _mill_ids = []
         for d in self.dn_line_ids:
@@ -28,7 +28,7 @@ class QcSummary(models.Model):
         return [('id', 'in', _summary_ids)]
 
     def _search_heat_number(self, operator, value):
-        _heat_nos = self.env['cic.qc.mill.cert'].search([('name', operator, value)])
+        _heat_nos = self.env['cic.qc.mill.cert.line'].search([('name', operator, value)])
         _heat_ids = [o.id for o in _heat_nos]
         _cert_line_ids = self.env['cic.qc.cert.line'].search([('certificate_ids', 'in', _heat_ids)])
         _summary_ids = [s.qc_summary_id.id for s in _cert_line_ids]
@@ -44,7 +44,7 @@ class QcSummary(models.Model):
     wb_ticket = fields.Integer('Weigh Bridge')
     loading_list = fields.Boolean('Loading List')
     order_codes = fields.Many2many('cic.qc.order.code', compute=_get_order_codes, search=_search_order_code, store=False, string='Order Codes', readonly=True)
-    heat_numbers = fields.Many2many('cic.qc.mill.cert', compute=_get_order_codes, search=_search_heat_number, store=False, string='Heat Numbers', readonly=True)
+    heat_numbers = fields.Many2many('cic.qc.mill.cert.line', compute=_get_order_codes, search=_search_heat_number, store=False, string='Heat Numbers', readonly=True)
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id ,required=True)
 
     _sql_constraints = [('uniq_summary', 'UNIQUE(name)', 'Summary Name Must be Unique')]
@@ -65,17 +65,15 @@ class QcCertLine(models.Model):
     _name = 'cic.qc.cert.line'
     _description = 'CICON Certificates Note'
 
-    qc_summary_id = fields.Many2one('cic.qc.summary',string='QC Summary',required=True, ondelete='cascade')
+    qc_summary_id = fields.Many2one('cic.qc.summary', string='QC Summary', required=True, ondelete='cascade')
     dia_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Diameter' )]", string='Diameter')
     origin_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
-    certificate_ids = fields.Many2many('cic.qc.mill.cert', 'cert_line_id', 'cert_id', string='Heat Numbers')
-    quantity = fields.Float('Remarks', digits=(10,3))
+    certificate_ids = fields.Many2many('cic.qc.mill.cert.line',  'cert_line_id', 'cert_id', string='Heat Numbers')
+    quantity = fields.Float('Remarks', digits=(10, 3))
 
     _sql_constraints = [('uniq_line', 'UNIQUE(qc_summary_id,dia_attrib_value_id,origin_attrib_value_id)', 'Cert Line Name Must be Unique')]
 
 QcCertLine()
-
-
 
 
 class QcDnLine(models.Model):
@@ -161,7 +159,7 @@ class QcMillCertLine(models.Model):
                                        string="Product Template",  store=True, readonly=True)
     origin_attrib_value_id = fields.Many2one('product.attribute.value', related='cert_file_id.origin_attrib_value_id',
                                              store=True, readonly=True, string='Origin')
-    dia_attrib_value_id = fields.Many2one('product.attribute.value', required=True,
+    dia_attrib_value_id = fields.Many2one('product.attribute.value',
                                           domain="[('attribute_id.name','=','Diameter')]", string='Diameter')
     length_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Length')]",
                                              string='Length')

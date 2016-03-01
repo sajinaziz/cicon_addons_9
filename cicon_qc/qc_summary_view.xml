@@ -26,7 +26,7 @@
 				<tree string="Mill Certificates" editable="bottom">
                     <field name="dia_attrib_value_id" options="{'no_create':True,'no_open':True}" />
                     <field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True}"/>
-                    <field name="certificate_ids" widget="many2many_tags"/>
+                    <field name="certificate_ids" widget="many2many_tags" />
                     <field name="quantity" />
 				</tree>
 			</field>
@@ -121,6 +121,20 @@
 			<!--</field>-->
 		<!--</record>-->
 
+        <record model="ir.ui.view" id="cic_mill_cert_line_form">
+            <field name="name">cic.mill.cert.line.form</field>
+            <field name="model">cic.qc.mill.cert.line</field>
+            <field name="arch" type="xml" >
+                <form string="QC Mill Certificate Line">
+                    <group>
+                        <field name="name"/>
+                        <field name="dia_attrib_value_id"/>
+                        <field name="origin_attrib_value_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_cic_qc_summary">
             <field name="name" >QC Summary Sheet</field>
             <field name="res_model">cic.qc.summary</field>
@@ -176,7 +190,7 @@
                                 <field name="certificates_ids" >
                                     <tree editable="bottom">
                                         <field name="name"/>
-                                        <field name="dia_attrib_value_id" />
+                                        <field name="dia_attrib_value_id" required="True" />
                                         <field name="length_attrib_value_id"/>
                                     </tree>
                                 </field>
