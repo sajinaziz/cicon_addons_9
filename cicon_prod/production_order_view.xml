@@ -280,14 +280,42 @@
         </record>
 
 
+          <record model="ir.ui.view" id="cicon_prod_order_plan_tree_view">
+			<field name="name">cicon.prod.order.plan.tree</field>
+			<field name="model">cicon.prod.order</field>
+            <field name="priority" eval="99"/>
+			<field name="arch" type="xml">
+                <tree string="Production Orders">
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="customer_order_id"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="remarks"/>
+                    <field name="required_date"/>
+                    <field name="template_ids"/>
+                    <field name="total_tonnage" sum="Total"/>
+                    <field name="plan_id"/>
+                    <field name="state"/>
+
+                    <!--<button name="set_deliver" states="pending,progress,hold" confirm="Confirm  Delivered ?" string="Delivered" type="object"  icon="gtk-redo" groups="cicon_prod.group_prod_delivery_user"/>-->
+                </tree>
+			</field>
+        </record>
+
+
+
        <record model="ir.actions.act_window" id="action_cicon_prod_plan">
             <field name="name" >Production Plan</field>
             <field name="res_model">cicon.prod.plan</field>
+           <field name="view_id" ref=""/>
+
        </record>
 
             <record model="ir.actions.act_window" id="action_cicon_prod_order_planning">
-            <field name="name" >Order Planning</field>
+            <field name="name" >Production Planning</field>
             <field name="res_model">cicon.prod.order</field>
+                <field name="view_id" ref="cicon_prod_order_plan_tree_view"/>
        </record>
 
 
@@ -298,7 +326,7 @@
         <menuitem name="Planning"  parent="cicon_menu_prod_order" id="cicon_menu_planning" sequence="30"/>
         <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_plan" action="action_cicon_prod_plan" sequence="10"/>
         <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20"/>
-
+        <menuitem  id="cicon_menu_to_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20" groups="cicon_prod.group_prod_manager"/>
 
     </data>
 </openerp>

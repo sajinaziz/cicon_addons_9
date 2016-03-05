@@ -23,6 +23,12 @@
         </record>
 
 
+          <record id="group_prod_manager" model="res.groups">
+            <field name="name">Manager </field>
+             <field name="category_id" ref="module_cicon_prod"/>
+            <field name="implied_ids" eval="[(4, ref('cicon_prod.group_prod_admin'))]"/>
+        </record>
+
 
     </data>
 </openerp>

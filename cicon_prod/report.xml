@@ -40,6 +40,16 @@
         />
 
 
+        <report
+            id="report_prod_plan"
+            string="Production Plan"
+            model="cicon.prod.plan"
+            report_type="qweb-pdf"
+            file="cicon_prod.prod_plan_report"
+            name="cicon_prod.cic_prod_plan_report_template"
+        />
+
+
 
         <!--<report-->
             <!--id="report_steel_trip_summary_qweb"-->
