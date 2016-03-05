@@ -17,6 +17,7 @@
                             <field name="description"/>
                             <field name="document_status"/>
                             <field name="rev_no" invisible="1"/>
+                            <field name="reason_id" options="{'no_create':True,'no_open':True}" />
                             <field name="draft_time"/>
                         </tree>
                     </field>

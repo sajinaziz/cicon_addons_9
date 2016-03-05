@@ -72,6 +72,7 @@ class SubmittalDocumentRevision(models.Model):
     date = fields.Date('Revised Date')
     created_by = fields.Many2one('res.users', 'Revision Done By')
     state = fields.Selection(related='revision_id.state', store=True, string="State")
+    reason_id = fields.Many2one('tech.submittal.revision.reason', string='Reason')
 
     _order = "name,revision_id"
 

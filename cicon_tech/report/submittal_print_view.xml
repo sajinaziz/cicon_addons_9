@@ -149,7 +149,7 @@
                         <tr t-att-class=" 'warning' if d.parent_id in o.revised_document_ids else '' ">
                         <td class="text-center"> <span t-esc="d_index +1"/> </td>
                         <td> <span t-field="d.name"/> </td>
-                        <td> <span t-field="d.document_status"/>  </td>
+                        <td> <span t-field="d.document_status"/> </td>
                         <td> <span t-field="d.description" /> </td>
                         </tr>
                     </t>

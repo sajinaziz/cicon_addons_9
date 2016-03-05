@@ -72,7 +72,7 @@
                         <!--<field name="signed_by" domain="[('sign_authority','=',True),('company_id','child_of',[company_id])]"/>-->
                         <!--<field name="signed_by" domain="[('id','in',allowed_signing_ids[0][2])]"  />-->
                         <field name="signed_by" options="{'no_open':True,'no_create':True}"/>
-                        <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>
+                        <!--<field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>-->
                         <!--<field name="allowed_signing_ids" invisible="1" />-->
                     </group>
                     <!--<group>-->

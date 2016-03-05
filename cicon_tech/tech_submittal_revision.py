@@ -97,7 +97,7 @@ class SubmittalRevision(models.Model):
     # Show Delivery Quantity Warning in case if more than the BBS
     qty_warning = fields.Char(type='char', string="Warning", readonly=True)
     total_draft_time = fields.Float(compute=total_delivery, string="Drafting Time", store=False)
-    reason_id = fields.Many2one('tech.submittal.revision.reason', string="Reason")
+    # reason_id = fields.Many2one('tech.submittal.revision.reason', string="Reason")
 
     _order = 'submittal_date desc'
 

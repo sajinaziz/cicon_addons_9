@@ -34,16 +34,17 @@
                                 <field name="description"/>
                                 <field name="document_status"/>
                                 <field name="date"/>
-                                <field name="created_by"/>
+                                <field name="created_by" options="{'no_create':True,'no_open':True}"/>
                             </group>
                             <group>
-                                <field name="submittal_id"  options="{'no_create':True,'no_open':True}" />
-                                <field name="document_id"  options="{'no_create':True,'no_open':True}"/>
-                                <field name="parent_id"   options="{'no_create':True}" />
-                                <field name="rev_no"/>
+                                <field name="submittal_id"  options="{'no_create':True,'no_open':True}" invisible="1" />
+                                <field name="document_id"  options="{'no_create':True,'no_open':True}" invisible="1" />
+                                <field name="parent_id"   options="{'no_create':True}"  invisible="1" />
+                                <field name="rev_no" />
                                 <field name="draft_time"/>
-                                <field name="is_revised"/>
-                                <field name="revision_id"   options="{'no_create':True,'no_open':True}"/>
+                                <field name="is_revised" invisible="1"  />
+                                <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('rev_no','=',0)]}" />
+                                <field name="revision_id"   options="{'no_create':True,'no_open':True}" invisible="1"  />
                             </group>
                         </group>
                     </sheet>
