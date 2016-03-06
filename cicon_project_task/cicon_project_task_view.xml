@@ -28,5 +28,16 @@
             </field>
          </record>
 
+          <record model="ir.ui.view" id="project_issue_form_view_extend">
+            <field name="name">Project Issue Tracker Form Extend</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='task_id']" position="attributes">
+                    <attribute name="groups">project.group_project_user</attribute>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

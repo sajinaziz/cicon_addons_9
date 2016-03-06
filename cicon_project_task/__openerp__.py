@@ -5,7 +5,7 @@
     'category': 'Others',
     'description': """   """,
     'website': 'http://www.cicon.ae',
-    'depends': ['project'],
+    'depends': ['project_issue'],
     'data': ['cicon_project_task_view.xml'],
     # 'data': 'cicon_project_task_view.xml',
     'test': [],
