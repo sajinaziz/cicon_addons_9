@@ -121,12 +121,33 @@ class QcMillCertFile(models.Model):
     @api.depends('certificates_ids')
     def _get_default_val(self):
         if self.certificates_ids:
-            _line = [x for x in self.certificates_ids]
-            self.default_dia_val = _line[0].dia_attrib_value_id
-            self.default_length_val = _line[0].length_attrib_value_id
+            self.default_dia_val = self.certificates_ids[0].dia_attrib_value_id
+            self.default_length_val = self.certificates_ids[0].length_attrib_value_id
+
+    @api.multi
+    def _get_dia(self):
+        for rec in self:
+            if rec.certificates_ids:
+                rec.dia_ids = rec.certificates_ids.mapped('dia_attrib_value_id')
+                rec.length_ids = rec.certificates_ids.mapped('length_attrib_value_id')
+
+    def _search_dia(self, operator, value):
+        _cert_lines = self.env['cic.qc.mill.cert.line'].search([('dia_attrib_value_id', operator, value)])
+        _cert_file_ids = _cert_lines.mapped('cert_file_id')
+        return [('id', 'in', _cert_file_ids._ids)]
+
+    def _search_length(self, operator, value):
+        _cert_lines = self.env['cic.qc.mill.cert.line'].search([('length_attrib_value_id', operator, value)])
+        _cert_file_ids = _cert_lines.mapped('cert_file_id')
+        return [('id', 'in', _cert_file_ids._ids)]
+
+    def _search_heat_no(self, operator, value):
+        _cert_lines = self.env['cic.qc.mill.cert.line'].search([('name', operator, value)])
+        _cert_file_ids = _cert_lines.mapped('cert_file_id')
+        return [('id', 'in', _cert_file_ids._ids)]
 
     name = fields.Char('Certificate Number', index=True, size=32, required=True)
-    supplier_id = fields.Many2one('res.partner', domain=[('supplier', '=', True)], required=True, string= 'Supplier')
+    supplier_id = fields.Many2one('res.partner', domain=[('supplier', '=', True)], required=True, string='Supplier')
     page_number = fields.Char('Page Number')
     description = fields.Char('Description')
     cert_type_id = fields.Many2one('cic.qc.cert.type', string="Certificate Type", required=True)
@@ -134,10 +155,16 @@ class QcMillCertFile(models.Model):
     product_template = fields.Many2one('product.template', string="Product Template", required=True)
     origin_attrib_value_id = fields.Many2one('product.attribute.value',
                                              domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
-    certificates_ids = fields.One2many('cic.qc.mill.cert.line', 'cert_file_id', string='Certificates', required=True)
+    certificates_ids = fields.One2many('cic.qc.mill.cert.line', 'cert_file_id', string='Certificates',
+                                       search=_search_heat_no, required=True)
     file_path = fields.Char('File Path ')
     default_dia_val = fields.Many2one('product.attribute.value', string="Default Dia Value", compute=_get_default_val)
-    default_length_val = fields.Many2one('product.attribute.value', string="Default Length Value", compute=_get_default_val)
+    default_length_val = fields.Many2one('product.attribute.value', string="Default Length Value",
+                                         compute=_get_default_val)
+    dia_ids = fields.Many2many('product.attribute.value', string="Diameter", readonly=True,
+                               compute=_get_dia, search=_search_dia)
+    length_ids = fields.Many2many('product.attribute.value', string="Length", readonly=True,
+                                  compute=_get_dia, search=_search_length)
 
     _sql_constraints = [('unique_name', 'UNIQUE(supplier_id,name)', 'Certificate Number must be Unique')]
 

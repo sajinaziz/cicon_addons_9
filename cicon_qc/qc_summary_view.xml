@@ -121,19 +121,19 @@
 			<!--</field>-->
 		<!--</record>-->
 
-        <record model="ir.ui.view" id="cic_mill_cert_line_form">
-            <field name="name">cic.mill.cert.line.form</field>
-            <field name="model">cic.qc.mill.cert.line</field>
-            <field name="arch" type="xml" >
-                <form string="QC Mill Certificate Line">
-                    <group>
-                        <field name="name"/>
-                        <field name="dia_attrib_value_id"/>
-                        <field name="origin_attrib_value_id"/>
-                    </group>
-                </form>
-            </field>
-        </record>
+        <!--<record model="ir.ui.view" id="cic_mill_cert_line_form">-->
+            <!--<field name="name">cic.mill.cert.line.form</field>-->
+            <!--<field name="model">cic.qc.mill.cert.line</field>-->
+            <!--<field name="arch" type="xml" >-->
+                <!--<form string="QC Mill Certificate Line">-->
+                    <!--<group>-->
+                        <!--<field name="name"/>-->
+                        <!--<field name="dia_attrib_value_id"/>-->
+                        <!--<field name="origin_attrib_value_id"/>-->
+                    <!--</group>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
 
         <record model="ir.actions.act_window" id="action_cic_qc_summary">
             <field name="name" >QC Summary Sheet</field>
@@ -158,10 +158,29 @@
                     <field name="name" />
                     <field name="cert_type_id"/>
                     <field name="issued_date"/>
+                    <field name="dia_ids"/>
+                    <field name="length_ids"/>
+
 
 				</tree>
 			</field>
 		</record>
+
+
+         <record model="ir.ui.view" id="cic_qc_cert_search">
+			<field name="name">cic.qc.mill.cert.file.search</field>
+			<field name="model">cic.qc.mill.cert.file</field>
+			<field name="arch" type="xml" >
+                <search string="Mill Certificates" >
+                    <field name="name"/>
+                    <field name="dia_ids" />
+                    <field name="length_ids" />
+                    <field name="product_template" widget="selection"/>
+                    <field name="supplier_id" widget="selection"/>
+                    <field name="certificates_ids" />
+                </search>
+			</field>
+        </record>
 
 
          <record model="ir.ui.view" id="cic_qc_mill_cert_file_form">
@@ -210,13 +229,48 @@
 			<field name="name">cic.qc.mill.cert.tree</field>
 			<field name="model">cic.qc.mill.cert.line</field>
 			<field name="arch" type="xml" >
-				<tree string="Mill Certificate File" create="false" edit="false">
+				<tree string="Mill Certificate File" create="false">
                     <field name="name"/>
                     <field name="cert_file_id"/>
                     <field name="dia_attrib_value_id"/>
                     <field name="origin_attrib_value_id"/>
                     <field name="length_attrib_value_id"/>
 				</tree>
+			</field>
+		</record>
+
+
+
+         <record model="ir.ui.view" id="cic_qc_mill_cert_line_search">
+			<field name="name">cic.qc.mill.cert.line.search</field>
+			<field name="model">cic.qc.mill.cert.line</field>
+			<field name="arch" type="xml" >
+                <search string="Mill Certificates" >
+                    <field name="name"/>
+                    <field name="cert_file_id" widget="selection"/>
+                    <field name="dia_attrib_value_id" />
+                    <field name="origin_attrib_value_id"/>
+                    <field name="length_attrib_value_id"/>
+                </search>
+			</field>
+        </record>
+
+
+           <record model="ir.ui.view" id="cic_qc_mill_cert_line_form">
+			<field name="name">cic.qc.mill.cert.line.form</field>
+			<field name="model">cic.qc.mill.cert.line</field>
+			<field name="arch" type="xml" >
+				<form string="Mill Certificate File" create="false">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="cert_file_id" options="{'no_create':True}"/>
+                            <field name="dia_attrib_value_id" options="{'no_create':True,'no_open':True }" />
+                            <field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True }"/>
+                            <field name="length_attrib_value_id" options="{'no_create':True,'no_open':True }"/>
+                       </group>
+                    </sheet>
+				</form>
 			</field>
 		</record>
 
