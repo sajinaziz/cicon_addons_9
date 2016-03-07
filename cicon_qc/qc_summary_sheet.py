@@ -117,8 +117,16 @@ class QcMillCertFile(models.Model):
     _name = 'cic.qc.mill.cert.file'
     _description = "CICON Mill Certificate file"
 
+    @api.one
+    @api.depends('certificates_ids')
+    def _get_default_val(self):
+        if self.certificates_ids:
+            _line = [x for x in self.certificates_ids]
+            self.default_dia_val = _line[0].dia_attrib_value_id
+            self.default_length_val = _line[0].length_attrib_value_id
+
     name = fields.Char('Certificate Number', index=True, size=32, required=True)
-    supplier_id = fields.Many2one('res.partner', domain=[('supplier', '=', True)], required=True, string= 'Supplier Id')
+    supplier_id = fields.Many2one('res.partner', domain=[('supplier', '=', True)], required=True, string= 'Supplier')
     page_number = fields.Char('Page Number')
     description = fields.Char('Description')
     cert_type_id = fields.Many2one('cic.qc.cert.type', string="Certificate Type", required=True)
@@ -128,6 +136,8 @@ class QcMillCertFile(models.Model):
                                              domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
     certificates_ids = fields.One2many('cic.qc.mill.cert.line', 'cert_file_id', string='Certificates', required=True)
     file_path = fields.Char('File Path ')
+    default_dia_val = fields.Many2one('product.attribute.value', string="Default Dia Value", compute=_get_default_val)
+    default_length_val = fields.Many2one('product.attribute.value', string="Default Length Value", compute=_get_default_val)
 
     _sql_constraints = [('unique_name', 'UNIQUE(supplier_id,name)', 'Certificate Number must be Unique')]
 
@@ -168,6 +178,7 @@ class QcMillCertLine(models.Model):
     _sql_constraints = [('uniq_cert', 'UNIQUE(name,cert_file_id)', 'Summary Name Must be Unique')]
 
 QcMillCertLine()
+
 
 
 
