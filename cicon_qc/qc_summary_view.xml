@@ -160,8 +160,6 @@
                     <field name="issued_date"/>
                     <field name="dia_ids"/>
                     <field name="length_ids"/>
-
-
 				</tree>
 			</field>
 		</record>
@@ -177,7 +175,7 @@
                     <field name="length_ids" />
                     <field name="product_template" widget="selection"/>
                     <field name="supplier_id" widget="selection"/>
-                    <field name="certificates_ids" />
+                    <field name="heat_nos" />
                 </search>
 			</field>
         </record>
