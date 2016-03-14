@@ -117,6 +117,10 @@ class CmmsJobOrder(models.Model):
         self.job_order_code_id.write({'cancelled': False, 'created': True})
         return res
 
+    @api.multi
+    def print_job_order(self):
+        self.ensure_one()
+        return self.env['report'].get_action(self, 'cmms.report_job_order_cmms')
 
 CmmsJobOrder()
 

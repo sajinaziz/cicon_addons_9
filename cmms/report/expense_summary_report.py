@@ -27,9 +27,6 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
         self._inv_lines = self.env['cmms.store.invoice.line'].search([('invoice_date', '>=', _start_date),
                                                                  ('invoice_date', '<=', _end_date)])
         _types = self._inv_lines.mapped('machine_id.type_id')
-        # _categs = _inv_lines.filtered(lambda r: r.machine_id.type_id == _type).mapped('machine_id.category_id')
-        # _machines = _inv_lines.filtered(lambda r: r.machine_id.category_id == _categ and r.machine_id.type_id == _type).mapped('machine_id')
-        # _invoices = _inv_lines.filtered(lambda r: r.machine_id == _machine)
         return _types
 
     def _get_categories(self, _type):

@@ -9,6 +9,7 @@ class CmmsCommonReportWizard(models.TransientModel):
     end_date = fields.Date('End Date', required=True)
     report_list = fields.Selection([('expense_summary', 'Expense Summary'),
                                    ('expense_detailed', 'Expense Detailed')], string='Report', required=True)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
 
     @api.multi
     def show_report(self):
@@ -17,4 +18,5 @@ class CmmsCommonReportWizard(models.TransientModel):
         ctx['from_date'] = self.start_date
         ctx['to_date'] = self.end_date
         ctx['heading'] = self.report_list
+        ctx['company_id'] = self.company_id
         return self.with_context(ctx).env['report'].get_action(self, report_name='cmms.cmms_inventory_expense_report_summary', data={})

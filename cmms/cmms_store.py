@@ -142,6 +142,7 @@ class CmmsStoreInvoiceLine(models.Model):
     job_code = fields.Char('Job Code', compute=_set_job_code)
     job_order_id = fields.Many2one('cmms.job.order', string="Job order", compute=_set_job_order, store=True)
     machine_id = fields.Many2one('cmms.machine', related='job_order_id.machine_id', string="Machine", store=True)
+    company_id = fields.Many2one('res.company', "Company", related="invoice_id.company_id", store=True)
     spare_part_type_id = fields.Many2one('cmms.spare.part.type', string="Part Type")
     parent_product_name = fields.Char('Parent Product')
 
