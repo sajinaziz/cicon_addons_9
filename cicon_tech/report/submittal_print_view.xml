@@ -142,6 +142,9 @@
                     <th> Drawing Number </th>
                     <th> Status </th>
                     <th> Drawing Title </th>
+                    <t t-if="o.show_reason">
+                        <th> Reason </th>
+                    </t>
                  </thead>
                  <tbody>
                     <t t-foreach="o.document_ids" t-as="d" >
@@ -151,10 +154,44 @@
                         <td> <span t-field="d.name"/> </td>
                         <td> <span t-field="d.document_status"/> </td>
                         <td> <span t-field="d.description" /> </td>
+                        <t t-if="o.show_reason">
+                            <th> <span t-field="d.reason_id.name"/> </th>
+                        </t>
                         </tr>
                     </t>
                  </tbody>
              </table>
+            <t t-if="o.revised_document_ids">
+
+                <table class="table table-bordered">
+                    <caption> Revised Documents</caption>
+                <thead>
+                    <th> SL No. </th>
+                    <th> Drawing Number </th>
+                    <th> Status </th>
+                    <th> Drawing Title </th>
+                    <t t-if="o.show_reason">
+                        <th> Reason </th>
+                    </t>
+                 </thead>
+                 <tbody>
+                    <t t-foreach="o.revised_document_ids" t-as="d" >
+                        <!--<tr t-att-class=" 'info' if o.revision_number &lt; d.rev_no else '' ">-->
+                        <tr t-att-class=" 'warning' if d.parent_id in o.revised_document_ids else '' ">
+                        <td class="text-center"> <span t-esc="d_index +1"/> </td>
+                        <td> <span t-field="d.name"/> </td>
+                        <td> <span t-field="d.document_status"/> </td>
+                        <td> <span t-field="d.description" /> </td>
+                        <t t-if="o.show_reason">
+                            <th> <span t-field="d.reason_id.name"/> </th>
+                        </t>
+                        </tr>
+                    </t>
+                 </tbody>
+             </table>
+            </t>
+
+
             <div class="row">
             <div class="col-xs-12">
                  This is for your kind information and necessary action.

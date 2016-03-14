@@ -31,9 +31,6 @@
 
 
 
-
-
-
         <record model="ir.actions.act_window" id="action_res_partners_tech">
             <field name="name" >Customers </field>
             <field name="res_model">res.partner</field>

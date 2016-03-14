@@ -81,6 +81,9 @@
                         <th  style="border: 1px solid;height: 25px;"> Drawing Number </th>
                         <th  style="border: 1px solid;height: 25px;"> Status </th>
                         <th  style="border: 1px solid;height: 25px;"> Drawing Title </th>
+                        %if object.show_reason:
+                        <th  style="border: 1px solid;height: 25px;"> Reason </th>
+                        %endif
                     </thead>
                     <tbody>
                         % for d in object.document_ids:
@@ -89,6 +92,9 @@
                             <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">   ${d.name or ''} </td>
                             <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.document_status or ''}  </td>
                             <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.description or ''} </td>
+                            %if object.show_reason:
+                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.reason_id.name or ''} </td>
+                            %endif
                         </tr>
                         % endfor
                     </tbody>

@@ -80,7 +80,10 @@ class SubmittalRevision(models.Model):
                                    states={'new': [('readonly', False)]}, domain=[('is_revised', '=', False)])
     # Revised Document list filtered with Domain
     revised_document_ids = fields.One2many('tech.submittal.document.revision', 'revision_id',
-                                           string='Documents', readonly=True, domain=[('is_revised', '=', True)])
+                                           string='Revised Documents', readonly=True, domain=[('is_revised', '=', True)])
+    # Full Document List with out filter
+    all_document_ids = fields.One2many('tech.submittal.document.revision', 'revision_id',
+                                           string='All Documents', readonly=True)
     # Delivered Information
     delivery_ids = fields.One2many('tech.delivery.details', 'revision_id',
                                    "Deliveries", readonly=True, states={'submitted': [('readonly', False)]})
@@ -96,8 +99,14 @@ class SubmittalRevision(models.Model):
                                            , readonly=True, states={'new': [('readonly', False)]})
     # Show Delivery Quantity Warning in case if more than the BBS
     qty_warning = fields.Char(type='char', string="Warning", readonly=True)
+    # To calculate total Draft time
     total_draft_time = fields.Float(compute=total_delivery, string="Drafting Time", store=False)
-    # reason_id = fields.Many2one('tech.submittal.revision.reason', string="Reason")
+    # Reason for Revision
+    reason_id = fields.Many2one('tech.submittal.revision.reason', string="Reason",
+                               readonly=True,states={'new': [('readonly', False)]}, help="Common Reason for revision")
+
+    # Show reason on Submittal Sheet Print
+    show_reason = fields.Boolean('Print Reason', default=False)
 
     _order = 'submittal_date desc'
 
@@ -293,6 +302,12 @@ class SubmittalRevision(models.Model):
             self.name = self.submittal_id.name  # Fields in tech.submittal
             self.partner_id = self.submittal_id.partner_id.id   # Fields in tech.submittal
             self.job_site_id = self.submittal_id.job_site_id.id # Fields in tech.submittal
+
+    @api.onchange('reason_id')
+    def onchange_reason(self):
+        if self.reason_id:
+            for d in self.document_ids:
+                d.reason_id = self.reason_id
 
     @api.multi
     def print_revision(self):

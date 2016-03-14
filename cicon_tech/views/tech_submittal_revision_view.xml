@@ -72,7 +72,8 @@
                         <!--<field name="signed_by" domain="[('sign_authority','=',True),('company_id','child_of',[company_id])]"/>-->
                         <!--<field name="signed_by" domain="[('id','in',allowed_signing_ids[0][2])]"  />-->
                         <field name="signed_by" options="{'no_open':True,'no_create':True}"/>
-                        <!--<field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>-->
+                        <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>
+                        <field name="show_reason"  attrs="{'invisible':[('revision_number','=',0)]}"/>
                         <!--<field name="allowed_signing_ids" invisible="1" />-->
                     </group>
                     <!--<group>-->
@@ -92,11 +93,12 @@
                                 <field name="description"/>
                                 <field name="document_status"/>
                                 <field name="rev_no"  />
+                                <field name="reason_id" />
                                 <field name="draft_time" widget="float_time" invisible="1"/>
-                               <field name="is_revised" invisible="1"/>
-                               <field name="created_by" invisible="1"/>
-                               <field name="parent_id" invisible="1"/>
-                               <field name="date" invisible="1"/>
+                                <field name="is_revised" invisible="1"/>
+                                <field name="created_by" invisible="1"/>
+                                <field name="parent_id" invisible="1"/>
+                                <field name="date" invisible="1"/>
                             </tree>
                         </field>
                         </page>
@@ -108,19 +110,34 @@
                                 <field name="description"/>
                                 <field name="document_status"/>
                                 <field name="rev_no"  />
+                                <field name="reason_id" />
                                 <field name="draft_time" widget="float_time" invisible="1"/>
-                               <field name="is_revised" invisible="1"/>
-                               <field name="created_by" invisible="1"/>
-                               <field name="parent_id" invisible="1"/>
-                               <field name="date" invisible="1"/>
+                                <field name="is_revised" invisible="1"/>
+                                <field name="created_by" invisible="1"/>
+                                <field name="parent_id" invisible="1"/>
+                                <field name="date" invisible="1"/>
                             </tree>
                         </field>
                         </page>
+                        <page string="All Documents">
+                            <field name="all_document_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="document_type_id"/>
+                                    <field name="description"/>
+                                    <field name="document_status"/>
+                                    <field name="rev_no"  />
+                                    <field name="reason_id" />
+                                    <field name="draft_time" widget="float_time" invisible="1"/>
+                                    <field name="is_revised" invisible="1"/>
+                                    <field name="created_by" invisible="1"/>
+                                    <field name="parent_id" invisible="1"/>
+                                    <field name="date" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
-
                     <group>
-
-
                     </group>
                     <div style="color:red">
                         <field name="qty_warning"/>
@@ -207,8 +224,6 @@
             <field name="arch" type="xml">
                 <gantt  date_start="submittal_date"
                        string="Submittal">
-
-
                 </gantt>
             </field>
         </record>
