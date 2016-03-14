@@ -28,6 +28,8 @@
             </field>
          </record>
 
+
+        <!--Show Task In Issue for normal user-->
           <record model="ir.ui.view" id="project_issue_form_view_extend">
             <field name="name">Project Issue Tracker Form Extend</field>
             <field name="model">project.issue</field>
