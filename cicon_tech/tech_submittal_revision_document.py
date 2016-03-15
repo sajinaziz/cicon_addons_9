@@ -28,10 +28,10 @@ class SubmittalRevisionDocument(models.Model):
                 Create need to override to block creation of Document on new revision
                   if name already available then it should return id of existing record on current revision.
         """
-        print vals.get('document_type_id')
+        #print vals.get('document_type_id')
         _rec = self.search([('name', '=', vals.get('name')),
                             ('submittal_id', '=', vals.get('submittal_id')),
-                            ('document_type_id','=', vals.get('document_type_id'))], limit=1)
+                            ('document_type_id', '=', vals.get('document_type_id'))], limit=1)
         if _rec:
             return _rec
         else:

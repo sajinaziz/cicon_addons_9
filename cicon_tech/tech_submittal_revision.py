@@ -307,7 +307,8 @@ class SubmittalRevision(models.Model):
     def onchange_reason(self):
         if self.reason_id:
             for d in self.document_ids:
-                d.reason_id = self.reason_id
+                if not d.reason_id:
+                    d.reason_id = self.reason_id
 
     @api.multi
     def print_revision(self):
