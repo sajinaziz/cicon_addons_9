@@ -26,7 +26,7 @@
             </div>
             <div class="col-xs-8">
                 <h3 class="text-center cicon-head-font">
-                     <span t-field="company.name"/>
+                     <span t-field="company.company_registry"/>
                 </h3>
                 <p class="text-center">
                     <strong>
