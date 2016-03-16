@@ -200,7 +200,7 @@
                  Thanks &amp; Regards,
             </div>
             <div class="col-xs-12 mt8">
-                For <strong> <span t-field="o.company_id.name" /> </strong>
+                For <strong> <span t-field="o.company_id.company_registry" /> </strong>
             </div>
             </div>
            <div class="row">
