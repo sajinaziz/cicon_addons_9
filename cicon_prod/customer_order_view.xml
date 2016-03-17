@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem name="Production"  id="cicon_menu" sequence="50" />
+        <menuitem name="Production"  id="cicon_menu" sequence="50" groups="cicon_prod.group_prod_user" />
         <menuitem name="Call Off Order"  parent="cicon_menu" id="cicon_menu_order" sequence="1"  groups="cicon_prod.group_prod_user" />
 
         <record model="ir.ui.view" id="cicon_customer_order_tree_view">

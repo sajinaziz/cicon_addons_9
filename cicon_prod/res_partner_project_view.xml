@@ -4,16 +4,16 @@
 
 
 
-           <record id="view_company_form_extn_prod" model="ir.ui.view">
-            <field name="name">res.company.form.extn.prod</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//form/sheet/div" position="inside">
-                    <field name ="logo2" widget="image"  class="oe_avatar oe_right"/>
-                </xpath>
-            </field>
-        </record>
+           <!--<record id="view_company_form_extn_prod" model="ir.ui.view">-->
+            <!--<field name="name">res.company.form.extn.prod</field>-->
+            <!--<field name="model">res.company</field>-->
+            <!--<field name="inherit_id" ref="base.view_company_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//form/sheet/div" position="inside">-->
+                    <!--<field name ="logo2" widget="image"  class="oe_avatar oe_right"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
 
         <record model="ir.ui.view" id="res_partner_project_tree_view">
             <field name="name">res_partner_project.tree</field>

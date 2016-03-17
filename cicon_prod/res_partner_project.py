@@ -16,9 +16,9 @@ class res_partner_project(models.Model):
 res_partner_project()
 
 
-class res_company(models.Model):
-    _inherit = 'res.company'
-
-    logo2 = fields.Binary('ISO Logo')
-
-res_company()
+# class res_company(models.Model):
+#     _inherit = 'res.company'
+#
+#     logo2 = fields.Binary('ISO Logo')
+#
+# res_company()
