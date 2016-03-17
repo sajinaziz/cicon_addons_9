@@ -250,6 +250,7 @@
                     <filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>
                 </group>
                 <field name="submittal_id" widget="selection"/>
+                <field name="partner_id" widget="selection" />
                 <field name="job_site_id" widget="selection"/>
                 <filter name="current" string="Current Submittal" domain="[('state','!=','resubmitted')]" help="New and Submitted" icon="terp-project"/>
                 <filter name="current_month" string="This Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>

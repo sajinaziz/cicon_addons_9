@@ -73,6 +73,6 @@
 
         <menuitem id="menu_submittal_register" name="Submittal Register" parent="tech_menu" sequence="70"/>
         <menuitem name="Drawing Register" action="action_drawing_register_all" id="menu_drawing_register" parent="menu_submittal_register" sequence="11"/>
-
+        <menuitem id="all_revision_menu" name="All Revisions" parent="menu_submittal_register" action="action_revision"  sequence="30"/>
     </data>
 </openerp>

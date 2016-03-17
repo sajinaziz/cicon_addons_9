@@ -6,7 +6,7 @@
             <field name="name">Submittals</field>
             <field name="res_model">tech.submittal.revision</field>
             <field name="view_mode">tree,form,calendar,pivot,graph,gantt</field>
-            <field name="domain">[('state','!=','resubmitted')]</field>
+            <field name="domain">[('state','not in', ('resubmitted','cancel'))]</field>
             <field name="context">{"search_default_current_month":1}</field>
         </record>
 
