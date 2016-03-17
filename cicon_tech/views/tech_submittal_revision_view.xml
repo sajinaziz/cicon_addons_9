@@ -2,18 +2,16 @@
 <openerp>
 <data>
 
-
-
-       <record model="ir.actions.act_window" id="action_tech_submittal_doc_action">
+    <record model="ir.actions.act_window" id="action_tech_submittal_doc_action">
             <field name="name">Submittal Documents</field>
             <field name="res_model">tech.submittal.document.revision</field>
             <field name="domain">[('is_revised','=',False),('revision_id','=', active_id)]</field>
             <field name="context">{"search_default_revision_id":active_id}</field>
-        </record>
+   </record>
 
 
 
-    <record model="ir.ui.view" id="tech_submittal_revision_form_view">
+   <record model="ir.ui.view" id="tech_submittal_revision_form_view">
         <field name="name">tech.submittal.revision.form</field>
         <field name="model">tech.submittal.revision</field>
         <field name="type">form</field>
@@ -167,7 +165,7 @@
     </record>
 
 
-    <record model="ir.ui.view" id="tech_submittal_revision_tree_view">
+   <record model="ir.ui.view" id="tech_submittal_revision_tree_view">
         <field name="name">tech.submittal.revision.tree</field>
         <field name="model">tech.submittal.revision</field>
         <field name="type">tree</field>
@@ -175,6 +173,7 @@
             <tree string="Technical Submittals">
                 <field name="submittal_id" string="Submittal" invisible="1" />
                 <field name="ref_no" string="Ref No#"/>
+                <field name="submittal_project_count" string="Count"/>
                 <field name="partner_id" string="Customer"/>
                 <field name="job_site_id" string="Project"/>
                 <field name="submittal_date" string="Submittal Date"/>
@@ -192,8 +191,7 @@
 
 
     <!--icon="terp-gtk-go-back-rtl"-->
-
-        <record model="ir.ui.view" id="tech_submittal_pivot_view">
+   <record model="ir.ui.view" id="tech_submittal_pivot_view">
             <field name="name">Technical Submittal Pivot</field>
             <field name="model">tech.submittal.revision</field>
             <field name="arch" type="xml">
@@ -203,10 +201,9 @@
                     <field name="bbs_weight"  type="measure"/>
                 </pivot>
             </field>
-        </record>
+   </record>
 
-
-      <record model="ir.ui.view" id="tech_submittal_graph_view">
+   <record model="ir.ui.view" id="tech_submittal_graph_view">
             <field name="name">Submittal Graph</field>
             <field name="model">tech.submittal.revision</field>
             <field name="arch" type="xml">
@@ -216,9 +213,9 @@
                     <field name="bbs_weight" type="measure"/>
                 </graph>
             </field>
-        </record>
+   </record>
 
-     <record id="tech_submittal_gantt_view" model="ir.ui.view">
+   <record id="tech_submittal_gantt_view" model="ir.ui.view">
             <field name="name">submittal.gantt</field>
             <field name="model">tech.submittal.revision</field>
             <field name="arch" type="xml">
@@ -226,9 +223,9 @@
                        string="Submittal">
                 </gantt>
             </field>
-        </record>
+   </record>
 
-      <record model="ir.ui.view" id="tech_submittal_calendar_view">
+   <record model="ir.ui.view" id="tech_submittal_calendar_view">
             <field name="name">Submittal Calendar</field>
             <field name="model">tech.submittal.revision</field>
             <field name="arch" type="xml">
@@ -237,7 +234,7 @@
                     <field name="job_site_id"/>
                 </calendar>
             </field>
-        </record>
+   </record>
 
 
 
@@ -255,10 +252,10 @@
                 <field name="submittal_id" widget="selection"/>
                 <field name="job_site_id" widget="selection"/>
                 <filter name="current" string="Current Submittal" domain="[('state','!=','resubmitted')]" help="New and Submitted" icon="terp-project"/>
-                <!--<filter name="current_month" string="This Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>-->
+                <filter name="current_month" string="This Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>
                 <filter name="my_submittal" string="My Submittal" domain="[('submitted_by','=',uid)]" help="My Submittal" icon="terp-project"/>
                 <separator orientation="horizontal"/>
-                <filter name="my_submittal_current_month" string="My Submittals on this Month" domain="[('submitted_by','=',uid),('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="My Submittal Current Month" icon="terp-project"/>
+                <filter name="my_submittal_current_month" string="My Submittals on this Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="My Submittal Current Month" icon="terp-project"/>
                 <field name="ref_no" string="Submittal Reference" />
                 <field name="submittal_date" filter_domain="[('submittal_date','&gt;=',self)]"/>
             </search>
@@ -278,5 +275,5 @@
     </record>
 
 
-</data>
+    </data>
 </openerp>

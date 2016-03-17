@@ -53,22 +53,61 @@
         </record>
 
 
+        <record id="submittal_revision_doc_search_form" model="ir.ui.view">
+            <field name="name">tech.submittal.document.search.form</field>
+            <field name="model">tech.submittal.document.revision</field>
+            <field name="arch" type="xml">
+                <search string="Submittal Document">
+                    <!--<group expand="0" string="Group By...">-->
+                        <!--<filter string="Submittal" name="group_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>-->
+                        <!--<filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>-->
+                        <!--<filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>-->
+                    <!--</group>-->
+                    <field name="revision_id" widget="selection"/>
+                    <filter name="current_month" string="This Month" domain="[('date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Drawing" icon="terp-project"/>
+                    <!--<filter name="my_submittal" string="My Submittal" domain="[('submitted_by','=',uid)]" help="My Submittal" icon="terp-project"/>-->
+                </search>
+            </field>
+        </record>
 
-    <record id="submittal_revision_doc_search_form" model="ir.ui.view">
-        <field name="name">tech.submittal.document.search.form</field>
-        <field name="model">tech.submittal.document.revision</field>
-        <field name="arch" type="xml">
-            <search string="Submittal Document">
-                <!--<group expand="0" string="Group By...">-->
-                    <!--<filter string="Submittal" name="group_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>-->
-                    <!--<filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>-->
-                    <!--<filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>-->
-                <!--</group>-->
-                <field name="revision_id" widget="selection"/>
-                <!--<filter name="my_submittal" string="My Submittal" domain="[('submitted_by','=',uid)]" help="My Submittal" icon="terp-project"/>-->
-            </search>
-        </field>
-    </record>
+
+        <record model="ir.ui.view" id="tech_submittal_doc_pivot_view">
+            <field name="name">tech.submittal.doc.pivot</field>
+            <field name="model">tech.submittal.document.revision</field>
+            <field name="arch" type="xml">
+              <pivot string="Document Pivot">
+                    <field name="created_by" type="row"/>
+                    <field name="rev_no" type="col"/>
+                  <!--<field name="reason_id" type="col"/>-->
+                </pivot>
+            </field>
+        </record>
+
+
+          <record model="ir.ui.view" id="tech_submittal_doc_graph_view">
+            <field name="name">tech.submittal.doc.graph</field>
+            <field name="model">tech.submittal.document.revision</field>
+            <field name="arch" type="xml">
+                <graph string="Document Graph" type="pie">
+                    <field name="reason_id" type="col"/>
+                </graph>
+
+            </field>
+        </record>
+
+
+
+         <record model="ir.actions.act_window" id="action_tech_submittal_doc_revision">
+            <field name="name">Documents</field>
+            <field name="res_model">tech.submittal.document.revision</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="domain">[('state','not in',('resubmitted','cancel'))]</field>
+             <field name="context">{"search_default_current_month":1}</field>
+        </record>
+
+
+        <menuitem  parent="tech_menu_submittal"  id="tech_menu_submittal_doc_revision_list"
+                  action="action_tech_submittal_doc_revision" sequence="50" />
 
 
 
