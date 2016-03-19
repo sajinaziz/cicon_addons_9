@@ -16,11 +16,11 @@
 
          <record id="group_tech_approval" model="res.groups">
             <field name="name">Technical / Approval </field>
-             <field name="implied_ids" eval="[(4, ref('group_tech_user'))]"/>
-             <field name="category_id" ref="module_cicon_tech"/>
+            <field name="implied_ids" eval="[(4, ref('group_tech_user'))]"/>
+            <field name="category_id" ref="module_cicon_tech"/>
         </record>
 
-          <record id="group_tech_admin" model="res.groups">
+        <record id="group_tech_admin" model="res.groups">
             <field name="name">Technical / Admin </field>
               <field name="implied_ids" eval="[(4, ref('group_tech_approval'))]"/>
               <field name="category_id" ref="module_cicon_tech"/>
