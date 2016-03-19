@@ -103,6 +103,7 @@
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="domain">[('state','not in',('resubmitted','cancel'))]</field>
              <field name="context">{"search_default_current_month":1}</field>
+             <field name="limit">20</field>
         </record>
 
 

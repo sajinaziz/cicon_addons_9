@@ -7,6 +7,7 @@
             <field name="res_model">tech.submittal.revision</field>
             <field name="view_mode">tree,form,pivot</field>
             <field name="domain">[('state','not in', ('resubmitted','cancel'))]</field>
+            <field name="limit">20</field>
             <field name="context">{"search_default_current_month":1}</field>
         </record>
 
