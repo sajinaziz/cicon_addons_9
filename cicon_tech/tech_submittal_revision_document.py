@@ -6,7 +6,7 @@ class SubmittalRevisionDocument(models.Model):
     Document Master Table
      used with class : 'tech.submittal.document.revision' as delegation inheritance
         Please refer : Inheritance and extension Section in ODOO Documentation
-    This class to keep the Master information of Document on Submittal, each new Document creates new mater entry
+    This class to keep the Master information of Document on Submittal, each new Document creates new master entry
     and there after revisions just refer to the main Document on class 'tech.submittal.document.revision'
     """
     _name = 'tech.submittal.revision.document'

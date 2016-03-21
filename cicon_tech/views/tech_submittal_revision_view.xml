@@ -36,13 +36,13 @@
                     <group>
                         <label for="partner_id"/>
                         <h2>
-                            <field name="partner_id"    domain="[('is_company','=',True),('customer','=',True)]" attrs="{'readonly':['|',('parent_id','!=',False),('state','=','submitted')]}"
-                                    options="{'always_reload': True, 'create': false, 'create_edit': false, 'm2o_dialog': false, 'no_open':True}"/>
+                            <field name="partner_id"  required="True"  domain="[('is_company','=',True),('customer','=',True)]" attrs="{'readonly':['|',('parent_id','!=',False),('state','=','submitted')]}"
+                                    options="{ 'no_create': True,  'no_open':True}"/>
                         </h2>
                         <label for='job_site_id'/>
                         <h2>
                             <field name="job_site_id" context="{'default_partner_id':partner_id}"  attrs="{'readonly':['|',('parent_id','!=',False),('state','=','submitted')]}"
-                                    options="{'always_reload': True, 'create': false, 'create_edit': false, 'm2o_dialog': false, 'no_open':True}" />
+                                    options="{ 'no_create': True,  'no_open':True}" />
                         </h2>
                     </group>
                     <group>
@@ -87,11 +87,11 @@
                             <field name="document_ids"  >
                            <tree string="Documents" editable="bottom">
                                 <field name="name"/>
-                                <field name="document_type_id"/>
+                                <field name="document_type_id" options="{'no_open':True,'no_create':True}" />
                                 <field name="description"/>
                                 <field name="document_status"/>
                                 <field name="rev_no"  />
-                                <field name="reason_id" />
+                                <field name="reason_id" options="{'no_open':True,'no_create':True}"  />
                                 <field name="draft_time" widget="float_time" invisible="1"/>
                                 <field name="is_revised" invisible="1"/>
                                 <field name="created_by" invisible="1"/>
@@ -121,7 +121,7 @@
                             <field name="all_document_ids">
                                 <tree>
                                     <field name="name"/>
-                                    <field name="document_type_id"/>
+                                    <field name="document_type_id" />
                                     <field name="description"/>
                                     <field name="document_status"/>
                                     <field name="rev_no"  />
