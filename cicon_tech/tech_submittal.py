@@ -12,7 +12,7 @@ class Submittal(models.Model):
     _description = "Technical Submittal"
 
     # unique Submittal Code generated from class 'tech.submittal.revision'
-    name = fields.Char('Submittal Ref', size=50, required=True, index=True)
+    name = fields.Char('Submittal Ref',  required=True, index=True)
     partner_id = fields.Many2one('res.partner', string="Customer", index=True)
     job_site_id = fields.Many2one('cic.job.site', "Job Site Name", required=True,
                                   domain="[('partner_id','=',partner_id)]", index=True)
