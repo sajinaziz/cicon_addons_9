@@ -188,6 +188,12 @@ class SubmittalRevision(models.Model):
         return self.write({'state': 'submitted'})
 
     @api.multi
+    def delete_revision(self):
+        """ Delete option for cancelled Revision : button access set to state cancel and admin group to avoid user"""
+        self.ensure_one()
+        return super(SubmittalRevision, self).unlink()
+
+    @api.multi
     def mark_draft(self):
         """Change Status on button Click"""
         return self.write({'state': 'new'})
