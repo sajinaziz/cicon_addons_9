@@ -12,7 +12,7 @@ class SubmittalRevisionDocument(models.Model):
     _name = 'tech.submittal.revision.document'
     _description = "Submittal Documents"
 
-    name = fields.Char('Document No', size=250, required=True)
+    name = fields.Char('Document No', size=250, required=True, index=True)
     document_type_id = fields.Many2one('tech.document_type', 'Document Types', help="Document Type : Drawing ,BBS, etc.." )
     submittal_id = fields.Many2one('tech.submittal', 'Submittal', ondelete='cascade', required=True)
     documents_revision_ids = fields.One2many('tech.submittal.document.revision', 'document_id', string="Documents")
@@ -60,8 +60,8 @@ class SubmittalDocumentRevision(models.Model):
                  }
     _description = "Submittal Documents"
 
-    document_id = fields.Many2one('tech.submittal.revision.document', string="Document", ondelete='cascade', required=True)
-    revision_id = fields.Many2one('tech.submittal.revision', 'Submittal Revisions', required=True, ondelete='cascade')
+    document_id = fields.Many2one('tech.submittal.revision.document', string="Document", index=True, ondelete='cascade', required=True)
+    revision_id = fields.Many2one('tech.submittal.revision', 'Submittal Revisions', index=True, required=True, ondelete='cascade')
     description = fields.Char('Description', size=255)
     document_status = fields.Char('Document Status', size=10)
     rev_no = fields.Integer('Revision No')
