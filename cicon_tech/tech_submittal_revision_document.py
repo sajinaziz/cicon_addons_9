@@ -12,7 +12,7 @@ class SubmittalRevisionDocument(models.Model):
     _name = 'tech.submittal.revision.document'
     _description = "Submittal Documents"
 
-    name = fields.Char('Document No', size=250, required=True, index=True)
+    name = fields.Char('Document No',  required=True, index=True)
     document_type_id = fields.Many2one('tech.document_type', 'Document Types', help="Document Type : Drawing ,BBS, etc.." )
     submittal_id = fields.Many2one('tech.submittal', 'Submittal', ondelete='cascade', required=True)
     documents_revision_ids = fields.One2many('tech.submittal.document.revision', 'document_id', string="Documents")
