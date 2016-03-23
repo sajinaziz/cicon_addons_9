@@ -56,7 +56,7 @@
                  </div>
                  <div  style="font-size: 12px; margin-top:10px">
                     <p>
-                    <strong> Subject : <u> ${object.job_site_id.name or ''} </u> </strong>
+                    <strong> Subject :  ${object.subject or ''} </strong>
                     </p>
                  </div>
                  <br/>
