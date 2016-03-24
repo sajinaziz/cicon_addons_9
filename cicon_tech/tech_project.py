@@ -6,6 +6,7 @@ class CicJobSite(models.Model):
     _name = 'cic.job.site'
     _description = "Job Site"
 
+    @api.model
     def _get_last_site_ref(self):
         """ Compute last created site Ref on field on Creation Form 'last_site_ref' """
         _job_site_id = self.search([], order='id desc', limit=1)
