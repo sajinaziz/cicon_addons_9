@@ -33,7 +33,7 @@ class CicJobSite(models.Model):
     fax = fields.Char('Fax', size=50)
     site_contact_ids = fields.One2many('tech.project.contact', 'job_site_id', "Job Site Contacts")
     last_site_ref = fields.Char(default=_get_last_site_ref, string='Previous Site Reference',
-                                readonly=True,store=False, help="Last created Site Reference")
+                                readonly=True, store=False, help="Last created Site Reference")
     submittal_count = fields.Integer(compute=_get_submittal_count, string="Submittal Count")
 
     _sql_constraints = [

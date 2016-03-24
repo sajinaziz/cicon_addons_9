@@ -69,7 +69,7 @@ class SubmittalRevision(models.Model):
     revision_number = fields.Integer('Revision No', required=True, readonly=True,
                                      states={'new': [('readonly', False)]})
     bbs_weight = fields.Float('BBS Weight', required=True)
-    subject = fields.Char('Subject', required=True, readonly=True, states={'new': [('readonly', False)]})
+    subject = fields.Char('Subject', required=True, index=True, readonly=True, states={'new': [('readonly', False)]})
     enclosures = fields.Text('Enclosure', readonly=True, states={'new': [('readonly', False)]})
     job_site_contact = fields.Many2one('tech.project.contact', "Project Contact", readonly=True,
                                        states={'new': [('readonly', False)]})
