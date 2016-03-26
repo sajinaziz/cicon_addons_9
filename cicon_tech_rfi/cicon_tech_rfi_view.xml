@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+            <record id="cicon_teh_rfi_form_view" model="ir.ui.view">
+                <field name="name">cicon.tech.rfi.form.view</field>
+                <field name="model">cicon.tech.rfi</field>
+                <field name="arch" type="xml">
+                    <form string="RFI">
+                        <header>
+                            <field name="state" widget="statusbar"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <field name="partner_id" options="{'no_create':True,'no_open': True}"/>
+                                <field name="job_site_id" options="{'no_create':True,'no_open': True}"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="element" placeholder="eg:- Building C - Column/Wall" />
+                                    <field name="level" placeholder="eg:- Ground Floor" />
+                                </group>
+                                <group>
+                                    <field name="rfi_date"/>
+                                    <field name="site_contact_ids" options="{'no_create':True,'no_open': True}" domain="[('job_site_id','=',job_site_id)]" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="subject"/>
+                                <field name="description"/>
+                            </group>
+                            <group col="4">
+                                <field name="attachment_count"/>
+                                <field name="response_last_date"/>
+                                <field name="created_by" options="{'no_create':True,'no_open': True}"/>
+                                <field name="company_id" invisible="1" options="{'no_create':True,'no_open': True}"/>
+                            </group>
+                            <group string="Contractor Response">
+                                <field name="contractor_subject"/>
+                                <field name="contractor_remarks"/>
+                            </group>
+
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+
+
+            <record id="cicon_teh_rfi_tree_view" model="ir.ui.view">
+                <field name="name">cicon.tech.rfi.tree.view</field>
+                <field name="model">cicon.tech.rfi</field>
+                <field name="arch" type="xml">
+                    <tree string="RFI">
+                        <field name="partner_id"/>
+                        <field name="job_site_id"/>
+                        <field name="name"/>
+                        <field name="rfi_date"/>
+                        <field name="element"/>
+                        <field name="level"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+
+
+        <record id="action_cicon_tech_rfi" model="ir.actions.act_window" >
+            <field name="name" >RFI </field>
+            <field name="res_model">cicon.tech.rfi</field>
+        </record>
+
+
+
+
+        <menuitem  parent="cicon_tech.tech_menu_submittal" id="tech_menu_tech_rfi"
+                  action="action_cicon_tech_rfi" />
+
+
+
+    </data>
+</odoo>
