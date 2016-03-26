@@ -92,7 +92,7 @@
                                 <field name="description"/>
                                 <field name="document_status"/>
                                 <field name="rev_no"  />
-                                <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'required':[('rev_no','>',0)]}"  />
+                                <field name="reason_id" options="{'no_open':True,'no_create':True}"  />
                                 <field name="draft_time" widget="float_time" invisible="1"/>
                                 <field name="is_revised" invisible="1"/>
                                 <field name="created_by" invisible="1"/>

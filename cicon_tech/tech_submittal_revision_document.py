@@ -1,4 +1,5 @@
 from openerp import models, fields, api
+from openerp.exceptions import ValidationError
 
 
 class SubmittalRevisionDocument(models.Model):
@@ -96,6 +97,7 @@ class SubmittalDocumentRevision(models.Model):
                 vals.update({'submittal_id': sub_revision.submittal_id.id})
         res = super(SubmittalDocumentRevision, self).create(vals)
         # Check for revision if available set value to be revised
+        print vals.get('reason_id')
         if res:
             _rec = res.parent_id
             _rec.write({'is_revised': True})
@@ -140,6 +142,13 @@ class SubmittalDocumentRevision(models.Model):
             'context': ctx,
         }
 
+    @api.constrains('reason_id', 'rev_no')
+    def _check_revision_reason(self):
+        """Validation on Reason as field not able to set as 'Required' OnChange"""
+        for rec in self:
+            if rec.rev_no > 0:
+                if not rec.reason_id:
+                    raise ValidationError("Please select reason for revision")
 
 SubmittalDocumentRevision()
 

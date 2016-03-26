@@ -300,7 +300,6 @@ class SubmittalRevision(models.Model):
             self.signed_by = self.parent_id.signed_by.id
             self.job_site_contact = self.parent_id.job_site_contact.id
 
-
     @api.onchange('submittal_id')
     def onchange_submittal(self):
         """
