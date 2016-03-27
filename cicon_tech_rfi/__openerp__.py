@@ -6,7 +6,11 @@
     'category': 'Generic Modules/Others',
     'depends': ['cicon_tech'],
     'data': [
-        'cicon_tech_rfi_view.xml'
+        'security/ir.model.access.csv',
+        'security/tech_rfi_security.xml',
+        'cicon_tech_rfi_view.xml',
+        'cicon_tech_rfi_report.xml',
+        'views/tech_rfi_print_view.xml'
     ],
     'update_xml': [],
     'description': 'Cicon Modules', 'active': False, 'installable': True, 'application': False, 'auto_install': False
