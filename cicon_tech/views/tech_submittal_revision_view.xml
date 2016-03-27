@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <form string="Technical Submittals" >
                 <header>
-                    <button name="print_revision" states="approved" confirm="Status Will be Changed to 'Submitted' !" string="Print" type="object" class="oe_highlight"/>
+                    <button name="print_revision" states="approved" confirm="Status Will be Changed to 'Submitted' !" icon="fa-print" string="Print" type="object" class="oe_highlight"/>
                     <button name="set_approved" string="Approved" states="new" type="object" class="oe_highlight" groups="cicon_tech.group_tech_approval"/>
                     <button name="send_email" string="Send Mail" states="submitted" icon="fa-at" type="object"/>
                     <button name="mark_submit" states="approved" confirm="Status Will be Changed to Submitted !" string="Mark As Submitted" type="object"/>
@@ -37,12 +37,12 @@
                     <group>
                         <label for="partner_id"/>
                         <h2>
-                            <field name="partner_id"  required="True"  domain="[('is_company','=',True),('customer','=',True)]" attrs="{'readonly':['|',('parent_id','!=',False),('state','=','submitted')]}"
+                            <field name="partner_id"  required="True"  domain="[('is_company','=',True),('customer','=',True)]" attrs="{'readonly':['|','|',('id','!=',False),('parent_id','!=',False),('state','=','submitted')]}"
                                     options="{ 'no_create': True,  'no_open':True}"/>
                         </h2>
                         <label for='job_site_id'/>
                         <h2>
-                            <field name="job_site_id" context="{'default_partner_id':partner_id}"  attrs="{'readonly':['|',('parent_id','!=',False),('state','=','submitted')]}"
+                            <field name="job_site_id" context="{'default_partner_id':partner_id}"  attrs="{'readonly':['|', '|',('id','!=',False),('parent_id','!=',False),('state','=','submitted')]}"
                                     options="{ 'no_create': True,  'no_open':True}" />
                         </h2>
                     </group>
@@ -250,16 +250,18 @@
                     <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>
                     <filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>
                 </group>
+                <field name="ref_no" string="Submittal Reference" />
                 <field name="submittal_id" widget="selection"/>
                 <field name="partner_id" widget="selection" />
                 <field name="job_site_id" widget="selection"/>
-                <filter name="current" string="Current Submittal" domain="[('state','!=','resubmitted')]" help="New and Submitted" icon="terp-project"/>
+                <!--<filter name="current" string="Current Submittal" domain="[('state','!=','resubmitted')]" help="New and Submitted" icon="terp-project"/>-->
+                <filter string="Prev Month" name="prev_month" domain="[('submittal_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01')),('submittal_date','&lt;',time.strftime('%%Y-%%m-01'))]"/>
+                <separator/>
                 <filter name="current_month" string="This Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>
+                <separator/>
                 <filter name="my_submittal" string="My Submittal" domain="[('submitted_by','=',uid)]" help="My Submittal" icon="terp-project"/>
-                <separator orientation="horizontal"/>
-                <filter name="my_submittal_current_month" string="My Submittals on this Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="My Submittal Current Month" icon="terp-project"/>
-                <field name="ref_no" string="Submittal Reference" />
-                <field name="submittal_date" filter_domain="[('submittal_date','&gt;=',self)]"/>
+                <!--<filter name="my_submittal_current_month" string="My Submittals on this Month" domain="[ ('submitted_by','=',uid),('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="My Submittal Current Month" icon="terp-project"/>-->
+
             </search>
         </field>
     </record>
