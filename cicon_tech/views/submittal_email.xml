@@ -3,7 +3,7 @@
 
     <!--:  Mail template need to  declared in a NOUPDATE block
          so users can freely customize/delete them -->
-    <data noupdate="1">
+    <data noupdate="0">
         <!--Email template -->
         <record id="submittal_email_template" model="mail.template">
             <field name="name"> Submittal Template </field>
@@ -13,50 +13,54 @@
             <field name="model_id" ref="cicon_tech.model_tech_submittal_revision"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-            <html>
-            <head>
-            </head>
-            <body>
+            <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
                 <p style="font-weight: bold; font-size: 12px;">
                      Ref :  ${object.ref_no}
                 </p>
-                <p style= "font-size: 12px; margin-top:10px"> Date: ${object.submittal_date} </p>
-                <div style="font-size: 10px; margin-top:10px;margin-bottom:10px">
+                <p style= "font-size: 12px; margin-top:11px"> Date: ${object.submittal_date} </p>
+                <br/>
+                <div style="font-size: 12px;">
                 <p>
-                     <strong>${object.job_site_id.partner_id.name} </strong> <br/>
-                    P.O Box: ${object.job_site_id.po_box or ''}<br/>
-                    Tel.: ${object.job_site_id.telephone or ''}<br/>
-                    FAX: ${object.job_site_id.fax or ''}
+                     <strong>${object.job_site_id.partner_id.name} </strong>
                 </p>
                 </div>
-
+                <div style="font-size: 10px; margin-bottom:10px">
+                <p>
+                    P.O Box: ${object.job_site_id.po_box or ''}
+                <p/>
+                <p>
+                    Tel.: ${object.job_site_id.telephone or ''}
+                </p>
+                 <p>
+                    FAX: ${object.job_site_id.fax or ''}
+                 </p>
+                </div>
+                <br/>
                 <table style="width:100%">
                     <tr>
-                        <td style="width:5%;font-size: 11px;"> Attn:<td>
-                        <td style="font-weight:bold; font-size: 11px;" >  ${object.job_site_contact.salutation }  ${object.job_site_contact.name or ''}</td>
+                        <td style="width:5%;font-size: 12px;"> Attn:<td>
+                        <td style="font-weight:bold; font-size: 12px;" >  ${object.job_site_contact.salutation or '' }  ${object.job_site_contact.name or ''}</td>
                     </tr>
                     % if object.job_site_contact.designation:
                         <tr>
                             <td style="width:5%;"> <td>
-                            <td style="font-size: 9px;">[${object.job_site_contact.designation or ''}]</td>
+                            <td style="font-size: 10px;">[${object.job_site_contact.designation or ''}]</td>
                         </tr>
                     % endif
                  </table>
                  <br/>
-                 <br/>
-
                  <div style="font-size: 12px; margin-top:10px">
                     Dear Sir,
                  </div>
                  <br/>
                  <div style="font-size: 12px; margin-top:10px">
                  <p>
-                    <strong> Project : ${object.job_site_id.name or ''} </strong>
+                    <strong> Project :  ${object.job_site_id.name or ''}  </strong>
                    </p>
                  </div>
                  <div  style="font-size: 12px; margin-top:10px">
                     <p>
-                    <strong> Subject :  ${object.subject or ''}  </strong>
+                    <strong> Subject : <u> ${object.subject or ''} </u>  </strong>
                     </p>
                  </div>
                  <br/>
@@ -77,30 +81,30 @@
 
                  <table  style="font-size: 12px; margin: 3px; width:100%; border: 1px solid; border-collapse:collapse ;" >
                    <thead>
-                        <th  style="border: 1px solid;height: 25px;" > SL No. </th>
-                        <th  style="border: 1px solid;height: 25px;"> Drawing Number </th>
-                        <th  style="border: 1px solid;height: 25px;"> Status </th>
-                        <th  style="border: 1px solid;height: 25px;"> Drawing Title </th>
+                        <th  style="border: 1px solid;height: 25px; text-align:center" > SL No. </th>
+                        <th   style="border: 1px solid;height: 25px; text-align:center"> Drawing Number </th>
+                        <th   style="border: 1px solid;height: 25px;text-align:center "> Status </th>
+                        <th   style="border: 1px solid;height: 25px; text-align:center"> Drawing Title </th>
                         %if object.show_reason:
-                        <th  style="border: 1px solid;height: 25px;"> Reason </th>
+                        <th  style="border: 1px solid;height: 25px; text-align:center"> Reason </th>
                         %endif
                     </thead>
                     <tbody>
                         % for d in object.document_ids:
                         <tr>
-                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${loop.index} </td>
-                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">   ${d.name or ''} </td>
-                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.document_status or ''}  </td>
-                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.description or ''} </td>
+                            <td    style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${loop.index} </td>
+                            <td   style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">   ${d.name or ''} </td>
+                            <td   style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.document_status or ''}  </td>
+                            <td   style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.description or ''} </td>
                             %if object.show_reason:
-                            <td style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.reason_id.name or ''} </td>
+                            <td   style="border:1px solid; border:1px solid #808080; height: 25px; padding: 3px;">  ${d.reason_id.name or ''} </td>
                             %endif
                         </tr>
                         % endfor
                     </tbody>
 
                  </table>
-
+                 <br/>
                  <p style="font-size: 12px">
                     This is for your kind information and necessary action.
                  </p>
@@ -124,8 +128,7 @@
                 </table>
 
 
-            </body>
-            </html>
+            </div>
 
             ]]></field>
         </record>
