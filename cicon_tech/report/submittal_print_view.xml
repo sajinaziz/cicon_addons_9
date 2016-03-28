@@ -157,7 +157,7 @@
                         <td> <span t-field="d.document_status"/> </td>
                         <td> <span t-field="d.description" /> </td>
                         <t t-if="o.show_reason">
-                            <th> <span t-field="d.reason_id.name"/> </th>
+                            <td> <span t-field="d.reason_id.name"/> </td>
                         </t>
                         </tr>
                     </t>
