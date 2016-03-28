@@ -75,7 +75,7 @@ class SubmittalDocumentRevision(models.Model):
     state = fields.Selection(related='revision_id.state', store=True, string="State")
     reason_id = fields.Many2one('tech.submittal.revision.reason', string='Reason')
 
-    _order = "name,revision_id"
+    #_order = "name,revision_id"
 
     # _sql_constraints = [('uniq_doc_revision', 'UNIQUE(document_id,revision_id)',
     #                      'Unique Drawing Number per Submittal Revision')]
