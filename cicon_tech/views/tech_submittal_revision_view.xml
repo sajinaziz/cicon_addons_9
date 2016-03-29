@@ -247,7 +247,8 @@
             <search string="Submittal">
                 <group expand="0" string="Group By...">
                     <filter string="Submittal" name="group_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>
-                    <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>
+                    <filter string="Customer" name="group_patner_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Job Site" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>
                     <filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>
                 </group>
                 <field name="ref_no" string="Submittal Reference" />
@@ -255,10 +256,13 @@
                 <field name="partner_id" widget="selection" />
                 <field name="job_site_id" widget="selection"/>
                 <!--<filter name="current" string="Current Submittal" domain="[('state','!=','resubmitted')]" help="New and Submitted" icon="terp-project"/>-->
+                <filter name="current_year" string="This Year" domain="[('submittal_date','&gt;=',time.strftime('%%Y-1-01'))]" help="Current Year Submittal" icon="terp-project"/>
+                <separator/>
                 <filter string="Prev Month" name="prev_month" domain="[('submittal_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01')),('submittal_date','&lt;',time.strftime('%%Y-%%m-01'))]"/>
                 <separator/>
                 <filter name="current_month" string="This Month" domain="[('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="Current Month Submittal" icon="terp-project"/>
                 <separator/>
+
                 <filter name="my_submittal" string="My Submittal" domain="[('submitted_by','=',uid)]" help="My Submittal" icon="terp-project"/>
                 <!--<filter name="my_submittal_current_month" string="My Submittals on this Month" domain="[ ('submitted_by','=',uid),('submittal_date','&gt;=',time.strftime('%%Y-%%m-01'))]" help="My Submittal Current Month" icon="terp-project"/>-->
 
