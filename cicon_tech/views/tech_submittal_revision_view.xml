@@ -249,6 +249,7 @@
                     <filter string="Submittal" name="group_submittal_id" icon="terp-personal" domain="[]"  context="{'group_by':'submittal_id'}"/>
                     <filter string="Customer" name="group_patner_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="Job Site" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'job_site_id'}"/>
+                    <filter string="Company" name="group_company_id" domain="[]" context="{'group_by': 'company_id' }" />
                     <filter string="Submitted By" name="group_submitted_by" icon="terp-folder-violet" domain="[]" context="{'group_by':'submitted_by'}"/>
                 </group>
                 <field name="ref_no" string="Submittal Reference" />
