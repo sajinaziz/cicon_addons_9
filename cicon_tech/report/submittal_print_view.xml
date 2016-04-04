@@ -68,12 +68,12 @@
 <template id="tech_cicon_layout_footer">
     <div class="footer">
         <div class="row" style="border-top: 1px solid black;">
-        <div class="text-left col-xs-8">
+        <div class="text-left col-xs-8 small">
             <t t-if="o and 'submitted_by' in o">
                 Prepared By:  <span t-field="o.submitted_by.name"/>
             </t>
         </div>
-        <div class="text-right col-xs-4" >
+        <div class="text-right col-xs-4 small" >
              <ul class="list-inline">
                 <li>Page:</li>
                 <li><span class="page"/></li>
@@ -227,17 +227,14 @@
                     <img t-if="o.signed_by.signature_image" t-att-src="'data:image/png;base64,%s' % o.signed_by.signature_image" style="max-height: 75px;"/>
                 </div>
             </div>
-            <div class="row mt8 col-xs-12">
-                <strong>  <span t-field="o.signed_by.name"/> </strong>
+            <div class="row mt8 mb12 col-xs-12">
+                <strong>  <span t-field="o.signed_by.name"/> </strong> <br/>
+                <p t-field="o.signed_by.partner_id.function" />
             </div>
-            <div class="row mt8 mb12">
-                <div class="col-xs-12">
-                    <span t-field="o.signed_by.signature"/>
-                </div>
-                <div class="col-xs-12">
-                <span t-field="o.signed_by.partner_id.function" />
-                 </div>
-            </div>
+            <!--<div class="row mb12">-->
+               <!--&lt;!&ndash;<span t-field="o.signed_by.signature"/> <br/>&ndash;&gt;-->
+               <!---->
+            <!--</div>-->
             <div class="row">
                 <div class="col-xs-2">
                    <strong>  Enclosures : </strong>
@@ -248,8 +245,10 @@
                         <span t-esc="s"/> :  <span t-esc="len([p for p in o.document_ids if p.document_type_id.name == s])"/> No(s). <br/>
                     </t>
                 </div>
-                <div class="col-xs-4 col-offset-2">
-                      <span t-esc="o.enclosures"/>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-2">
+                          <span t-esc="o.enclosures"/>
                 </div>
             </div>
 
