@@ -60,8 +60,8 @@
         </record>
 
 
-        <record id="view_drawing_register_graph" model="ir.ui.view">
-            <field name="name">drawing.register.graph</field>
+        <record id="view_drawing_register_pivot" model="ir.ui.view">
+            <field name="name">drawing.register.pivot</field>
             <field name="model">tech.drawing.register</field>
             <field name="arch" type="xml">
                 <pivot string="Drawing Analysis">

@@ -11,7 +11,7 @@
             <field name="context">{"search_default_current_month":1}</field>
         </record>
 
-        <menuitem name="Technical" id="tech_menu"/>
+        <menuitem name="Technical" id="tech_menu" groups="group_tech_user,base.group_no_one"/>
         <menuitem name="Technical Submittals" parent="tech_menu" id="tech_menu_submittal"/>
 
 
