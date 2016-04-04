@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.act_window" id="action_cicon_report_model">
+            <field name="name">Reports</field>
+            <field name="res_model">cicon.reporting.model</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+
+
+        <record id="cicon_report_view_form" model="ir.ui.view" >
+        <field name="name">cicon.report.view.form</field>
+        <field name="model">cicon.reporting.model</field>
+            <field name="arch" type="xml">
+                <form string="Report">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="report_model_id"/>
+                            <field name="report_action_id" context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report2_action_id"  domain="[('action_model_id','=', report_model_id ]"  context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report3_action_id"  domain="[('action_model_id','=', report_model_id ]"  context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report4_action_id"   domain="[('action_model_id','=', report_model_id ]" context="{'default_action_model_id': report_model_id}"/>
+                        </group>
+
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+
+
+        <record id="cicon_report_action_view_form" model="ir.ui.view" >
+        <field name="name">cicon.reporting.action.form</field>
+        <field name="model">cicon.reporting.action</field>
+            <field name="arch" type="xml">
+                <form string="Report Action">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="action_model_id"/>
+                            <field name="model_name"/>
+                            <field name="view_ref_id" domain="[('model','=', model_name)]" />
+                            <field name="action_ref_id"  domain="[('res_model','=', model_name)]"  />
+                            <field name="view_mode" />
+                        </group>
+
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+
+        <record id="cicon_report_view_kanban_view" model="ir.ui.view" >
+        <field name="name">cicon.report.view.kanban</field>
+        <field name="model">cicon.reporting.model</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="report_action_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <h3 class="text-center o_primary"><field name="name"/></h3>
+                                </div>
+                            </div>
+                             <div class="container o_kanban_card_content o_visible">
+                                <div class="row">
+                                    <ul class="col-xs-6 o_kanban_primary_left">
+                                       <li>
+                                           <button type="object" class="btn btn-link" name="show_report" context="{'rpt': 1}" >
+                                            <field name="report_action_id"/>
+                                        </button>
+                                        </li>
+                                        <li>
+                                        <button type="object"  class="btn btn-link btn-sm" name="show_report" context="{'rpt': 2}" >
+                                            <field name="report2_action_id"/>
+                                        </button>
+                                        </li>
+                                         <li>
+                                        <button type="object"  class="btn btn-link btn-sm" name="show_report" context="{'rpt': 3}" >
+                                            <field name="report3_action_id"/>
+                                        </button>
+                                        </li>
+                                         <li>
+                                        <button type="object"  class="btn btn-link btn-sm" name="show_report" context="{'rpt': 4}" >
+                                            <field name="report4_action_id"/>
+                                        </button>
+                                        </li>
+                                    </ul>
+                                    <div class="col-xs-6 o_kanban_primary_right">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <menuitem name="CICON Reporting" id="menu_cicon_reporting" action="action_cicon_report_model" groups="group_cicon_reporting_user_tech,base.group_no_one"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tech_sub_rpt_user,Tech.Submittal Report User,cicon_tech.model_tech_submittal,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_sub_rev_rpt_user,Tech.Submittal.Rev Report User,cicon_tech.model_tech_submittal_revision,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_sub_rev_doc_rpt_user,Tech.Submittal.Rev.Doc  Report User,cicon_tech.model_tech_submittal_revision_document,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_sub_rev_doc_rev_rpt_user,Tech.Submittal.Rev.Doc.Rev  Report User,cicon_tech.model_tech_submittal_document_revision,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_job_site_rpt_user,Tech.Cic.Job.Site Report User,cicon_tech.model_cic_job_site,group_cicon_reporting_user_tech,1,0,0,0
+access_site_cont_rpt_user,tech.project.contact Report User,cicon_tech.model_tech_project_contact,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_doc_type_user,tech.doc.type Report User,cicon_tech.model_tech_document_type,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_delivery_rpt_user,Tech.Delivery Report User,cicon_tech.model_tech_delivery_details,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_dwg_reg_rpt_user,Tech.Dwg.Reg Report User,cicon_tech.model_tech_drawing_register,group_cicon_reporting_user_tech,1,0,0,0
+access_tech_rev_reason_rpt_user,Tech.Rev.Reason Report User,cicon_tech.model_tech_submittal_revision_reason,group_cicon_reporting_user_tech,1,0,0,0
+access_cicon_report_model_user,Cicon.Report.Model User,model_cicon_reporting_model,group_cicon_reporting_user_tech,1,0,0,0
+access_cicon_report_action_user,Cicon.Report.Action User,model_cicon_reporting_action,group_cicon_reporting_user_tech,1,0,0,0
+
+
