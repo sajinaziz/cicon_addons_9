@@ -19,10 +19,10 @@
                         <group>
                             <field name="name"/>
                             <field name="report_model_id"/>
-                            <field name="report_action_id" context="{'default_action_model_id': report_model_id}"/>
-                            <field name="report2_action_id"  domain="[('action_model_id','=', report_model_id ]"  context="{'default_action_model_id': report_model_id}"/>
-                            <field name="report3_action_id"  domain="[('action_model_id','=', report_model_id ]"  context="{'default_action_model_id': report_model_id}"/>
-                            <field name="report4_action_id"   domain="[('action_model_id','=', report_model_id ]" context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report_action_id"   domain="[('action_model_id','=', report_model_id)]" context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report2_action_id"  domain="[('action_model_id','=', report_model_id)]"  context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report3_action_id" domain="[('action_model_id','=', report_model_id)]"  context="{'default_action_model_id': report_model_id}"/>
+                            <field name="report4_action_id"  domain="[('action_model_id','=', report_model_id)]" context="{'default_action_model_id': report_model_id}"/>
                         </group>
 
                     </sheet>
