@@ -28,17 +28,21 @@
                 <h3 class="text-center cicon-head-font">
                      <span t-field="company.company_registry"/>
                 </h3>
-                <p class="text-center">
+                <p class="text-center ">
+                    <small>
                     <strong>
                     Tel: <span t-field="company.phone"/> ,
                     Fax: <span t-field="company.fax"/>,
                     P.O Box: <span t-field="company.zip"/>,
                     <span t-field="company.state_id.name" /> - <span t-field="company.country_id.name" />
                     </strong>
+                    </small>
                     <br/>
+                     <small>
                     Main Off. Tel: <span t-field="parent_company.phone"/> Fax: <span t-field="parent_company.fax"/> P.O Box <span t-field="parent_company.zip"/>
                     <br/>
                     <strong> E-mail: <span t-field="company.email"/> </strong>
+                    </small>
                 </p>
             </div>
             <!--<div class="col-xs-8 text-left" style="margin-top:25px;padding-left:25px;" t-field="company.rml_header1"/>-->
@@ -103,10 +107,13 @@
                     <strong t-field="o.partner_id.name" /> <br/>
                     P.O Box: <span t-field="o.job_site_id.po_box"/>  <br/>
                     Tel.:  <span t-field="o.job_site_id.telephone" /> <br/>
-                    FAX:  <span t-field="o.job_site_id.fax" /> <br/>
+                    FAX:  <span t-field="o.job_site_id.fax" />
+                 <br/>
+                 <br/>
              </div>
 
-            <div class="row mt32">
+            <div class="row">
+
                 <div class="col-xs-1">
                 Attn:
                 </div>
@@ -122,8 +129,11 @@
                     <small> [ <span t-field="o.job_site_contact.designation"/> ] </small>
                 </div>
             </div>
+
             <div class="row col-xs-12">
-                    Dear Sir,
+                <br/>
+                Dear Sir,
+                  <br/>
             </div>
              <div class="row col-xs-12 mt8">
                   <strong> Project : <span t-field="o.job_site_id.name"/> </strong>
@@ -135,7 +145,14 @@
                     We would like to
                     <t t-if="o.revision_number > 0"> resubmit </t>
                     <t t-if="o.revision_number == 0"> submit  </t>
-                    the following Shop Drawing and Bar Bending Schedules for the above mentioned subject.
+                    the following
+                    <t t-if="o.as_built">
+                        As-built Drawings
+                    </t>
+                    <t t-if="o.as_built == False">
+                        Shop Drawing and Bar Bending Schedules
+                    </t>
+                     for the above mentioned subject.
              </div>
 
              <table class="table table-bordered">

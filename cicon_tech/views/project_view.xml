@@ -40,7 +40,7 @@
                                 </button>
                             </div>
                             <group >
-                                <field name="partner_id"/>
+                                <field name="partner_id" options="{'no_create':True,'no_open': True}" />
                                 <field name="name"  placeholder="Job Site" />
                             </group>
                             <group>

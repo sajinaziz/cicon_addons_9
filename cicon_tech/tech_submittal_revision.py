@@ -108,7 +108,9 @@ class SubmittalRevision(models.Model):
                                readonly=True,states={'new': [('readonly', False)]}, help="Common Reason for revision")
 
     # Show reason on Submittal Sheet Print
-    show_reason = fields.Boolean('Print Reason', default=False)
+    show_reason = fields.Boolean('Print Reason', help="Show Reason on Submittal Print ", default=False)
+    # Is as build Submittal
+    as_built = fields.Boolean('As-Built', help="Is This As-Built Submittal ?", dafault=False)
 
     _order = 'submittal_date desc'
 
@@ -299,6 +301,7 @@ class SubmittalRevision(models.Model):
             self.document_ids = _docs
             self.signed_by = self.parent_id.signed_by.id
             self.job_site_contact = self.parent_id.job_site_contact.id
+            self.as_built = self.parent_id.as_built
 
     @api.onchange('submittal_id')
     def onchange_submittal(self):

@@ -63,14 +63,23 @@
                         <field name="parent_id" readonly="1"  attrs="{'invisible':[('parent_id','=',False)]}"/>
                         <field name="ref_no" readonly="True"/>
                         <field name="revision_number" invisible="True"/>
+                    </group>
+                    <group col="4">
                         <field name="submittal_date"/>
+                        <field name="as_built"/>
+                     </group>
+                    <group>
                         <field name="subject" completion="1"/>
                         <field name="job_site_contact" domain="[('job_site_id','=',job_site_id)]" context="{'default_job_site_id': job_site_id}"/>
                         <field name="bbs_weight" />
+                     </group>
+                    <group >
                         <field name="submitted_by" domain="[('company_id','child_of',[company_id])]" options="{'no_open':True,'no_create':True}" />
                         <!--<field name="signed_by" domain="[('sign_authority','=',True),('company_id','child_of',[company_id])]"/>-->
                         <!--<field name="signed_by" domain="[('id','in',allowed_signing_ids[0][2])]"  />-->
                         <field name="signed_by" options="{'no_open':True,'no_create':True}"/>
+                    </group>
+                    <group col="4">
                         <field name="reason_id" options="{'no_open':True,'no_create':True}" attrs="{'invisible':[('revision_number','=',0)]}"/>
                         <field name="show_reason"  attrs="{'invisible':[('revision_number','=',0)]}"/>
                         <!--<field name="allowed_signing_ids" invisible="1" />-->

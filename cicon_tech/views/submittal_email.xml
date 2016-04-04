@@ -73,7 +73,13 @@
                   %else:
                     submit
                   %endif
-                    the following Shop Drawing and Bar Bending Schedules for the above mentioned subject.
+                    the following
+                  %if object.as_built:
+                    As-built Drawings
+                  %else:
+                    Shop Drawing and Bar Bending Schedules
+                  %endif
+                     for the above mentioned subject.
                     </p>
                  </div>
 
