@@ -79,7 +79,7 @@
              <ul class="list-inline">
                 <li>Page:</li>
                 <li><span class="page"/></li>
-                <li>/</li>
+                <li>of</li>
                 <li><span class="topage"/></li>
             </ul>
         </div>

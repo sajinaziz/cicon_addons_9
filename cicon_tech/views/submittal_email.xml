@@ -122,7 +122,7 @@
                         <td style="font-weight: bold;width:15%;vertical-align: top">  Enclosures : </td>
                         <td style="vertical-align: top">
                         % for d in object.document_ids|groupby('document_type_id.name'):
-                           ${d.grouper or 'Documents'} :  ${d.list|count}
+                           ${d.grouper or 'Documents'} :  ${d.list|count} No(s).
                         <br/>
                         %endfor
                         </td>
@@ -137,6 +137,10 @@
             </div>
 
             ]]></field>
+            <!--<field name="report_template" ref="cicon_tech.report_submittal_qweb"/>-->
+            <!--<field name="report_name">${(object.ref_no or '').replace('/','_')}</field>-->
+
+
         </record>
     </data>
 </openerp>
