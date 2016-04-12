@@ -190,7 +190,7 @@ QcMillCertFile()
 class QcMillCertLine(models.Model):
     _name = 'cic.qc.mill.cert.line'
     _description = 'CICON Mill Certificate Line'
-    _rec_name = 'cert_file_id'
+    _rec_name = 'name'
 
     name = fields.Char("Heat Number", index=True, required=True)
     cert_file_id = fields.Many2one('cic.qc.mill.cert.file', string='Certificate File', ondelete='cascade')

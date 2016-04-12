@@ -120,7 +120,14 @@
                                               <span t-field="mline.quantity" />
                                              </t>
                                           </td>
-                                         <td> <span t-esc="', '.join(map(lambda x: x.name, mline.certificate_ids))"/>  </td>
+                                         <td>
+                                             <ul class="list-unstyled">
+                                                 <li t-foreach="mline.certificate_ids" t-as="c">
+                                                     <span t-esc="c.name"/>
+                                                 </li>
+                                                <!--<span t-esc="', '.join(map(lambda x: x.name, mline.certificate_ids))"/>-->
+                                             </ul>
+                                         </td>
                                      </tr>
                                 </tbody>
                             </table>

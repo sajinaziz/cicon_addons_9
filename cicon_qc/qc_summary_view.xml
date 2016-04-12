@@ -26,7 +26,8 @@
 				<tree string="Mill Certificates" editable="bottom">
                     <field name="dia_attrib_value_id" required="True"  options="{'no_create':True,'no_open':True}" />
                     <field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True}"/>
-                    <field name="certificate_ids" widget="many2many_tags" />
+                    <field name="certificate_ids" widget="many2many_tags" domain="[('dia_attrib_value_id','=',dia_attrib_value_id),
+                    ('origin_attrib_value_id','=',origin_attrib_value_id)]" />
                     <field name="quantity" />
 				</tree>
 			</field>
