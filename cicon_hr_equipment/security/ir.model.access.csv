@@ -4,3 +4,17 @@ access_hr_equip_prop_val_emp,hr.equip.prop.val.user,model_hr_equipment_property_
 access_hr_equip_categ_prop_admin,hr.equip.cteg.prop.admin,model_hr_equipment_category_property,base.group_equipment_manager,1,1,1,1
 access_hr_equip_prop_val_admin,hr.equip.prop.val.admin,model_hr_equipment_property_value,base.group_equipment_manager,1,1,1,1
 access_hr_equipment_category_admin,hr.equipment.category.admin,model_hr_equipment_category,base.group_equipment_manager,1,1,1,0
+access_hr_equip_cic_job_categ,hr.equip_cic_job_cteg.user,model_cicon_it_job_category,base.group_user,1,0,0,0
+access_hr_equip_cic_job_profile,hr.equip_cic_job_profile.user,model_cicon_it_job_profile,base.group_user,1,0,0,0
+access_hr_equip_cic_job_task,hr.equip_cic_job_task.user,model_cicon_it_job_task,base.group_user,1,0,0,0
+access_hr_equip_cic_job_categ_admin,hr.equip_cic_job_cteg.admin,model_cicon_it_job_category,group_cicon_it_manager,1,1,1,1
+access_hr_equip_cic_job_profile_admin,hr.equip_cic_job_profile.admin,model_cicon_it_job_profile,group_cicon_it_manager,1,1,1,1
+access_hr_equip_cic_job_profile_user,hr.equip_cic_job_profile.user,model_cicon_it_job_profile,base.group_equipment_manager,1,1,0,0
+access_hr_equip_cic_it_job_task_admin,hr.equip_cic_job_task.admin,model_cicon_it_job_task,base.group_equipment_manager,1,1,1,1
+access_hr_equip_cic_task_log_admin,hr.equip_cic_task_log.admin,model_cicon_it_job_task_log,base.group_equipment_manager,1,1,1,1
+access_hr_equip_cic_task_log_user,hr.equip_cic_task_log.user,model_cicon_it_job_task_log,base.group_user,1,1,1,0
+access_hr_equip_cic_job_type_user,hr.equip_cic_job_type.user,model_cicon_it_job_type,base.group_user,1,0,0,0
+access_hr_equip_cic_job_type,hr.equip_cic_job_type.admin,model_cicon_it_job_type,base.group_equipment_manager,1,1,1,0
+access_hr_equip_cic_it_team,hr.equip_cic_it_team.user,model_cicon_it_support_team,base.group_user,1,0,0,0
+
+

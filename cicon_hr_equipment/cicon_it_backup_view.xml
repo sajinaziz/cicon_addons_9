@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="cicon_it_task_log_form_new" model="ir.ui.view" >
+        <field name="name">cicon.it.task.log.form.new</field>
+        <field name="model">cicon.it.job.task.log</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form string="Task Log">
+                    <group>
+                        <group>
+                            <field name="log_datetime"/>
+                            <field name="job_task_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="user_id" options="{'no_create':True,'no_open':True}" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                         <field name="note"/>
+                    </group>
+                    <footer>
+                        <button name="add_log" icon="fa-list-alt" string="Add Log" type="object"  class="oe_highlight"/>
+                            or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+         <record model="ir.actions.act_window" id="action_cicon_it_task_log">
+             <field name="name">Task Log</field>
+             <field name="res_model">cicon.it.job.task.log</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="cicon_it_task_log_form_new"/>
+             <field name="context">{'default_job_task_id':active_id}</field>
+             <field name="target">new</field>
+        </record>
+
+        <record id="cicon_it_job_profile_form" model="ir.ui.view" >
+        <field name="name">cicon.it.job.profile.form</field>
+        <field name="model">cicon.it.job.profile</field>
+            <field name="arch" type="xml">
+                <form string="Job Profile">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" readonly="True" />
+                            <field name="category_id" options="{'no_open':True, 'no_create': True}" readonly="True" />
+                        </group>
+                        <group col="4">
+                            <field name="user_id" invisible="1" options="{'no_open':True, 'no_create': True}" readonly="True" />
+                            <field name="company_id" options="{'no_open':True, 'no_create': True}" readonly="True" />
+                            <field name="priority" widget="priority" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="notes" readonly="True"/>
+                            <field name="delegated_user_ids" widget="many2many_tags" readonly="True"/>
+                        </group>
+                        <notebook>
+                            <page string="Jobs">
+                                <field name="job_task_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="rrule_type"/>
+                                        <field name="assign_type"/>
+                                        <field name="last_updated"/>
+                                        <button name="%(action_cicon_it_task_log)d" icon="fa-list-alt" type="action"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <!--<page string="Logs">-->
+                                 <!--<field name="log_ids">-->
+                                    <!--<tree create="false" edit="false">-->
+                                        <!--<field name="job_id"/>-->
+                                        <!--<field name="user_id"/>-->
+                                        <!--<field name="log_datetime"/>-->
+                                        <!--<field name="note"/>-->
+                                        <!--<field name="state"/>-->
+                                    <!--</tree>-->
+                                <!--</field>-->
+                            <!--</page>-->
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="cicon_it_job_profile_manage" model="ir.ui.view" >
+        <field name="name">cicon.it.job.profile.form.manage</field>
+        <field name="model">cicon.it.job.profile</field>
+        <field name="inherit_id" ref="cicon_hr_equipment.cicon_it_job_profile_form"/>
+        <field name="groups_id" eval="[(4, ref('cicon_hr_equipment.group_cicon_it_manager'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='priority']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='notes']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='delegated_user_ids']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="cicon_it_job_profile_tree" model="ir.ui.view" >
+        <field name="name">cicon.it.job.profile.tree</field>
+        <field name="model">cicon.it.job.profile</field>
+            <field name="arch" type="xml">
+                <tree string="Job Profile">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="company_id" />
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="cicon_it_job_profile_kanban" model="ir.ui.view" >
+        <field name="name">cicon.it.job.profile.kanban</field>
+        <field name="model">cicon.it.job.profile</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="category_id" quick_create='false' >
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="company_id"/>
+                    <field name="priority"/>
+                    <field name="job_task_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row">
+                                   <div class="col-xs-12">
+                                        <h4 class="text-center"><field name="name"/></h4>
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                        <button class="btn btn-link" type="action" name="%(action_cicon_it_job_task)d">
+                                            Tasks(<field name="task_count" />)
+                                        </button>
+                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                             <field name="priority" widget="priority" groups="cicon_hr_equipment.group_cicon_it_manager" />
+                                        </div>
+                                    </div>
+                                </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record id="cicon_it_job_task_form" model="ir.ui.view" >
+        <field name="name">cicon.it.job.task.form</field>
+        <field name="model">cicon.it.job.task</field>
+            <field name="arch" type="xml">
+                <form string="Task" create="false" edit="false" >
+                    <sheet>
+                        <group>
+                            <!--<field name="job_profile_id"/>-->
+                            <field name="name"/>
+                            <field name="notes"/>
+                        </group>
+                        <group>
+                            <group >
+                                <field name="rrule_type" />
+                                <field name="source_type_ids" widget="many2many_tags" />
+                                <field name="company_id" options="{'no_open':True, 'no_create': True}" />
+                            </group>
+                            <group>
+                                <field name="equipment_ids" widget="many2many_tags"/>
+                                <field name="dest_type_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="assign_type" widget="radio"/>
+                            </group>
+                            <group>
+                                <field name="assign_team_id" attrs="{'invisible':[('assign_type','=', 'user')]}"/>
+                                <field name="assign_user_id" attrs="{'invisible':[('assign_type','=', 'team')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="job_log_ids">
+                                <tree>
+                                    <field name="log_datetime"/>
+                                    <field name="user_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="cicon_it_job_task_tree" model="ir.ui.view" >
+        <field name="name">cicon.it.job.task.tree</field>
+        <field name="model">cicon.it.job.task</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false">
+                    <field name="job_profile_id"/>
+                    <field name="name"/>
+                    <field name="last_updated" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="cicon_it_job_task_search" model="ir.ui.view" >
+        <field name="name">cicon.it.job.task.search</field>
+        <field name="model">cicon.it.job.task</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="job_profile_id"/>
+                </search>
+            </field>
+        </record>
+
+
+             <record id="cicon_it_job_task_kanban" model="ir.ui.view" >
+        <field name="name">cicon.it.job.task.kanban</field>
+        <field name="model">cicon.it.job.task</field>
+            <field name="arch" type="xml">
+                <kanban quick_create='false' class="oe_background_grey o_kanban_dashboard" default_group_by="rrule_type">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                   <div class="o_kanban_card_header_title">
+                                       <div class="o_primary text-center"> <field name="name"/> </div>
+                                   </div>
+                                </div>
+                                <div class="container o_kanban_card_content o_visible">
+                                    <div class="row">
+                                        <div class="col-xs-6"> Last Updated :</div>
+                                        <div class="col-xs-6"><field name="last_updated"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <button name="%(action_cicon_it_task_log)d"  class="btn btn-primary btn-sm" type="action">
+                                                Add Log
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+
+
+        <record id="cicon_it_task_log_form" model="ir.ui.view" >
+        <field name="name">cicon.it.task.log.form</field>
+        <field name="model">cicon.it.job.task.log</field>
+            <field name="arch" type="xml">
+                <form string="Task Log">
+                    <group>
+                        <group>
+                            <field name="log_datetime"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="user_id" options="{'no_create':True,'no_open':True}" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                         <field name="note"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+
+
+
+        <record id="cicon_it_job_category_tree" model="ir.ui.view" >
+        <field name="name">cicon.it.job.category.tree</field>
+        <field name="model">cicon.it.job.category</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="parent_id" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="cicon_it_support_team_tree" model="ir.ui.view" >
+        <field name="name">cicon.it.support.team.tree</field>
+        <field name="model">cicon.it.support.team</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="team_lead_id" />
+                    <field name="member_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="cicon_it_support_team_form" model="ir.ui.view" >
+        <field name="name">cicon.it.support.team.form</field>
+        <field name="model">cicon.it.support.team</field>
+            <field name="arch" type="xml">
+                <form string="Support Team">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="team_lead_id" />
+                        </group>
+                        <group>
+                            <field name="member_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="action_cicon_it_job_profile">
+            <field name="name">Job Profile</field>
+            <field name="res_model">cicon.it.job.profile</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="action_cicon_it_job_task">
+            <field name="name">Job Task</field>
+            <field name="res_model">cicon.it.job.task</field>
+            <field name="context">{'search_default_job_profile_id':active_id,'default_job_profile_id':active_id}</field>
+            <field name="domain">[('job_profile_id','=',active_id)]</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="action_cicon_it_job_category">
+            <field name="name">Job Category</field>
+            <field name="res_model">cicon.it.job.category</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_cicon_it_support_team">
+            <field name="name">Support Team</field>
+            <field name="res_model">cicon.it.support.team</field>
+        </record>
+
+
+
+
+        <menuitem
+            id="menu_cicon_it_job_profile"
+            name="Job Profiles"
+            parent="hr_equipment.menu_equipment_title"
+            action="action_cicon_it_job_profile"
+            sequence="90"/>
+
+        <menuitem
+            id="menu_cicon_it_job_cat"
+            name="Job Categories"
+            parent="hr_equipment.menu_equipment_configuration"
+            action="action_cicon_it_job_category"
+            groups="base.group_no_one"
+            sequence="100"/>
+
+         <menuitem
+            id="menu_cicon_it_support_team"
+            name="IT Team"
+            parent="hr_equipment.menu_equipment_configuration"
+            action="action_cicon_it_support_team"
+            groups="base.group_no_one"
+            sequence="110"/>
+
+    </data>
+</odoo>
