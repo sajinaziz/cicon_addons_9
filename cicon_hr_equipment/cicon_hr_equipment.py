@@ -7,7 +7,7 @@ class HrEquipmentCategoryProperty(models.Model):
 
     name = fields.Char('Property Name', required=True)
 
-    _sql_constraints = [('uniq_name', 'UNIQUE(name,category_id)', "Property Name Should be Unique" )]
+    _sql_constraints = [('uniq_name', 'UNIQUE(name)', "Property Name Should be Unique" )]
 
 HrEquipmentCategoryProperty()
 

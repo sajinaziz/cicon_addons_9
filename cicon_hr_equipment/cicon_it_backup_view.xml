@@ -41,6 +41,16 @@
              <field name="target">new</field>
         </record>
 
+
+
+        <record model="ir.actions.act_window" id="action_cicon_it_job_task">
+            <field name="name">Job Task</field>
+            <field name="res_model">cicon.it.job.task</field>
+            <field name="context">{'search_default_job_profile_id':active_id,'default_job_profile_id':active_id}</field>
+            <field name="domain">[('job_profile_id','=',active_id)]</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
         <record id="cicon_it_job_profile_form" model="ir.ui.view" >
         <field name="name">cicon.it.job.profile.form</field>
         <field name="model">cicon.it.job.profile</field>
@@ -241,6 +251,10 @@
         </record>
 
 
+
+
+
+
              <record id="cicon_it_job_task_kanban" model="ir.ui.view" >
         <field name="name">cicon.it.job.task.kanban</field>
         <field name="model">cicon.it.job.task</field>
@@ -353,15 +367,6 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-
-
-        <record model="ir.actions.act_window" id="action_cicon_it_job_task">
-            <field name="name">Job Task</field>
-            <field name="res_model">cicon.it.job.task</field>
-            <field name="context">{'search_default_job_profile_id':active_id,'default_job_profile_id':active_id}</field>
-            <field name="domain">[('job_profile_id','=',active_id)]</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
 
 
 
