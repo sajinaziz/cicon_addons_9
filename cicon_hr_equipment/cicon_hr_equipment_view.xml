@@ -9,13 +9,21 @@
             <field name="arch" type="xml">
                 <field name="note" position="after">
                     <group string="Properties Information">
-                    <field name="property_ids" widget="many2many_tags"/>
+                        <field name="property_ids" widget="many2many_tags"/>
                     </group>
 
                 </field>
 
+            </field>
+        </record>
 
-
+        <record id="hr_equipment_categ_prop_tree_view" model="ir.ui.view">
+            <field name="name"> hr.equipment.category.property.tree </field>
+            <field name="model">hr.equipment.category.property</field>
+            <field name="arch" type="xml">
+                <tree string="Category Properties" editable="bottom">
+                    <field name="name"/>
+                </tree>
             </field>
         </record>
 
@@ -60,6 +68,25 @@
 
             </field>
         </record>
+
+
+
+         <record model="ir.actions.act_window" id="action_hr_equip_categ_property">
+            <field name="name">Category Property</field>
+            <field name="res_model">hr.equipment.category.property</field>
+        </record>
+
+
+
+
+          <menuitem
+            id="menu_equip_categ_prop"
+            parent="hr_equipment.menu_equipment_configuration"
+            action="action_hr_equip_categ_property"
+            groups="base.group_no_one"
+            sequence="99"/>
+
+
 
 </data>
 </openerp>
