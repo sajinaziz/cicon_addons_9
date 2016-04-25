@@ -34,6 +34,14 @@ class QcSummary(models.Model):
         _summary_ids = [s.qc_summary_id.id for s in _cert_line_ids]
         return [('id', 'in', _summary_ids)]
 
+    def _get_attachments(self):
+        if self.certificate_line_ids:
+            _cert_ids = self.certificate_line_ids.mapped('certificate_ids')
+            _file_ids = _cert_ids.mapped('cert_file_id')
+            _attach_ids = self.env['ir.attachment'].search([('res_model', '=', 'cic.qc.mill.cert.file'),
+                                                            ('res_id', 'in', _file_ids._ids)])
+            self.attachment_ids = list(_attach_ids._ids)
+
     name = fields.Char('Trip Reference', readonly=True)
     dn_date = fields.Date('DN Date', required=True, default=fields.Date.context_today)
     delivery_date = fields.Date('Delivery Date', default=fields.Date.context_today)
@@ -46,6 +54,7 @@ class QcSummary(models.Model):
     order_codes = fields.Many2many('cic.qc.order.code', compute=_get_order_codes, search=_search_order_code, store=False, string='Order Codes', readonly=True)
     heat_numbers = fields.Many2many('cic.qc.mill.cert.line', compute=_get_order_codes, search=_search_heat_number, store=False, string='Heat Numbers', readonly=True)
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id ,required=True)
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments', compute=_get_attachments, readonly=True,store=False)
 
     _sql_constraints = [('uniq_summary', 'UNIQUE(name)', 'Summary Name Must be Unique')]
 

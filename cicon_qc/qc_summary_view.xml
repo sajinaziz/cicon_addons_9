@@ -73,6 +73,11 @@
                             <page string="Heat Numbers">
                                 <field name="heat_numbers"/>
                             </page>
+                            <page string="Attachments">
+                                <group>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </group>
+                            </page>
 
                         </notebook>
                     </sheet>
