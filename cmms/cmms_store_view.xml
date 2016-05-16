@@ -2,14 +2,19 @@
 <openerp>
     <data>
 
+
+
+
         <record model="ir.ui.view" id="cmms_store_invoice_tree">
             <field name="name">cmms.store.invoice.tree</field>
             <field name="model">cmms.store.invoice</field>
            <field name="arch" type="xml" >
                 <tree string="Store Invoice">
-                    <field name="inv_ref" />
-                    <field name="inv_date"/>
-                    <field name="inv_name"/>
+                    <field name="name" />
+                    <field name="invoice_date"/>
+                    <field name="qb_ref"/>
+                    <field name="qb_inv_name"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -20,32 +25,72 @@
         <field name="model">cmms.store.invoice</field>
         <field name="arch" type="xml" >
             <form string="Store Invoice">
+                <header>
+                    <button name="set_confirm"  icon="fa-check-circle" class="oe_highlight" string="Confirm" states="draft" type="object"/>
+                    <button name="move_consume" icon="fa-forward" class="oe_highlight" string="Post" states="confirmed" type="object" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"   />
+                </header>
                 <sheet>
+                    <div class="oe_title oe_left">
+                        <field name="name" readonly="1"/>
+                    </div>
+                    <div class="oe_right or_button_box">
+
+                        <!--<button name="post_move_view" type="object" string="Post"/>-->
+                    </div>
                  <group>
                      <group>
-                        <field name="inv_id"/>
-                        <field name="inv_ref"/>
-                        <field name="inv_date"/>
+                         <field name="is_qb_invoice" readonly="1"/>
+                         <field name="invoice_date"/>
+                         <field name="machine_id" domain="[('company_id','=', company_id)]"  attrs="{'required':[('is_qb_invoice','=',False)]}" />
                      </group>
                      <group>
-                         <field name="inv_name"/>
-                        <field name="company_id"/>
-                         <field name="qb_ref"/>
+                         <field name="company_id"/>
+                         <field name="user_id"/>
                      </group>
                  </group>
-                    <field name="invoice_line_ids">
-                        <tree editable="bottom">
-                            <field name="qb_line_ref" />
-                            <field name="product_id"/>
-                            <field name="prod_name"/>
-                            <field name="prod_desc"/>
-                            <field name="job_code" />
-                            <field name="unit_price"/>
-                            <field name="quantity"/>
-                            <field name="job_order_id"/>
-                            <field name="amount" sum="Total"/>
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Invoice Items">
+                            <field name="invoice_line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_desc"/>
+                                    <field name="unit_price"/>
+                                    <field name="quantity"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="job_code" />
+                                    <field name="job_order_id"/>
+                                    <field name="move_state"/>
+                                    <field name="qb_line_ref" invisible="1" />
+                                    <field name="qb_prod_desc" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <button name="move_consume" icon="fa-forward"  states="confirmed" type="object"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Inventory">
+                            <group>
+                                <group>
+                                    <field name="warehouse_id"/>
+                                    <field name="picking_type_id"/>
+                                </group>
+                                <group>
+                                    <field name="src_location_id"/>
+                                    <field name="consu_location_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="QB Details">
+                            <group string="Quick books" col="4">
+                                 <field name="qb_inv_name"/>
+                                 <field name="qb_inv_ref"/>
+                                 <field name="qb_ref"/>
+                                 <field name="qb_inv_id"/>
+                                 <field name="qb_last_updated"/>
+                             </group>
+                        </page>
+
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -60,18 +105,20 @@
             <field name="model">cmms.store.invoice.line</field>
            <field name="arch" type="xml" >
                 <tree string="Store Invoice Line">
-                    <field name="invoice_id"/>
-                      <field name="qb_line_ref" />
+                     <field name="invoice_id"/>
                      <field name="product_id" invisible="1"/>
-                    <field name="invoice_date"/>
-                     <field name="prod_name"/>
-                     <field name="prod_desc"/>
+                     <field name="invoice_date"/>
+                     <field name="product_desc"/>
+                     <field name="qb_prod_desc" invisible="1"/>
                      <field name="job_order_id"/>
                      <field name="machine_id"/>
-                    <field name="unit_price"/>
-                    <field name="quantity"/>
-                    <field name="amount" sum="Total"/>
-                    <field name="spare_part_type_id"/>
+                     <field name="unit_price"/>
+                     <field name="quantity"/>
+                     <field name="amount" sum="Total"/>
+                     <field name="spare_part_type_id"/>
+                     <field name="qb_line_ref" invisible="1" />
+                    <field name="state" />
+
                 </tree>
             </field>
         </record>
@@ -111,9 +158,9 @@
                     <field name="invoice_id"/>
                     <field name="job_order_id"/>
                     <field name="machine_id"/>
-                    <filter name="last_month" string="Last Month" domain="[('invoice_id.inv_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01')),('invoice_id.inv_date','&lt;',time.strftime('%%Y-%%m-01'))]" />
+                    <filter name="last_month" string="Last Month" domain="[('invoice_id.invoice_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01')),('invoice_id.invoice_date','&lt;',time.strftime('%%Y-%%m-01'))]" />
                     <seperator/>
-                    <filter name="this_month" string="This Month" domain="[('invoice_id.inv_date','&gt;=',(context_today()).strftime('%%Y-%%m-01')),('invoice_id.inv_date','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01'))]" />
+                    <filter name="this_month" string="This Month" domain="[('invoice_id.invoice_date','&gt;=',(context_today()).strftime('%%Y-%%m-01')),('invoice_id.invoice_date','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01'))]" />
                     <seperator/>
                     <filter name="pending" string="Without Job Order" domain="[('job_order_id','=',False)]" help="Not Mapped To any Job Order" />
                     <seperator/>
@@ -151,7 +198,6 @@
         <record model="ir.actions.act_window" id="action_cmms_store_invoice">
             <field name="name" >Store Invoice</field>
             <field name="res_model">cmms.store.invoice</field>
-
         </record>
 
          <record model="ir.actions.act_window" id="action_cmms_store_invoice_line">
@@ -180,24 +226,6 @@
         </record>
 
 
-              <record model="ir.ui.view" id="cmms_machine_form_view_store">
-            <field name="name">cmms.machine.form.store</field>
-            <field name="model">cmms.machine</field>
-             <field name="inherit_id" ref="cmms_machine_form_view"/>
-            <field name="arch" type="xml" >
-                <xpath expr="//sheet/div" postision="inside">
-                    <button name="%(action_cmms_store_invoice_line)d"
-                                        type="action"
-                                        class="oe_inline oe_stat_button"
-                                        icon="fa-money"
-                                        widget="statinfo"
-                                        context="{'search_default_machine_id': active_ids}"
-                                         help="Parts Cost">
-                                   <field name="parts_cost" widget="statinfo"/>
-                    </button>
-                </xpath>
-            </field>
-        </record>
 
 
         <menuitem name="Store" parent="cmms_menu" id="cmms_machine_store_menu" sequence="50"/>

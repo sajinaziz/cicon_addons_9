@@ -79,18 +79,12 @@
                                         </tree>
                                     </field>
                                  </page>
-                                 <page string="Spare Parts">
-                                     <field name="spare_parts_ids">
-                                         <tree string="Parts">
-                                            <field name="qb_line_ref" />
-                                            <field name="product_id"/>
-                                            <field name="prod_name"/>
-                                            <field name="unit_price"/>
-                                            <field name="quantity"/>
-                                            <field name="amount" sum="Total"/>
-                                         </tree>
-                                     </field>
+                                 <page string="Parts">
+                                     <field name="spare_part_ids"/>
+
+
                                  </page>
+
                              </notebook>
                      </sheet>
                 <div class="oe_chatter">

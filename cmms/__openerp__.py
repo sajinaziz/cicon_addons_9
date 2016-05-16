@@ -25,7 +25,7 @@ Required modules:
     "author": "@ CICON",
     "website": "http://www.cicondubai.ae/",
     "category": "Enterprise Maintenance Management System",
-    "depends": ['base', 'product', 'mail'],
+    "depends": ['base', 'product', 'mail', 'stock'],
     "data": [
         'security/cmms_security.xml',
         'security/ir.model.access.csv',
@@ -46,6 +46,7 @@ Required modules:
         'wizard/pm_task_sch_report_wizard_view.xml',
         'wizard/spare_part_type_wizard_view.xml',
         'wizard/common_report_wizard_view.xml',
+        # 'wizard/consume_product_wizard_view.xml',
         'cmms_report.xml'],
     "init_xml": [],
     'update_xml': [],

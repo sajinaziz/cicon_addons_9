@@ -27,7 +27,6 @@
             <record model="ir.ui.view" id="cmms_machine_form_view">
             <field name="name">cmms.machine.form</field>
             <field name="model">cmms.machine</field>
-            <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="CMMS Machine">
                     <header>
@@ -35,7 +34,15 @@
                     </header>
                     <sheet>
                          <div class="oe_right oe_button_box">
-
+                             <button name="%(action_cmms_store_invoice_line)d"
+                                                                    type="action"
+                                                                    class="oe_inline oe_stat_button"
+                                                                    icon="fa-money"
+                                                                    widget="statinfo"
+                                                                    context="{'search_default_machine_id': active_ids}"
+                                                                     help="Parts Cost">
+                                                               <field name="parts_cost" widget="statinfo"/>
+                             </button>
                         </div>
                         <div class="oe_left">
                             <label for="code"/>
@@ -48,7 +55,6 @@
                         <group>
                             <group>
                                 <field name="id" invisible="1"/>
-
                                 <field name="last_machine_code" readonly="1" attrs="{'invisible':[('id','!=',False)]}"/>
                                 <field name="type_id" options="{'no_open':True,'no_create': True}"/>
                                 <field name="category_id" options="{'no_open':True,'no_create': True}"/>
@@ -91,6 +97,9 @@
                                         <field name="last_date"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Parts">
+                                <field name="spare_part_ids"/>
 
                             </page>
                         </notebook>

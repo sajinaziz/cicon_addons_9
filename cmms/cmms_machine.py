@@ -94,15 +94,15 @@ class CmmsMachine(models.Model):
                               ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status',
                              required=True, track_visibility='onchange')
     active = fields.Boolean('Active', default=True, required=True)
-    is_active = fields.Boolean('Is Active', help="Is Machine Active or  Stand by", track_visibility='onchange')
+    is_active = fields.Boolean('Is Active', default=True, help="Is Machine Active or  Stand by", track_visibility='onchange')
     last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, "
                                                                             "Please Select a group to show !.")
     pm_scheme_id = fields.Many2one('cmms.pm.scheme', string='PM Scheme', track_visibility='onchange')
     pm_task_ids = fields.One2many('cmms.machine.task.view', 'machine_id', readonly=True)
-    # spare_part_ids = fields.One2many('cmms.store.invoice.line', 'machine_id', readonly=True, string="Parts")
+    spare_part_ids = fields.One2many('cmms.store.invoice.line', 'machine_id', readonly=True, string="Parts")
     # job_order_ids = fields.One2many('cmms.job.order', 'machine_id', readonly=True, string="Job Orders")
     breakdown_count = fields.Integer('Breakdowns', compute=_job_order_count)
-    parts_cost = fields.Float('Part Cost', compute=_job_order_count, digits=(10, 2))
+    parts_cost = fields.Float('Parts Cost', compute=_job_order_count)
     location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
 
     _sql_constraint = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]

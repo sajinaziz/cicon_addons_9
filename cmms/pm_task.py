@@ -91,7 +91,7 @@ class CmmsPmScheduleMaster(models.Model):
             return ''
 
         def get_end_date():
-            _end_date =''
+            _end_date = ''
             if self.end_date:
                 _end_date = self.end_date
             return (self.end_type == 'count' and (';COUNT=' + str(self.count)) or '') +\

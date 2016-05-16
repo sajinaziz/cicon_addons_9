@@ -81,7 +81,7 @@ class CmmsJobOrder(models.Model):
                              store=True, readonly=True)
 
     sch_pm_task_ids = fields.One2many('cmms.pm.task.job.order.line', 'job_order_id', string="PM Tasks")
-    spare_parts_ids = fields.One2many('cmms.store.invoice.line', 'job_order_id', string="Spare Parts", readonly=True)
+    spare_part_ids = fields.One2many('cmms.store.invoice.line', 'job_order_id', readonly=True, string="Parts")
 
     _order = 'job_order_date desc'
 
