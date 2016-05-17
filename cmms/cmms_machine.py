@@ -72,7 +72,7 @@ class CmmsMachine(models.Model):
             for r in _res:
                 if r['job_order_type'] == 'breakdown':
                     self.breakdown_count = r['job_order_type_count']
-            self.parts_cost = sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount'))
+            self.parts_cost = round(sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount')),2)
 
     code = fields.Char('Code', size=10, help="Machine Code", required=True, track_visibility='always')
     name = fields.Char('Name', help="Machine Name", required=True)

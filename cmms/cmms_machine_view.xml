@@ -2,8 +2,7 @@
 <openerp>
     <data>
 
-
-            <menuitem name="CMMS " id="cmms_menu" sequence="60" ></menuitem>
+            <menuitem name="CMMS " id="cmms_menu" sequence="60" />
 
             <record model="ir.ui.view" id="cmms_machine_tree_view">
             <field name="name">cmms.machine.tree</field>
@@ -14,7 +13,7 @@
                     <field name="name"/>
                     <field name="model"/>
                     <field name="supplier_id"/>
-                    <field name="mfg_year"/>
+
                     <field name="serial_no"/>
                     <field name="note"/>
                     <field name="condition"/>
@@ -100,7 +99,6 @@
                             </page>
                             <page string="Parts">
                                 <field name="spare_part_ids"/>
-
                             </page>
                         </notebook>
 
@@ -112,6 +110,28 @@
                 </form>
             </field>
             </record>
+
+
+        <record id="cmms_machine_search" model="ir.ui.view">
+         <field name="name">cmms.machine.search</field>
+         <field name="model">cmms.machine</field>
+         <field name="arch" type="xml">
+             <search>
+                 <field name="code"/>
+                 <field name="category_id" widget="selection"/>
+                 <field name="group_id" widget="selection"/>
+                 <field name="type_id" widget="selection"/>
+                 <field name="company_id" widget="selection"/>
+                 <group string="Group By">
+                     <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" />
+                 </group>
+                 <group string="Filter">
+                     <filter name="active_machines" string="Active" domain="[('is_active', '=', True)]"/>
+                 </group>
+             </search>
+         </field>
+        </record>
+
 
 
 

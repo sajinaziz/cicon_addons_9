@@ -433,7 +433,7 @@
     <template id="cmms_job_order_blank_template">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
-            <t t-call="cmms.cmms_internal_layout">
+            <t t-call="cmms.cmms_internal_layout"/>
                 <div class="page">
                     <div class="row" style="border-bottom:1px" >
                     <div class="text-center col-xs-4 col-xs-offset-4">
@@ -452,8 +452,8 @@
                     </t>
 
 
-                </div>
-            </t>
+               </div>
+
         </t>
     </t>
 
@@ -464,7 +464,7 @@
    <template id="cmms_job_order_template">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
-        <t t-call="cmms.cmms_internal_layout">
+        <t t-call="cmms.cmms_internal_layout"/>
         <div class="page">
             <div class="row" style="border-bottom:1px" >
                 <div class="text-center col-xs-4 col-xs-offset-4">
@@ -487,7 +487,7 @@
 
         </div>
         </t>
-        </t>
+
     </t>
     </template>
 
@@ -727,13 +727,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="o.spare_parts_ids" t-as="r">
+                                <tr t-foreach="o.spare_part_ids" t-as="r">
                                     <td> <span t-esc="r_index +1 "/> </td>
-                                    <td> <span t-field="r.invoice_id.inv_ref"/> </td>
+                                    <td> <span t-field="r.invoice_id.qb_inv_ref"/> </td>
                                     <td> <span t-field="r.invoice_date"/> </td>
-                                    <td> <span t-field="r.prod_name"/> </td>
+                                    <td> <span t-field="r.product_desc"/> </td>
                                     <td> <span t-field="r.quantity" /> </td>
-                                    <td><span t-field="r.spare_part_type_id"/> </td>
+                                    <td><span t-field="r.spare_part_type_id.name"/> </td>
                                 </tr>
                             </tbody>
                         </table></div>

@@ -81,8 +81,6 @@
                                  </page>
                                  <page string="Parts">
                                      <field name="spare_part_ids"/>
-
-
                                  </page>
 
                              </notebook>
@@ -201,9 +199,8 @@
          <record model="ir.ui.view" id="cmms_job_order_code_tree_view">
             <field name="name">cmms.job_order_code.tree</field>
             <field name="model">cmms.job.order.code</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml" >
-                <tree string="Job Order Master" editable="bottom">
+                <tree string="Job Order Master" editable="bottom" default_order="name desc">
                     <field name="name" string="Code" />
                     <field name="created"/>
                     <field name="printed"/>
@@ -212,6 +209,20 @@
                 </tree>
             </field>
         </record>
+
+           <record model="ir.ui.view" id="cmms_job_order_code_search">
+            <field name="name">cmms.job_order_code.search</field>
+            <field name="model">cmms.job.order.code</field>
+            <field name="arch" type="xml">
+                <search string="Job Order Code">
+                    <filter name="breakdown_filter" string="Breakdown" domain="[('job_order_type','=','breakdown')]"/>
+                    <filter name="general_filter" string="General" domain="[('job_order_type','=','general')]"/>
+                </search>
+
+            </field>
+           </record>
+
+
 
         <record model="ir.ui.view" id="cmms_job_order_category_tree">
             <field name="name">cmms.job.category.tree</field>

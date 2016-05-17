@@ -32,9 +32,9 @@
                                  <t t-set="invoices" t-value="get_invoice(m)"/>
                                  <tr t-foreach="invoices" t-as="i">
                                      <td> <span t-field="i.job_order_id.name"/> </td>
-                                     <td> <span t-field="i.invoice_id.inv_ref"/> </td>
-                                     <td> <span t-field="i.invoice_id.inv_date"/> </td>
-                                     <td> <span t-field="i.prod_name"/> </td>
+                                     <td> <span t-field="i.invoice_id.qb_inv_ref"/> </td>
+                                     <td> <span t-field="i.invoice_id.invoice_date"/> </td>
+                                     <td> <span t-field="i.product_desc"/> </td>
                                      <td> <span t-esc="int(i.quantity)"/> </td>
                                      <td> <span t-esc="i.unit_price" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> </td>
                                      <td> <span t-esc="i.amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>  </td>

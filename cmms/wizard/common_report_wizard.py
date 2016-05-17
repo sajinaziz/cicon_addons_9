@@ -18,5 +18,6 @@ class CmmsCommonReportWizard(models.TransientModel):
         ctx['from_date'] = self.start_date
         ctx['to_date'] = self.end_date
         ctx['heading'] = self.report_list
-        ctx['company_id'] = self.company_id
+        ctx['company_id'] = self.company_id.id
+        print ctx
         return self.with_context(ctx).env['report'].get_action(self, report_name='cmms.cmms_inventory_expense_report_summary', data={})
