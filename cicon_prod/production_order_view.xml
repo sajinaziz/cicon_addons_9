@@ -36,21 +36,19 @@
                     <field name="template_ids"/>
                     <templates>
                         <t t-name="kanban-box">
-                        <div class="oe_kanban_card oe_prod_order_details oe_kanban_global_click">
-                            <div  class="oe_prod_order_details" >
-                                <h3> <field name="partner_id"/>  </h3>
-                                <br/>
-                                <h3> <field name="project_id"/>  </h3>
-                                <br/>
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <h4> <field name="project_id"/>  </h4>
                                 <h4> <field name="name"/></h4>
                                 <h6> <field name="description"/> </h6>
                                 <ul>
-
                                     <li><field name="customer_order_id"/></li>
                                     <li t-if="record.required_date.raw_value"><field name="required_date"/></li>
                                     <li> Tonnage : <span> <field name="total_tonnage"/> </span> </li>
-                                    <li><field name="template_ids"/> </li>
+                                    <li> <field  name="template_str"/> </li>
                                 </ul>
+
+
                             </div>
                         </div>
                         </t>
@@ -315,7 +313,8 @@
             <record model="ir.actions.act_window" id="action_cicon_prod_order_planning">
             <field name="name" >Production Planning</field>
             <field name="res_model">cicon.prod.order</field>
-                <field name="view_id" ref="cicon_prod_order_plan_tree_view"/>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="cicon_prod_order_plan_tree_view"/>
        </record>
 
 

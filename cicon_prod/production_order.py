@@ -14,7 +14,10 @@ class cicon_prod_order(models.Model):
             _temp = []
             for line in rec.product_lines:
                 _temp.extend(line.mapped('product_tmpl_id')._ids)
+                # _temp_str.extend([x.name for x in line.product_tmpl_id])
             rec.template_ids = list(set(_temp))
+            if rec.template_ids:
+                rec.template_str = ','.join([x.name for x in rec.template_ids])
 
     name = fields.Char('Armaor Code / Internal Ref.', size=12, required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     revision_no = fields.Integer('Revision No', required=True, readonly=True, track_visibility="onchange", states={'pending': [('readonly', False)]})
@@ -26,8 +29,9 @@ class cicon_prod_order(models.Model):
     tag_count = fields.Integer('Tags', readonly=True, states={'pending': [('readonly', False)]})
     bar_mark_count = fields.Integer('Bar Marks', readonly=True, states={'pending': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', related='customer_order_id.project_id.partner_id', string='Customer', readonly=True)
-    project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project',readonly=True)
-    state = fields.Selection([('pending', 'New'), ('progress', 'In Progress'), ('transit', 'Transit'), ('delivered', 'Delivered'), ('cancel', 'Cancel'),
+    project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project', readonly=True)
+    state = fields.Selection([('pending', 'New'), ('progress', 'In Progress'), ('transit', 'Transit'),
+                              ('delivered', 'Delivered'), ('cancel', 'Cancel'),
                               ('hold', 'On Hold'), ('transfer', 'Transfer')], default='pending',  string='Status', track_visibility="onchange")
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
     created_user = fields.Many2one('res.users', string="Created By", default=lambda self: self.env.user.id)
@@ -36,6 +40,7 @@ class cicon_prod_order(models.Model):
     plan_id = fields.Many2one('cicon.prod.plan', string="Production Plan")
     sequence = fields.Integer('Sequence')
     template_ids = fields.Many2many('product.template', compute=_get_tonnage, store=False, string='Products')
+    template_str = fields.Char(compute=_get_tonnage,store=False, string='Products')
     load = fields.Integer("Load Priority")
 
     _order = "required_date desc"
@@ -66,16 +71,14 @@ class cicon_prod_order(models.Model):
         default.update(state='pending')
         return super(cicon_prod_order, self).copy(default)
 
-    # @api.v7
-    # def _read_group_plan_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-    #     plan_obj = self.pool.get('cicon.prod.plan')
-    #     plan_ids = plan_obj.search(cr, uid, [], context=context)
-    #     result = plan_obj.name_get(cr, uid, plan_ids)
-    #     return result, {}
-    #
-    # _group_by_full = {
-    #     'plan_id': _read_group_plan_ids,
-    # }
+    @api.model
+    def plan_groups(self, present_ids, domain, **kwargs):
+        _plans = self.env['cicon.prod.plan'].search([('state', '!=', 'done')]).name_get()
+        return _plans, None
+
+    _group_by_full = {
+        'plan_id': plan_groups,
+    }
 
     # @api.one
     # def write(self, vals):

@@ -24,6 +24,9 @@
 			<field name="model">cicon.prod.delivery.order</field>
 			<field name="arch" type="xml">
                 <form string="Delivery Order" >
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="partner_id"/>
@@ -35,6 +38,7 @@
                                 <field name="customer_order_id" attrs="{'readonly':[('id','!=',False)]}" />
                                 <field name="name"/>
                                 <field name="dn_date"/>
+                                <field name="trip_details"/>
                             </group>
                             <group>
                                 <field name="prod_order_ids" widget="many2many_tags"/>

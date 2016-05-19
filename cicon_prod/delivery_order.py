@@ -16,6 +16,7 @@ class CiconProdDeliveryOrder(models.Model):
     product_tmpl_ids = fields.Many2many('product.template','cicon_dn_product_tmpl_rel','dn_id', 'product_tmpl_id', "Product Templates")
     state = fields.Selection([('pending', 'Pending'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
     dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines")
+    trip_details = fields.Char('Trailer/Driver')
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(name)', "DN Should be unique")]
 

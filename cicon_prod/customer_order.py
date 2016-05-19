@@ -30,7 +30,8 @@ class cicon_customer_order(models.Model):
             ('progress', 'In Process'),
             ('close', 'Completed'),
             ('cancel', 'Cancelled')], 'Status', default='new', track_visibility='onchange')
-    # last_order = fields.Many2one('cicon.customer.order', string='Previous Order', store=False, readonly=True)
+    last_order = fields.Many2one('cicon.customer.order', string='Previous Order', store=False, readonly=True)
+    prod_order_ids = fields.One2many('cicon.prod.order', 'customer_order_id', string='Production Orders')
     # old_id = fields.Integer('Old Id')
 
     _sql_constraints = [('order_name', 'unique(project_id,name)', 'Order Name Must be Unique per project')]
