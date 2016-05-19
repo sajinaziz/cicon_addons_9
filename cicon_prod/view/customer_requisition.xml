@@ -246,10 +246,31 @@
                      </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="range(1,16)" t-as="l">
+
+                    <t t-if="o.prod_order_count ==0">
+                     <tr t-foreach="range(1,16)" t-as="l">
                         <th style="height:30px;  border: 1px solid;" t-foreach="range(1,12)" t-as="c">
                         </th>
                     </tr>
+                    </t>
+                    <t t-if="o.prod_order_count > 0">
+                        <tr t-foreach="o.prod_order_ids" t-as="po">
+                            <th style="height:30px; border:1px solid;"> <span t-esc="po.name"/> </th>
+                            <th style="height:30px; border: 1px solid;"> <small t-esc="po.template_str"/>  </th>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"> <span t-esc="po.total_tonnage"/> </th>
+                            <th style="height:30px; border: 1px solid;"/>
+                            <th style="height:30px; border: 1px solid;"/>
+
+                        </tr>
+
+                    </t>
+
 
                 </tbody>
             </table>
@@ -257,10 +278,11 @@
                   <!--<div class="col-xs-4">-->
                        <!--<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.create_uid.name + '/' + str(o.id) , 600, 100)" style="width:300px;height:30px;"/>-->
                   <!--</div>-->
-
-            <div class="col-xs-8 text-right">
-                <span t-esc="o.get_datetime_current()"/>
-             </div>
+               <t t-if="o.prod_order_count ==0">
+                <div class="col-xs-8 text-right">
+                   <span t-esc="o.get_datetime_current()"/>
+                 </div>
+                </t>
             </div>
         </div>
        <div class="footer">
