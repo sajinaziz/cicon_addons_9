@@ -32,16 +32,8 @@
 
                     </header>
                     <sheet>
-                         <div class="oe_right oe_button_box">
-                             <button name="%(action_cmms_store_invoice_line)d"
-                                                                    type="action"
-                                                                    class="oe_inline oe_stat_button"
-                                                                    icon="fa-money"
-                                                                    widget="statinfo"
-                                                                    context="{'search_default_machine_id': active_ids}"
-                                                                     help="Parts Cost">
-                                                               <field name="parts_cost" widget="statinfo"/>
-                             </button>
+                         <div name="btn_box" class="oe_right oe_button_box">
+
                         </div>
                         <div class="oe_left">
                             <label for="code"/>

@@ -205,7 +205,32 @@
             <field name="res_model">cmms.store.invoice.line</field>
              <field name="view_mode">tree,form,pivot,graph</field>
              <field name="context">{'search_default_this_month': 1}</field>
+
         </record>
+
+
+
+        <record model="ir.ui.view" id="cmms_machine_form_view_extn">
+            <field name="name">cmms.machine.form.extn</field>
+            <field name="model">cmms.machine</field>
+            <field name="inherit_id" ref="cmms.cmms_machine_form_view"/>
+            <field name="arch" type="xml" >
+
+                <xpath expr="//form/sheet/div[@name='btn_box']" position="inside">
+                    <button name="%(action_cmms_store_invoice_line)d"
+                            type="action"
+                            class="oe_inline oe_stat_button"
+                            icon="fa-money"
+                            widget="statinfo"
+                            context="{'search_default_machine_id': active_ids}"
+                            help="Parts Cost">
+                        <field name="parts_cost" widget="statinfo"/>
+                    </button>
+                </xpath>
+
+            </field>
+        </record>
+
 
          <record model="ir.ui.view" id="cmms_spare_part_type_tree">
             <field name="name">cmms.spare.part.type.tree</field>

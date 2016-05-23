@@ -44,11 +44,6 @@ class CmmsPmGenerateWizard(models.TransientModel):
                     _job_obj.create(_pm_job_order)
         return True
 
-
-
-
-
-
         # _pm_date = None
         # if ids:
         #     _pm_obj = self.read(cr,uid,ids)
