@@ -405,25 +405,6 @@
             </div>
         </div>
 
-         <div class="row mt8">
-             <table class="table table-bordered">
-                 <thead>
-                     <th> S/N </th>
-                     <th>Attended By (Name)</th>
-                     <th>Employee No.</th>
-                     <th>Signature</th>
-                 </thead>
-                 <tbody>
-                     <tr t-foreach="[1,2,3]" t-as="r">
-                         <td> <span t-esc="r"/> </td>
-                         <td></td>
-                         <td></td>
-                         <td></td>
-                     </tr>
-                 </tbody>
-             </table>
-         </div>
-
 
 
     </template>
