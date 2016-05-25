@@ -1,4 +1,4 @@
-from openerp import models,api
+from openerp import models, api
 
 _inv_lines = None
 
@@ -17,7 +17,8 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
             'heading': self._context.get('heading'),
             'get_category': self._get_categories,
             'get_machine': self._get_machines,
-            'get_invoice': self._get_invoices
+            'get_invoice': self._get_invoices,
+            'get_total': self._get_invoice_total
         }
         return report_obj.render('cmms.cmms_inventory_expense_report_summary', docargs)
 
@@ -40,6 +41,10 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
     def _get_invoices(self, _machine):
         _invoices = self._inv_lines.filtered(lambda r: r.machine_id == _machine)
         return _invoices
+
+    def _get_invoice_total(self, _machine):
+        _total = sum(x.amount for x in self._inv_lines.filtered(lambda r: r.machine_id == _machine))
+        return _total
 
 
 

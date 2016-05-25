@@ -202,7 +202,7 @@ class CmmsStoreInvoiceLine(models.Model):
                 _ex_code = rec.qb_prod_desc.split(' ')[-1]
                 _prefix = _ex_code.split('-')[0]
                 #TODO:  Check other Criteria for Job Order Code
-                rec.job_code = _ex_code
+                rec.job_code = str(_ex_code).strip()
 
     @api.depends('qb_prod_desc')
     def _set_job_order(self):
@@ -221,11 +221,11 @@ class CmmsStoreInvoiceLine(models.Model):
     invoice_date = fields.Date('Date', related='invoice_id.invoice_date', store=True, readonly=True)
     product_id = fields.Many2one('product.product', string='Product', states={'draft':[('readonly', False)]} ,required=True , readonly=True)
     product_uom_id = fields.Many2one('product.uom', realted='product_id.product_uom_id', string='Unit' , store=True , readonly=True )
-    product_desc = fields.Char('Product Description', index=True, required=True ,readonly=True, states={'draft':[('readonly', False)]} )
-    quantity = fields.Float('Quantity', readonly=True, states={'draft':[('readonly', False)]})
-    unit_price = fields.Float('Unit Price', readonly=True, states={'draft':[('readonly', False)]} )
-    amount = fields.Float("Amount", compute=_total_amount, store=True , readonly=True )
-    job_code = fields.Char('Job Code', compute=_set_job_code , readonly=True )
+    product_desc = fields.Char('Product Description', index=True, required=True, readonly=True, states={'draft':[('readonly', False)]} )
+    quantity = fields.Float('Quantity', readonly=True, states={'draft': [('readonly', False)]})
+    unit_price = fields.Float('Unit Price', readonly=True, states={'draft': [('readonly', False)]} )
+    amount = fields.Float("Amount", compute=_total_amount, store=True, readonly=True)
+    job_code = fields.Char('Job Code', compute=_set_job_code, readonly=True)
     job_order_id = fields.Many2one('cmms.job.order', string="Job order", compute=_set_job_order, store=True, readonly=True )
     machine_id = fields.Many2one('cmms.machine', related='job_order_id.machine_id', string="Machine", store=True, readonly=True )
     company_id = fields.Many2one('res.company', "Company", related="invoice_id.company_id", store=True, readonly=True )

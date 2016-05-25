@@ -12,13 +12,13 @@
                             <th>Code </th>
                             <th>Date </th>
                             <th>Machine </th>
-                            <th>Cause</th>
-                            <th>Corrective Action</th>
-                            <th>Technician</th>
-                            <th>Priority</th>
-                            <th>Category</th>
-                            <th>Work Time</th>
-                            <th>Amount</th>
+                            <th>Cause </th>
+                            <th>Corrective Action </th>
+                            <th>Technician </th>
+                            <th>Priority </th>
+                            <th>Category </th>
+                            <th>Work Time </th>
+                            <th>Amount </th>
                             <th>Status </th>
                         </thead>
                         <tbody>

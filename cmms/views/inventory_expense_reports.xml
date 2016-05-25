@@ -35,10 +35,16 @@
                                      <td> <span t-field="i.invoice_id.qb_inv_ref"/> </td>
                                      <td> <span t-field="i.invoice_id.invoice_date"/> </td>
                                      <td> <span t-field="i.product_desc"/> </td>
-                                     <td> <span t-esc="int(i.quantity)"/> </td>
-                                     <td> <span t-esc="i.unit_price" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> </td>
-                                     <td> <span t-esc="i.amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>  </td>
+                                     <td  class="text-right"> <span t-esc="int(i.quantity)"/> </td>
+                                     <td  class="text-right"> <span t-esc="i.unit_price"  t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
+                                     <td  class="text-right"> <span t-esc="i.amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' />  </td>
                                  </tr>
+                                  <tr>
+                                      <td class="text-right" colspan="5"/>
+                                      <td class="text-center">Total</td>
+                                      <t t-set="total_amount"  t-value="get_total(m)"/>
+                                      <td class="text-right"> <strong> <u t-esc="total_amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </strong> </td>
+                                  </tr>
                                </t>
                             </t>
                             </tbody>
