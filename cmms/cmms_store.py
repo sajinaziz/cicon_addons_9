@@ -16,6 +16,10 @@ class CmmsStoreInvoice(models.Model):
     _name = 'cmms.store.invoice'
     _description = "Store Invoice"
 
+    def _calc_total(self):
+        for rec in self:
+            rec.total_amount = sum([x.amount for x in rec.invoice_line_ids])
+
     is_qb_invoice = fields.Boolean('QB Invoice Import')
     name = fields.Char('Reference', default='New', copy=False,
                        readonly=True)
@@ -44,6 +48,7 @@ class CmmsStoreInvoice(models.Model):
     qb_last_updated = fields.Datetime('Last Edited Time')
 
     invoice_line_ids = fields.One2many('cmms.store.invoice.line', 'invoice_id', string="Invoice Lines", readonly=True, states={'draft':[('readonly', False)]})
+    total_amount = fields.Float(string="Total Amount", compute=_calc_total)
 
     @api.multi
     def set_confirm(self):

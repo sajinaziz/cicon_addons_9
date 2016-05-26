@@ -22,7 +22,7 @@
                            <h2><field name="job_order_code_id" attrs="{'readonly':[('id','!=',False)],'invisible':[('job_order_type','=','preventive')],'required':[('job_order_type','!=','preventive')]}" options="{'no_create':True,'no_open':True}"/> </h2>
                            <h2> <field name="name" attrs="{'invisible':[('job_order_type','!=','preventive')]}" /> </h2>
                            <label for='machine_id'/>
-                           <h2><field name="machine_id" options="{'no_create':True,'no_open':True}"/></h2>
+                           <h2><field name="machine_id" options="{'no_create':True}"/></h2>
                          </div>
                          <group>
                          <div>
@@ -80,7 +80,21 @@
                                     </field>
                                  </page>
                                  <page string="Parts">
-                                     <field name="spare_part_ids"/>
+                                     <field name="spare_part_ids">
+                                         <tree>
+                                             <field name="invoice_id"/>
+                                             <field name="product_id" invisible="1"/>
+                                             <field name="invoice_date"/>
+                                             <field name="product_desc"/>
+                                             <field name="qb_prod_desc" invisible="1"/>
+                                             <field name="unit_price"/>
+                                             <field name="quantity"/>
+                                             <field name="amount" sum="Total"/>
+                                             <field name="spare_part_type_id"/>
+                                             <field name="qb_line_ref" invisible="1" />
+                                            <field name="state"/>
+                                         </tree>
+                                     </field>
                                  </page>
 
                              </notebook>
@@ -102,6 +116,7 @@
                     <field name="name" string="Code"/>
                     <field name="machine_id"/>
                     <field name="job_order_date"/>
+                    <field name="work_hour" widget="float_time"/>
                     <field name="status_id"/>
                     <field name="state" invisible="1"/>
                 </tree>

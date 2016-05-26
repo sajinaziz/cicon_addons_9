@@ -1,6 +1,6 @@
-from openerp import models, fields, api
+from openerp import models, fields, api, tools
 # from openerp.exceptions import Warning
-
+from datetime import datetime
 
 JOB_ORDER_TYPE = [('breakdown', 'BREAKDOWN'), ('preventive', 'PREVENTIVE'), ('general', 'GENERAL')]
 
@@ -27,6 +27,21 @@ class CmmsJobOrder(models.Model):
     #     for rec in self:
     #         if rec.job_order_code_id:
     #             rec.job_order_code_id.write({'created': True, 'cancelled': False})
+    @api.multi
+    def _calc_total(self):
+        for rec in self:
+            rec.total_amount = sum([x.amount for x in rec.spare_part_ids])
+            if rec.work_start_datetime and rec.work_end_datetime:
+                _start = datetime.strptime(rec.work_start_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                _end = datetime.strptime(rec.work_end_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                _wh_diff = _end - _start
+                _wh_day_sec = _wh_diff.days * 24 * 3600
+                _wh_min = (_wh_day_sec + _wh_diff.seconds) / 60
+                _wh_hour = (_wh_min / 60)
+                _wh_mod_min = _wh_min % 60
+                _wh = _wh_hour + _wh_mod_min/60.0
+                rec.work_hour = float(_wh)
+
     @api.model
     def _get_default_status(self):
         _status = self.env['cmms.job.order.status'].search([('sequence', '>', '0')], order='sequence', limit=1)
@@ -82,6 +97,8 @@ class CmmsJobOrder(models.Model):
 
     sch_pm_task_ids = fields.One2many('cmms.pm.task.job.order.line', 'job_order_id', string="PM Tasks")
     spare_part_ids = fields.One2many('cmms.store.invoice.line', 'job_order_id', readonly=True, string="Parts")
+    total_amount = fields.Float(string="Total Amount", compute=_calc_total)
+    work_hour = fields.Float(string='Work Hours', compute=_calc_total)
 
     _order = 'job_order_date desc'
 
@@ -179,5 +196,6 @@ class CmmsPmTaskJobOrderLine(models.Model):
                 self.date_completed = fields.Date.today()
 
 CmmsPmTaskJobOrderLine()
+
 
 
