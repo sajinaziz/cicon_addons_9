@@ -236,7 +236,7 @@ class CmmsStoreInvoiceLine(models.Model):
     company_id = fields.Many2one('res.company', "Company", related="invoice_id.company_id", store=True, readonly=True )
     spare_part_type_id = fields.Many2one('cmms.spare.part.type', string="Part Type", readonly=True , states={'draft':[('readonly', False)]} )
     move_id = fields.Many2one('stock.move', string="Stock Move", readonly=True)
-    state = fields.Selection(related='invoice_id.state', string='State', readonly=True, store=True)
+    state = fields.Selection(related='invoice_id.state', string='State', readonly=True, default='draft', store=True)
     move_state = fields.Selection(related='move_id.state', string='Move State', readonly=True, store=True)
 
     qb_line_ref = fields.Char('QB Line Reference')
