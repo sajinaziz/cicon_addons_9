@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
-<template id="cmms_inventory_expense_report_summary">
-     <t t-call="report.html_container">
+    <template id="cmms_inventory_expense_report_summary">
+         <t t-call="report.html_container">
          <t t-call="cmms.cmms_internal_layout"/>
             <div class="page">
+
+                  <table class="table table-bordered">
+                      <caption> <h4>  <span t-esc="heading"/>  </h4> </caption>
+                    <thead>
+                        <th>Category</th>
+                        <th>Amount</th>
+                    </thead>
+                     <tbody>
+                         <t t-foreach="docs" t-as="o">
+                            <tr>
+                                <th class="text-center" colspan="2"> <span t-field="o.name"/> </th>
+                            </tr>
+                         <t t-set="categs" t-value="get_category(o)"/>
+                         <t t-foreach="categs" t-as="c">
+                             <tr>
+                                <td> <span t-field="c.name" />  </td>
+                                <td class="text-right"> <span t-esc="get_total_categ(c)"/>  </td>
+                             </tr>
+                         </t>
+                             <tr>
+                                 <td> Total </td>
+                                 <td class="text-right"> <strong t-esc="get_total_type(o)"/>  </td>
+                             </tr>
+                         </t>
+                     </tbody>
+                  </table>
+
+                <p style="page-break-after:always;">   </p>
+
                 <t t-foreach="docs" t-as="o">
                     <table class="table table-condensed">
                         <caption> <span t-field="o.name"/> </caption>
@@ -42,7 +71,7 @@
                                   <tr>
                                       <td class="text-right" colspan="5"/>
                                       <td class="text-center">Total</td>
-                                      <t t-set="total_amount"  t-value="get_total(m)"/>
+                                      <t t-set="total_amount"  t-value="get_total_machine(m)"/>
                                       <td class="text-right"> <strong> <u t-esc="total_amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </strong> </td>
                                   </tr>
                                </t>
@@ -51,8 +80,11 @@
                     </table>
                     <p style="page-break-after:always;">   </p>
                 </t>
+
             </div>
          </t>
     </template>
+
+
     </data>
 </odoo>
