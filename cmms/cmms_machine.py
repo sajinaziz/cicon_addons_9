@@ -126,7 +126,7 @@ class CmmsPmTaskMaster(models.Model):
 
     name = fields.Char('PM Task Description', size=200, required=True)
     pm_scheme_id = fields.Many2one('cmms.pm.scheme', 'PM Scheme', required=True)
-    interval_id = fields.Many2one('cmms.pm.interval', "Interval")
+    interval_id = fields.Many2one('cmms.pm.interval', "Interval",required=True)
     action_by = fields.Selection([('operator', 'Operator'), ('technician', 'Technician')], string='Action By', default='technician')
     active = fields.Boolean('Is Active', default=True)
     material_required = fields.Text('Materials / Tools Required')

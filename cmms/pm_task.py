@@ -129,11 +129,16 @@ class CmmsPmScheduleMaster(models.Model):
     def _search_next_date(self, operator, value):
         if operator == '=':
             _after = parser.parse(value)
-            print _after
             _recs = self.search([])
             _res = _recs.filtered(lambda r:  rrule.rrulestr(r.rrule_str).after(_after, inc=True) and rrule.rrulestr(r.rrule_str).after(_after, inc=True).strftime('%Y-%m-%d') == _after.strftime('%Y-%m-%d'))
             return [('id', 'in', _res._ids)]
 
+    @api.multi
+    def _display_name(self):
+        for rec in self:
+            rec.display_name = rec.pm_scheme_id.name + '/' + rec.interval_id.name
+
+    display_name = fields.Char(string='Name', compute=_display_name, store=False)
     pm_scheme_id = fields.Many2one('cmms.pm.scheme', 'PM Scheme', required=True)
     interval_id = fields.Many2one('cmms.pm.interval', "Interval", required=True)
     rrule_str = fields.Char(compute=compute_rule_string, string='RRule String', store=True)
@@ -144,7 +149,7 @@ class CmmsPmScheduleMaster(models.Model):
     rrule_type = fields.Selection(_RRULE_TYPE, related='interval_id.rrule_type', store=True, readonly=True, string='Recurrency',help="Let the event automatically repeat at that interval")
     interval = fields.Integer('Repeat Every', related='interval_id.count', store=False,  help="Repeat every (Days/Week/Month/Year)", readonly=True)
     next_date = fields.Date('Next Date', search=_search_next_date, compute=_get_next_date, store=False)
-    company_id = fields.Many2one('res.company', string='Company', defualt=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
 
     _sql_constraints = [('unique_schedule', 'unique(pm_scheme_id,interval_id)', "Task/Day/Machine should be Unique")]
 

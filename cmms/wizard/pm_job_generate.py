@@ -39,7 +39,9 @@ class CmmsPmGenerateWizard(models.TransientModel):
                         'job_order_date': self.pm_date,
                         'state': 'open',
                         'description': 'Preventive Maintenance',
-                        'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_task_list)
+                        'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_task_list),
+                        'company_id': m.company_id.id
+
                     }
                     _job_obj.create(_pm_job_order)
         return True

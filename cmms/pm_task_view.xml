@@ -2,8 +2,7 @@
 <openerp>
     <data>
 
-
-          <record model="ir.ui.view" id="cmms_pm_task_sch_master_form">
+        <record model="ir.ui.view" id="cmms_pm_task_sch_master_form">
             <field name="name">cmms.pm.schedule.master.form</field>
             <field name="model">cmms.pm.schedule.master</field>
             <field name="arch" type="xml" >
@@ -52,12 +51,12 @@
                                             </div>
                                             <label string="Select Weekday" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
                                              <group col="2" colspan="1" name="weekday" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
-                                                <field name="week_day" nolabel="1"/>
+                                                <field name="week_day" nolabel="1" attrs="{'required': [('rrule_type', '=', 'weekly')]}"/>
                                             </group>
                                             <label string="Day of Month"
                                                    attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
-                                            <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
-                                                <field name="select1"/>
+                                            <div class="oe_left" attrs="{'invisible': [('rrule_type','!=','monthly')]}">
+                                                <field name="select1" attrs="{'required': [('rrule_type','=','monthly')]}" />
                                                 <field name="day"
                                                        attrs="{'required': [('select1','=','date'), ('rrule_type','=','monthly')],
                                                 'invisible': [('select1','=','day')]}"/>
@@ -135,17 +134,14 @@
         <record model="ir.actions.act_window" id="action_interval_view">
             <field name="name" >PM Interval</field>
             <field name="res_model">cmms.pm.interval</field>
-            <field name="view_mode">tree</field>
         </record>
 
 
-
         <menuitem name="Preventive Tasks" parent="cmms_menu" id="menu_pm_task" sequence="3"/>
-        <menuitem name="PM Scheme" parent="menu_pm_task" id="pm_scheme" action ="action_cmms_pm_scheme_view" ></menuitem>
-        <menuitem name="PM Tasks" parent="menu_pm_task" id="pm_task" action ="action_cmms_pm_task_view" ></menuitem>
+        <menuitem name="PM Scheme" parent="menu_pm_task" id="pm_scheme" action ="action_cmms_pm_scheme_view" />
+        <menuitem name="PM Tasks" parent="menu_pm_task" id="pm_task" action ="action_cmms_pm_task_view" />
 
-
-        <menuitem name="PM Interval" parent="menu_pm_task" id="pm_interval" action ="action_interval_view" ></menuitem>
+        <menuitem name="PM Interval" parent="menu_pm_task" id="pm_interval" action ="action_interval_view" />
         <menuitem name="Schedule" parent="menu_pm_task" id="pm_schedule" action="action_cmms_pm_schedule_master"/>
 
     </data>

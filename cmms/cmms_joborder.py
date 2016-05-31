@@ -19,7 +19,7 @@ CmmsJobCategory()
 
 class CmmsJobOrder(models.Model):
     _name = "cmms.job.order"
-    _description = "CMMS Job Order"
+    _description = "Job Order"
     _inherit = ['mail.thread']
 
     #Inverse Sample for Job Order Code
@@ -66,8 +66,8 @@ class CmmsJobOrder(models.Model):
                               states={'open': [('readonly', False)]})
     job_category_id = fields.Many2one('cmms.job.category', 'Job Category', readonly=True,
                                       states={'open': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', related='machine_id.company_id', string="Company",
-                                 store=True, readonly=True)
+    company_id = fields.Many2one('res.company',  string="Company",
+                                 default=lambda self: self.env.user.company_id)
     reported_by = fields.Char("Reported/Operated By", size=50, readonly=True,
                               states={'open': [('readonly', False)]})
     foreman = fields.Char('Foreman In charge', size=50, readonly=True,

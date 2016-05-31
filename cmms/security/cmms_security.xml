@@ -29,17 +29,54 @@
 
 
         <record id="cmms_mind_your_own_company_machine" model="ir.rule">
-            <field name="name">CMMS See Machines for allowed Company </field>
+            <field name="name">CMMS See Machines for allowed Company</field>
             <field name="model_id" ref="model_cmms_machine"/>
             <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
             <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
         </record>
 
         <record id="cmms_mind_your_own_company_location" model="ir.rule">
-            <field name="name">CMMS See Locations for allowed Company </field>
+            <field name="name">CMMS See Locations for allowed Company</field>
             <field name="model_id" ref="model_cmms_machine_location"/>
             <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
-            <field name="domain_force">['|',('company_id', 'in', user.company_ids._ids),('company_id', '=', False)]</field>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+        </record>
+
+        <record id="cmms_mind_your_own_company_store" model="ir.rule">
+            <field name="name">CMMS See Store Invoice for allowed Company</field>
+            <field name="model_id" ref="model_cmms_store_invoice"/>
+            <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+        </record>
+
+        <record id="cmms_mind_your_own_company_job" model="ir.rule">
+            <field name="name">CMMS See Job Order for allowed Company</field>
+            <field name="model_id" ref="model_cmms_job_order"/>
+            <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+        </record>
+
+
+        <record id="cmms_mind_your_own_company_store_line" model="ir.rule">
+            <field name="name">CMMS See Store Line for allowed Company</field>
+            <field name="model_id" ref="model_cmms_store_invoice_line"/>
+            <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+        </record>
+
+
+        <record id="cmms_mind_your_own_company_job_code" model="ir.rule">
+            <field name="name">CMMS See Job Code for allowed Company</field>
+            <field name="model_id" ref="model_cmms_job_order_code"/>
+            <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+        </record>
+
+        <record id="cmms_mind_your_own_company_schedule" model="ir.rule">
+            <field name="name">CMMS See PM Schedule for allowed Company</field>
+            <field name="model_id" ref="model_cmms_pm_schedule_master"/>
+            <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
         </record>
 
 

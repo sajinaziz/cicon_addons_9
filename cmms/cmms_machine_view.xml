@@ -282,6 +282,33 @@
         </record>
 
 
+         <record model="ir.ui.view" id="cmms_pm_task_form_view">
+            <field name="name">cmms.pm.task.form</field>
+            <field name="model">cmms.pm.task.master</field>
+            <field name="arch" type="xml" >
+                <form string="PM Task">
+                    <sheet>
+                        <group>
+                            <field name="pm_scheme_id" options="{'no_open':True,'no_create': True}"/>
+                            <field name="name" />
+                        </group>
+                        <group col="4">
+
+                            <field name="interval_id" options="{'no_open':True,'no_create': True}" />
+                            <field name="action_by"/>
+                            <field name="duration"/>
+                            <field name="approx_cost"/>
+                            <field name="active"/>
+                         </group>
+                        <group>
+                            <field name="material_required"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
 
 
 

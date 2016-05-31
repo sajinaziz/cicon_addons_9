@@ -27,7 +27,7 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
         _pm_list = {}
         if _pm_date:
             _sch_obj = self.env['cmms.pm.schedule.master']
-            _sch_recs = _sch_obj.search([('next_date', '=', _pm_date)])
+            _sch_recs = _sch_obj.search([('next_date', '=', _pm_date), ('company_id', '=', self.env.user.company_id.id)])
             if _sch_recs:
                 _interval = _sch_recs.mapped('interval_id')
                 for _intv in _interval:

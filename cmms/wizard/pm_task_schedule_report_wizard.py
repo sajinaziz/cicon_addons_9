@@ -26,8 +26,14 @@ class CmmsPmSchPlanReportWizard(models.TransientModel):
             res.append((str(y), str(y)))
         return res
 
-    rpt_month = fields.Selection(_MONTHS, string="Month", required=True)
-    rpt_year = fields.Selection(_get_year, string="Year", required=True)
+    def _get_this_year(self):
+        return str(datetime.today().year)
+
+    def _get_this_month(self):
+        return str(datetime.today().month)
+
+    rpt_month = fields.Selection(_MONTHS, string="Month", required=True, default=_get_this_month)
+    rpt_year = fields.Selection(_get_year, string="Year", required=True, default=_get_this_year)
 
     @api.multi
     def show_report(self):

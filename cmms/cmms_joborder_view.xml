@@ -66,6 +66,7 @@
                                             <field name="technician"/>
                                             <field name="attended_by"/>
                                             <field name="service"/>
+                                             <field name="company_id" options="{'no_create':True, 'no_open': True}"/>
                                         </group>
                                      </group>
                                  </page>
