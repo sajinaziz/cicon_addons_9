@@ -1,6 +1,7 @@
 from openerp import models, fields, api
 import time
 
+
 class cicon_qc_observation_category(models.Model):
     _name = 'cicon.qc.observation.category'
     _description = "CICON QC Observation Category"
@@ -22,7 +23,6 @@ class cicon_qc_observation_category(models.Model):
                 pcat = pcat.parent_id
             res.append((cat.id, ' / '.join(reversed(names))))
         return res
-
 
     @api.one
     @api.constrains
