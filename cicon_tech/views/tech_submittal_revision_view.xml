@@ -74,7 +74,7 @@
                         <field name="bbs_weight" />
                      </group>
                     <group >
-                        <field name="submitted_by" domain="[('company_id','child_of',[company_id])]" options="{'no_open':True,'no_create':True}" />
+                        <field name="submitted_by"  options="{'no_open':True,'no_create':True}" />
                         <!--<field name="signed_by" domain="[('sign_authority','=',True),('company_id','child_of',[company_id])]"/>-->
                         <!--<field name="signed_by" domain="[('id','in',allowed_signing_ids[0][2])]"  />-->
                         <field name="signed_by" options="{'no_open':True,'no_create':True}"/>
@@ -96,6 +96,10 @@
                         <page string="Documents">
                             <field name="document_ids"  >
                            <tree string="Documents" editable="bottom">
+                               <field name="state" readonly="1" invisible="1" />
+                                <!--<field name="name" attrs="{'readonly':[('state','in', ('new','approved','submitted','resubmitted','cancel'))]}"/>-->
+                                <!--Enable readonly (above) in case rename document not perform as expected it makes name readonly once saved then deletion only possibile -->
+                               <!--in case need to rename -->
                                 <field name="name"/>
                                 <field name="document_type_id" options="{'no_open':True,'no_create':True}" />
                                 <field name="description"/>
@@ -113,6 +117,7 @@
                         <page string="Revised Documents">
                              <field name="revised_document_ids"  >
                            <tree string="Documents">
+                                <field name="state" readonly="1" invisible="1" />
                                 <field name="name"/>
                                 <field name="document_type_id"/>
                                 <field name="description"/>
@@ -130,6 +135,7 @@
                         <page string="All Documents">
                             <field name="all_document_ids">
                                 <tree>
+                                    <field name="state" readonly="1" invisible="1" />
                                     <field name="name"/>
                                     <field name="document_type_id" />
                                     <field name="description"/>
