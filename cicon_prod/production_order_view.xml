@@ -45,7 +45,7 @@
                                     <li><field name="customer_order_id"/></li>
                                     <li t-if="record.required_date.raw_value"><field name="required_date"/></li>
                                     <li> Tonnage : <span> <field name="total_tonnage"/> </span> </li>
-                                    <li> <field  name="template_str"/> </li>
+
                                 </ul>
 
 
