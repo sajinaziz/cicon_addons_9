@@ -51,7 +51,7 @@
                             <h2><field name="subtitle"/></h2>
                          </div>
                       <group>
-                          <field name="last_order"/>
+
                       </group>
                         <group>
                             <group string="Order Details">
