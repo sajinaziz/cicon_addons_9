@@ -119,6 +119,34 @@
             </field>
         </record>
 
+         <record model="ir.ui.view" id="cmms_store_invoice_line_form">
+            <field name="name">cmms.store.invoice.line.form</field>
+            <field name="model">cmms.store.invoice.line</field>
+           <field name="arch" type="xml" >
+                <form string="Store Invoice Line form">
+                    <sheet>
+                        <group col="4">
+                            <field name="invoice_id"/>
+                            <field name="invoice_date"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="product_desc"/>
+                            <field name="unit_price"/>
+                             <field name="quantity"/>
+                            <field name="amount" />
+                        </group>
+                        <group col="4">
+                             <field name="qb_prod_desc" invisible="1"/>
+                             <field name="job_order_id"/>
+                             <field name="machine_id"/>
+                             <field name="spare_part_type_id"/>
+                             <field name="qb_line_ref" invisible="1" />
+                             <field name="state" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
 
          <record model="ir.ui.view" id="cmms_store_invoice_line_pivot">
             <field name="name">CMMS Expense</field>

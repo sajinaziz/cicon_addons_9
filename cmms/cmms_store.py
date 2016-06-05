@@ -81,12 +81,25 @@ class CmmsStoreInvoice(models.Model):
                 scrap_move = _stock_move_obj.create(default_val)
                 move_prod.write({'move_id': scrap_move.id})
                 scrap_move.action_done()
+        if self.invoice_line_ids.filtered(lambda l: l.move_state != 'done'):
+            raise Warning('Error ! Not all items are posted !')
+        else:
+            self.write({'state': 'done'})
 
     @api.onchange('picking_type_id')
     def change_picking_type(self):
         if self.picking_type_id:
             self.src_location_id = self.picking_type_id.default_location_src_id
             self.consu_location_id = self.picking_type_id.default_location_dest_id
+
+    @api.multi
+    def unlink(self):
+        self.ensure_one()
+        if self.state == 'draft':
+            res = super(CmmsStoreInvoice, self).unlink()
+            return res
+        else:
+            raise Warning('Delete can perform only in draft state !')
 
     _sql_constraints = [('uniq_ref', 'UNIQUE(qb_ref)', 'Unique QB Reference'),
                         ('uniq_name', 'UNIQUE(name)', 'Unique Reference')]

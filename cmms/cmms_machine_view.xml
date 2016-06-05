@@ -8,7 +8,7 @@
             <field name="name">cmms.machine.tree</field>
             <field name="model">cmms.machine</field>
             <field name="arch" type="xml" >
-                <tree decoration-warning="state in ('repair')" decoration-danger="state in ('unstable')">
+                <tree decoration-warning="state in ('repair')" decoration-danger="state in ('unstable')" decoration-muted="is_active == False">
                     <field name="code" />
                     <field name="name"/>
                     <field name="model"/>
