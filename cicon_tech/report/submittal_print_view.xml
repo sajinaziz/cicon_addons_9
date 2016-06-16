@@ -157,6 +157,7 @@
                      for the above mentioned subject.
              </div>
 
+             <t t-if="o.document_ids">
              <table class="table table-bordered">
                 <thead>
                     <th class="text-center col-xs-1" style="width:12px" > SL No. </th>
@@ -182,12 +183,13 @@
                     </t>
                  </tbody>
              </table>
-            <t t-if="o.revised_document_ids">
+            </t>
 
+            <t t-if="o.revised_document_ids">
                 <table class="table table-bordered">
                     <caption> Revised Documents</caption>
                 <thead>
-                   <th class="text-center col-xs-1"> SL No. </th>
+                   <th class="text-center col-xs-1" style="width:12px" > SL No. </th>
                     <th class="text-center col-xs-4"> Drawing Number </th>
                     <th class="text-center col-xs-1"> Status </th>
                     <th class="text-center" > Drawing Title </th>
