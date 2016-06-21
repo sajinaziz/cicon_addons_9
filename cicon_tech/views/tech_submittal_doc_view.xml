@@ -6,7 +6,7 @@
             <field name="name">tech.submittal.doc.tree</field>
             <field name="model">tech.submittal.document.revision</field>
             <field name="arch" type="xml">
-                <tree string="Submittal Documents">
+                <tree string="Submittal Documents"  delete="false">
                     <field name="name" />
                     <field name="document_type_id" options="{'no_create':True,'no_open':True}" />
                     <field name="description"/>
@@ -24,7 +24,7 @@
             <field name="name">tech.submittal.doc.form</field>
             <field name="model">tech.submittal.document.revision</field>
             <field name="arch" type="xml">
-                <form string="Document" create="false">
+                <form string="Document" create="false" delete="false">
                     <sheet>
                         <group>
                             <group>
