@@ -12,6 +12,7 @@
         'security/cicon_hr_equipment_security.xml',
         'security/ir.model.access.csv',
         'cicon_hr_equipment_view.xml',
+        'cicon_hr_equipment_property_view.xml',
     ],
     'update_xml': [],
     'description': 'CICON Applications',
