@@ -57,14 +57,17 @@
             </field>
         </record>
 
-        <record id="hr_equipment_request_view_form_etxn" model="ir.ui.view">
-            <field name="name">hr.equipment.request.form.extn</field>
+         <record id="hr_equipment_request_view_form_extn" model="ir.ui.view">
+            <field name="name">hr.equipment.request.view.form.extn</field>
             <field name="model">hr.equipment.request</field>
             <field name="inherit_id" ref="hr_equipment.hr_equipment_request_view_form"/>
             <field name="arch" type="xml">
                  <field name="priority" position="after">
                      <field name="company_id" options="{'no_open':True,'no_create': True}" />
                  </field>
+                <field name="description" position="after">
+                    <field name="solution" placeholder="Solution ......." />
+                </field>
 
             </field>
         </record>
@@ -75,7 +78,6 @@
             <field name="name">Category Property</field>
             <field name="res_model">hr.equipment.category.property</field>
         </record>
-
 
 
 
