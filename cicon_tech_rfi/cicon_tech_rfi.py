@@ -20,13 +20,15 @@ class CiconTechRfi(models.Model):
     subject = fields.Char('Subject')
     description = fields.Html('Description')
     created_by = fields.Many2one('res.users', string="Raised By", default=lambda self: self.env.user, required=True)
+    coordinator_id = fields.Many2one('res.users', 'Co-ordinated By', help="Site Coordinator",
+                                     readonly=True,related='job_site_id.coordinator_id',store=False)
     attachment_count = fields.Integer('Attachment No:')
     response_last_date = fields.Date("Response Required Date")
     contractor_remarks = fields.Text('Contractor Remarks')
     contractor_subject = fields.Text('Contractor Subject')
     company_id = fields.Many2one('res.company', string="Company", required=True,
                                  default=lambda self: self.env.user.company_id)
-    state = fields.Selection([('draft', 'Draft'), ('pending', 'Pending'), ('done', 'Replied'),
+    state = fields.Selection([('draft', 'Draft'), ('pending', 'Submitted'), ('done', 'Replied'),
                               ('cancel', 'Cancelled')], string="Status", track_visibility='onchange', required=True, default='draft')
 
     _sql_constraints = [('unique_rfi', 'UNIQUE(name)', 'RFI Reference Must be Unique'),
