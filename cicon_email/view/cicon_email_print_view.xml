@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_email_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!--<t t-call="cicon_tech.tech_cicon_external_layout">-->
+                   <div class="header" style="background-color:red;">
+                       <div class="row" style="min-height:6px">
+                            <div class="col-xs-2">
+                                <img style="max-height: 45px;" t-att-src="'cicon_email\static\src\img\logo.png'"/>
+                            </div>
+                               <div class="col-xs-6">
+                                    <h3 style="text-align:center;">I.T.EMAIL <br/>REQUEST FORM</h3>
+                               </div>
+
+                                <div class="col-xs-4 text-right">
+                                     <span>
+                                       <img style="max-height: 45px;" t-att-src="'cicon_email\static\src\img\mail.png'"/>
+                                     </span>
+
+                                </div>
+                       </div>
+                       <div class="row zero_min_height">
+                          <div class="col-xs-12">
+                              <div style="border-bottom: 1px solid black;"/>
+                          </div>
+                       </div>
+                   </div>
+                        <div class="page">
+                            <div class="oe_structure"/>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-2" style="color:red;" > ITERF No. :  </div>
+                                    <div class="col-xs-3" style="border:1px solid;"> <span t-field="o.name"/> </div>
+                                    <div class="col-xs-2" style="text-align:right;"> Date : </div>
+                                    <div class="col-xs-3" style="border:1px solid;"> <span t-field="o.request_date"/></div>
+                                    <div class="col-xs-2"></div>
+                                </div>
+                                <div class="row zero_min_height">
+                                    <div class="col-xs-12">
+                                        <div style="border-bottom: 1px solid black;"/>
+                                    </div>
+                                </div>
+                                <div class="row" style="min-height:40px;margin-top:15px;" >
+                                    <div class="col-xs-2"> Attention:  </div>
+                                    <div class="col-xs-6  text-left" style="border:1px solid;"> <span t-field="o.manager_id"/> </div>
+                                    <div class="col-xs-4"></div>
+                                </div>
+                                    <h3 class="text-center"  style="color:red;">REQUEST INFORMATION</h3>
+                                <div class="row" style="min-height:40px;margin-top:10px;" >
+                                    <div class="col-xs-4"> Name:  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.employee_id"/> </div>
+                                    <div class="col-xs-2"></div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Department:  </div>
+                                    <div class="col-xs-4" style="border:1px solid;"> <span t-field="o.employee_id.department_id"/> </div>
+                                    <div class="col-xs-4"></div>
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Designation :  </div>
+                                    <div class="col-xs-4" style="border:1px solid;"> <span t-field="o.employee_id.job_id"/> </div>
+                                    <div class="col-xs-4"></div>
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Location :  </div>
+                                    <div class="col-xs-4" style="border:1px solid;"> <span t-field="o.location"/> </div>
+                                    <div class="col-xs-4"></div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Preferred E-mail ID :  </div>
+                                    <div class="col-xs-8" style="border:1px solid;"> <span t-field="o.email_id"/> </div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Purpose :  </div>
+                                    <div class="col-xs-8" style="border-bottom:1px solid;padding-top:10px;"><span t-field="o.purpose"/></div>
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"></div>
+                                    <div class="col-xs-8" style="border-bottom:1px solid;"></div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4"> Company :  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.company_id"/> </div>
+                                    <div class="col-xs-2"></div>
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-6"></div>
+                                    <div class="col-xs-2">Approved By:</div>
+                                    <div class="col-xs-4" style="border-bottom:1px solid;padding-top:10px;"></div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+
+                                    <div class="col-xs-4">Signature:</div>
+                                    <div class="col-xs-4" style="border-bottom:1px solid;padding-top:10px;"></div>
+                                    <div class="col-xs-4"></div>
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                     <div class="col-xs-6"></div>
+                                    <div class="col-xs-2">Management:</div>
+                                    <div class="col-xs-4" style="border-bottom:1px solid;padding-top:10px;"></div>
+                                </div>
+                                <div class="row zero_min_height">
+                                    <div class="col-xs-12">
+                                        <div style="border-bottom: 1px double black;"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12" style="font-size:12px;">FOR I.T. DEPARTMENT</div>
+                                </div>
+                                    <h3 class="text-center"  style="color:red;">REQUEST INFORMATION</h3>
+                                <div class="row" style="min-height:40px;Margin-top:15px;" >
+                                    <div class="col-xs-4"> Date. :  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.approved_date"/> </div>
+                                    <div class="col-xs-2"></div>
+
+                                </div>
+                                 <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4" > Approved E-mail ID  :  </div>
+                                    <div class="col-xs-8" style="border:1px solid;"> <span t-field="o.approved_email_id"/> </div>
+
+
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4" > POP3 Password :  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.pop_password"/> </div>
+                                     <div class="col-xs-2"></div>
+
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4" > Local Password :  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.local_password"/> </div>
+                                    <div class="col-xs-2"></div>
+
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4" > I.T Department:  </div>
+                                    <div class="col-xs-6" style="border:1px solid;"> <span t-field="o.technician_id"/> </div>
+                                    <div class="col-xs-2"></div>
+                                </div>
+                                <div class="row" style="min-height:40px" >
+                                    <div class="col-xs-4" > Signature:  </div>
+                                    <div class="col-xs-6" style="border-bottom:1px solid;padding-top:10px;"></div>
+                                    <div class="col-xs-2"></div>
+
+                                </div>
+
+                        </div>
+                    </t>
+                <!--</t>-->
+            </t>
+
+        </template>
+    </data>
+</odoo>
