@@ -7,6 +7,7 @@
             <field name="model">hr.equipment.category</field>
             <field name="inherit_id" ref="hr_equipment.hr_equipment_category_view_form"/>
             <field name="arch" type="xml">
+
                 <field name="note" position="after">
                     <group string="Properties Information">
                         <field name="property_ids" widget="many2many_tags"/>
@@ -16,6 +17,18 @@
 
             </field>
         </record>
+
+        <record id="hr_equipment_status_tree_view" model="ir.ui.view">
+            <field name="name"> hr.equipment.status.tree </field>
+            <field name="model">hr.equipment.status</field>
+            <field name="arch" type="xml">
+                <tree string="Status" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
 
         <record id="hr_equipment_categ_prop_tree_view" model="ir.ui.view">
             <field name="name"> hr.equipment.category.property.tree </field>
@@ -32,6 +45,11 @@
             <field name="model">hr.equipment</field>
             <field name="inherit_id" ref="hr_equipment.hr_equipment_view_form"/>
             <field name="arch" type="xml">
+                 <xpath expr="//sheet" position="before">
+                    <header>
+                        <field widget="statusbar" name="status_id"  clickable="True"/>
+                    </header>
+                </xpath>
                 <xpath expr="//notebook[last()]" position="inside" >
                     <page string="Properties">
                         <field name="property_ids" widget="many2many_tags" invisible="True"/>
@@ -80,11 +98,24 @@
         </record>
 
 
+         <record model="ir.actions.act_window" id="action_hr_equip_status">
+            <field name="name">Equipment Status</field>
+            <field name="res_model">hr.equipment.status</field>
+        </record>
+
+
 
           <menuitem
             id="menu_equip_categ_prop"
             parent="hr_equipment.menu_equipment_configuration"
             action="action_hr_equip_categ_property"
+            groups="base.group_no_one"
+            sequence="99"/>
+
+         <menuitem
+            id="menu_equip_status"
+            parent="hr_equipment.menu_equipment_configuration"
+            action="action_hr_equip_status"
             groups="base.group_no_one"
             sequence="99"/>
 
