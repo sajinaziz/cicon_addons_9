@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="report_cicon_email_qweb"
+            string="Email Requests"
+            model="cicon.email"
+            report_type="qweb-pdf"
+            name="cicon_email.report_email_template"
+            file="cicon_email.cicon_email_print_view"
+         />
+
+    </data>
+</odoo>
