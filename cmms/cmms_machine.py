@@ -100,7 +100,7 @@ class CmmsMachine(models.Model):
     pm_scheme_id = fields.Many2one('cmms.pm.scheme', string='PM Scheme', track_visibility='onchange')
     pm_task_ids = fields.One2many('cmms.machine.task.view', 'machine_id', readonly=True)
     spare_part_ids = fields.One2many('cmms.store.invoice.line', 'machine_id', readonly=True, string="Parts")
-    # job_order_ids = fields.One2many('cmms.job.order', 'machine_id', readonly=True, string="Job Orders")
+    job_order_ids = fields.One2many('cmms.job.order', 'machine_id', readonly=True, string="Job Orders")
     breakdown_count = fields.Integer('Breakdowns', compute=_job_order_count)
     parts_cost = fields.Float('Parts Cost', compute=_job_order_count)
     location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
