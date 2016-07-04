@@ -8,7 +8,7 @@ class CmmsCommonReportWizard(models.TransientModel):
     start_date = fields.Date('Start Date', required=True)
     end_date = fields.Date('End Date', required=True)
     report_list = fields.Selection([('expense_report', 'Expense Report'),
-                                   ('expense_detailed', 'Expense Detailed')], string='Report', required=True)
+                                   ('expense_detailed', 'Expense Detailed'),('job_order_report','Job Order Report')],string='Report', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
 
     @api.multi
