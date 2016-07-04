@@ -12,6 +12,20 @@ class HrEquipmentCategoryProperty(models.Model):
 HrEquipmentCategoryProperty()
 
 
+class HrEquipmentStatus(models.Model):
+    _name = 'hr.equipment.status'
+    _description = "Equipment Status"
+
+    name = fields.Char('Status', required=True)
+    sequence=fields.Integer('Sequence')
+
+    _order = 'sequence'
+
+    _sql_constraints = [('uniq_name', 'UNIQUE(name)', "Status should be Unique")]
+
+HrEquipmentStatus()
+
+
 class HrEquipmentPropertyValue(models.Model):
     _name = 'hr.equipment.property.value'
     _description = "Equipment Category Property"
@@ -36,10 +50,15 @@ class HrEquipment(models.Model):
             if self.serial_no:
                 self.asset_code += '-' + str(self.serial_no)
 
+    def _get_default_status(self):
+        _status = self.env['hr.equipment.status'].search([], order='sequence desc', limit=1)
+        return _status
+
     property_ids = fields.Many2many(related='category_id.property_ids', store=False, string="Properties")
     property_value_ids = fields.One2many('hr.equipment.property.value', 'equipment_id', string="Property Values")
-    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id, track_visibility='onchange')
     asset_code = fields.Char(compute=_get_asset_name, string="Asset Code", store=True)
+    status_id = fields.Many2one('hr.equipment.status', string='Status', track_visibility='onchange', default=_get_default_status)
 
     _sql_constraints = [('UniqueAsset', 'UNIQUE(asset_code)', 'Asset Name Should be Unique !')]
 
