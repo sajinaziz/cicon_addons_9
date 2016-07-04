@@ -48,9 +48,6 @@ class cicon_customer_order(models.Model):
             _pre_order = self.search([('project_id', '=', self.project_id.id)], order='id desc', limit=1)
             self.last_order = _pre_order
 
-    @api.multi
-    def order_cancel(self):
-        self.write({'state': 'cancel'})
 
     @api.multi
     def order_confirm(self):

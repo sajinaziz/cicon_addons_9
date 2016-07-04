@@ -29,11 +29,11 @@
 			<field name="arch" type="xml">
 				<form string="Customer Order">
 				 <header>
-				 	<!--<button name="order_cancel" string="Cancel" type="object" states="new,confirmed,progress" />-->
 				 	<button name="order_reopen" string="Re-Open" type="object" states="confirmed" />
 				 	<button name="order_confirm" string="Confirm" type="object" states="new" class="oe_highlight"/>
                      <!--<button name="order_close" string="Close" type="object" states="confirmed,progress" class="oe_highlight" groups="cicon_prod.group_prod_admin"/>-->
 				 	<button name="print_order" string="Print" type="object"  class="oe_highlight"/>
+                     <button name="order_cancel" string="Cancel" type="object" states="new,confirmed,progress" groups="cicon_prod.group_prod_admin" />
 				 	<field name="state" widget="statusbar" statusbar_visible="new,confirmed,progress,close"/>
 				 </header>
 				  <sheet>
