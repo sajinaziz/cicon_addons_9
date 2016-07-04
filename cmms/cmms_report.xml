@@ -56,6 +56,15 @@
        name="cmms.job_order_report_template"
      />
 
+     <report
+        id="report_cmms_machine_summary"
+        string="Machine Summary"
+        model="cmms.machine"
+        report_type="qweb-pdf"
+        file="cmms.report_machine_summary"
+        name="cmms.report_machine_summary_template"
+    />
+
 
     </data>
 </odoo>
