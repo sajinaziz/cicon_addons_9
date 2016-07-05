@@ -153,6 +153,16 @@ class cicon_customer_order(models.Model):
     prod_order_ids = fields.One2many('cicon.prod.order', 'customer_order_id', string='Production Orders', copy=False)
     prod_order_count = fields.Integer('Production Order Count', compute=_get_prod_order_count, store=False, readonly=True)
 
+    @api.multi
+    def order_cancel(self):
+        self.ensure_one()
+        #TODO: Check for production Orders status
+        if self.prod_order_count == 0:
+            self.write({'state': 'cancel'})
+        else:
+            raise UserWarning("Please Cancel Production Order !")
+
+
 cicon_customer_order()
 
 
