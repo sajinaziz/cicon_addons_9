@@ -177,6 +177,8 @@ class QcMillCertFile(models.Model):
                                   compute=_get_dia, search=_search_length)
     heat_nos = fields.Char("Heat Numbers", compute=_get_dia, store=False, readonly=True, search=_search_heat_no)
 
+    _order = 'id desc'
+
     _sql_constraints = [('unique_name', 'UNIQUE(supplier_id,name)', 'Certificate Number must be Unique')]
 
 QcMillCertFile()
