@@ -44,7 +44,10 @@
                         <group>
                             <field name="name"/>
                             <field name="partner_id" options="{'no_create':True,'no_open':True}"/>
-                            <field name="project_id" options="{'no_create':True,'no_open':True}"/>
+                            <!--<field name="project_id" options="{'no_create':True,'no_open':True}"/>-->
+
+                            <!-- disable options attribute -->
+                            <field name="project_id" />
                             <field name="dn_date"/>
                             <field name="delivery_date"/>
                             <field name="wb_ticket"/>
