@@ -34,12 +34,38 @@ class CmmsCommonReportWizard(models.TransientModel):
             self.end_date = this_saturday #assign  the current day before  saturday
 
 
-    start_date = fields.Date('Start Date', required=True)
-    end_date = fields.Date('End Date', required=True)
+
     report_by = fields.Selection([('this_month','This Month'),('this_week','This Week'),('last_month','Last Month'),('last_week','Last Week')],string='Report By')
     report_list = fields.Selection([('expense_report', 'Expense Report'),
-                                   ('expense_detailed', 'Expense Detailed'),('job_order_report','Job Order Report')],string='Report', required=True)
+                                   ('expense_detailed', 'Expense Detailed'),('job_order_report','Job Order Report'),('parts_by_producttype_report','Parts Summary By Product Type Report'),('machine_analysis_report','Machine Analysis Report')],string='Report', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
+
+    start_date = fields.Date('Start Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
+    end_date = fields.Date('End Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
+
+   # print report_year
+
+    ''' fill year select box values '''
+    current_year = datetime.today().strftime("%Y")
+    last_year = int(current_year) - 1
+    prev_last_year = int(last_year) - 1
+    prev_year = int(prev_last_year) - 1
+
+    report_year = fields.Selection(
+        [(current_year, current_year), (last_year, last_year), (prev_last_year, prev_last_year),
+         (prev_year, prev_year)],string="Year")
+
+    @api.onchange('report_year')
+    def _fill_date(self):
+        if self.report_year > 0:
+            #print self.report_year
+            first_month = date(int(self.report_year), 1, 1)
+            last_month = date(int(self.report_year), 12, 31)
+            # year_data = self.report_year
+            year_first_day = '{:%Y-%m-%d}'.format(first_month)
+            year_last_day = '{:%Y-%m-%d}'.format(last_month)
+            self.start_date = year_first_day
+            self.end_date = year_last_day
 
     @api.multi
     def show_report(self):
@@ -51,3 +77,19 @@ class CmmsCommonReportWizard(models.TransientModel):
         if self.report_list == 'expense_report':
             ctx['heading'] = "Expense Report - Detailed [ " + self.start_date + '-' + self.end_date + ' ]'
             return self.with_context(ctx).env['report'].get_action(self, report_name='cmms.cmms_inventory_expense_report_summary', data={})
+        if self.report_list == "job_order_report":
+            _qry = [('job_order_date', '>=', self.start_date), ('job_order_date', '<=', self.end_date)]
+            #_qyery = _qry.append([('company_id','=', self.company_id and 'company_id','!=','NULL')])
+            _job_orders = self.env['cmms.job.order'].search(_qry)
+            #print _job_orders
+            return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')
+        if self.report_list == 'parts_by_producttype_report':
+            ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + self.start_date + '-' + self.end_date + ' ]'
+            return self.with_context(ctx).env['report'].get_action(self,
+                                                                   report_name='cmms.report_partsby_producttype_summary_template',
+                                                                   data={})
+        if self.report_list == 'machine_analysis_report':
+            ctx['year'] = self.report_year
+            return self.with_context(ctx).env['report'].get_action(self,
+                                                                   report_name='cmms.report_machine_analysis_summary_template',
+                                                                   data={})
