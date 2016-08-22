@@ -38,6 +38,8 @@ Required modules:
         'views/inventory_expense_reports.xml',
         'views/job_order_report.xml',
         'views/report_machine_summary.xml',
+        'views/report_partsby_producttype_summary.xml',
+        'views/report_machine_analysis_summary.xml',
         'cmms_store_view.xml',
         'cmms_joborder_view.xml',
         'pm_task_view.xml',
