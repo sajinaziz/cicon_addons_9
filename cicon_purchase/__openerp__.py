@@ -7,11 +7,9 @@
     'description': """CICON  Material Request""",
     'website': 'http://www.cicon.net',
     'category': 'CICON IT',
-    'depends': ['purchase'],
+    'depends': ['purchase_requisition','base'],
     'data': [
-        'view/cicon_purchase_request_view.xml',
-        'view/cicon_purchase_request_report.xml',
-        'view/cicon_purchase_request_print_view.xml'
+        'view/cicon_purchase_requisition_view.xml'
     ],
     'update_xml': [],
     'description': 'CICON Applications',
