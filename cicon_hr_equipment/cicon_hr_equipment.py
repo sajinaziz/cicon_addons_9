@@ -65,11 +65,53 @@ class HrEquipment(models.Model):
 HrEquipment()
 
 
+class HrEquipmentRequestCategory(models.Model):
+    _name = 'hr.equipment.request.category'
+    _description = "Request Category"
+
+    name = fields.Char('Category', required=True)
+    parent_id = fields.Many2one('hr.equipment.request.category', string="Parent")
+    child_ids = fields.One2many('hr.equipment.request.category', 'parent_id', string='Children Categories')
+
+    _sql_constraints = [('uniq_name', 'UNIQUE(name)', 'Unique Category')]
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for cat in self:
+            names = [cat.name]
+            pcat = cat.parent_id
+            while pcat:
+                names.append(pcat.name)
+                pcat = pcat.parent_id
+            res.append((cat.id, ' / '.join(reversed(names))))
+        return res
+
+    @api.one
+    @api.constrains
+    def _check(self):
+        parent = self._parent_name
+        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
+        current_id = self.id
+        while current_id is not None:
+            self._cr.execute(query, (current_id,))
+            result = self._cr.fetchone()
+            current_id = result[0] if result else None
+            if current_id == self.id:
+                return False
+        return True
+
+HrEquipmentRequestCategory()
+
+    #TODO: Request Category
 class HrEquipmentRequest(models.Model):
     _inherit = 'hr.equipment.request'
 
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
     solution = fields.Text('Solution')
+    request_categ_id = fields.Many2one('hr.equipment.request.category', string="Request Category")
+    request_sub_categ_id = fields.Many2one('hr.equipment.request.category', string="Sub Category")
 
 HrEquipmentRequest()
 

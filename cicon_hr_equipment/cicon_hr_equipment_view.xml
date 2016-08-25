@@ -83,12 +83,45 @@
                  <field name="priority" position="after">
                      <field name="company_id" options="{'no_open':True,'no_create': True}" />
                  </field>
+                <field name="description" position="before">
+                    <group>
+                        <field name ="request_categ_id" domain="[('parent_id','=', False)]" options="{'no_open':True,'no_create': True}"/>
+                        <field name ="request_sub_categ_id" domain="[('parent_id','=', request_categ_id)]"  options="{'no_open':True,'no_create': True}"/>
+                    </group>
+                </field>
+
                 <field name="description" position="after">
                     <field name="solution" placeholder="Solution ......." />
                 </field>
 
             </field>
         </record>
+
+
+          <record model="ir.ui.view" id="equipment_request_pivot_view">
+            <field name="name">Equipment Request Pivot</field>
+            <field name="model">hr.equipment.request</field>
+            <field name="arch" type="xml">
+                <pivot string="Equipment Request">
+                    <field name="request_categ_id" type="row"/>
+                    <field name="request_sub_categ_id" type="row"/>
+                </pivot>
+            </field>
+          </record>
+
+         <record id="hr_equipment.hr_equipment_request_action" model="ir.actions.act_window">
+                <!--<field name="name">Maintenance Requests</field>-->
+                <field name="res_model">hr.equipment.request</field>
+                <field name="view_mode">kanban,tree,form,pivot</field>
+                <!--<field name="view_id" ref="hr_equipment_request_view_kanban"/>-->
+                <!--<field name="help" type="html">-->
+                    <!--<p class="oe_view_nocontent_create">-->
+                        <!--Click to add a new maintenance request.-->
+                    <!--</p><p>-->
+                        <!--Follow the process of the request and communicate with the collaborator.-->
+                    <!--</p>-->
+                <!--</field>-->
+            </record>
 
 
 
