@@ -43,7 +43,8 @@ class cicon_prod_order(models.Model):
     template_str = fields.Char(compute=_get_tonnage,store=False, string='Products')
     load = fields.Integer("Load Priority")
 
-    _order = "required_date desc"
+    _order = "load, sequence, required_date desc"
+    # _sequence = 'load'
 
     @api.multi
     def set_deliver(self):

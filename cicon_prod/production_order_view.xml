@@ -17,6 +17,8 @@
                     <field name="template_ids"/>
                     <field name="total_tonnage" sum="Total"/>
                     <field name="state"/>
+                    <field name="plan_id" invisible="1"/>
+                    <field name="load" invisible="1"/>
                     <button name="set_deliver" states="pending,progress,hold" confirm="Confirm  Delivered ?" string="Delivered" type="object"  icon="gtk-redo" groups="cicon_prod.group_prod_delivery_user"/>
                 </tree>
 			</field>
@@ -28,16 +30,18 @@
 			<field name="name">cicon.prod.order.kanban</field>
 			<field name="model">cicon.prod.order</field>
 			<field name="arch" type="xml">
-                <kanban quick_create='false' default_group_by="plan_id" class="oe_background_grey" >
+                <kanban quick_create='false'  default_group_by="plan_id" class="oe_background_grey" >
                     <field name="name"/>
                     <field name="plan_id"/>
                     <field name="sequence"/>
+                    <field name="load"/>
                     <field name="required_date"/>
                     <field name="template_ids"/>
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
+                                <field name="sequence" invisible="1" />
                                 <h4> <field name="project_id"/>  </h4>
                                 <h4> <field name="name"/></h4>
                                 <h6> <field name="description"/> </h6>
@@ -160,11 +164,13 @@
                 <field name="customer_order_id" widget="selection"/>
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer'])]"/>
+                <filter name="no_plan_order" string="Not Planned/Pending Order" domain="[('state','not in',['delivered','cancel','transfer']),('plan_id','=',False)]"/>
                 <!--#TODO: Search by Product Template-->
                 <filter name="delivered" string="Delivered" domain="[('state','in',['delivered','cancel'])]"/>
                 <group expand="0" string="Group By...">
                     <filter string="Customer Order" name="group_order_customer" icon="terp-folder-violet" domain="[]" context="{'group_by':'customer_order_id'}"/>
                     <filter string="Plan" name="group_planned_date" context="{'group_by':'plan_id'}"/>
+                    <filter string="Load" name="group_by_load" context="{'group_by':'load'}"/>
                     <filter string="State" name="group_state" context="{'group_by':'state'}"/>
                 </group>
 
@@ -257,6 +263,7 @@
                             <page string="Orders">
                                 <field name="prod_order_ids" widget="many2many">
                                     <tree editable="bottom">
+                                         <field name="sequence" widget="handle"/>
                                           <field name="partner_id" readonly="1"/>
                                           <field name="project_id" readonly="1"/>
                                           <field name="customer_order_id" readonly="1"/>
