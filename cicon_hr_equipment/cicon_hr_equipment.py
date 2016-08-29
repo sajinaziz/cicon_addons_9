@@ -70,8 +70,12 @@ class HrEquipmentRequestCategory(models.Model):
     _description = "Request Category"
 
     name = fields.Char('Category', required=True)
+    asset_categ_ids = fields.Many2many('hr.equipment.category', 'hr_equip_categ_req_categ_rel',
+                                    'req_categ_id', "asset_categ_id", string="Asset Categories")
     parent_id = fields.Many2one('hr.equipment.request.category', string="Parent")
     child_ids = fields.One2many('hr.equipment.request.category', 'parent_id', string='Children Categories')
+    note = fields.Text(string='Required Information', help="Required information to solve this category issues, "
+                                                           "will apper on description in requests")
 
     _sql_constraints = [('uniq_name', 'UNIQUE(name)', 'Unique Category')]
 
@@ -104,14 +108,19 @@ class HrEquipmentRequestCategory(models.Model):
 
 HrEquipmentRequestCategory()
 
-    #TODO: Request Category
 class HrEquipmentRequest(models.Model):
     _inherit = 'hr.equipment.request'
 
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.user.company_id)
     solution = fields.Text('Solution')
-    request_categ_id = fields.Many2one('hr.equipment.request.category', string="Request Category")
+    request_categ_id = fields.Many2one('hr.equipment.request.category',  string="Request Category")
     request_sub_categ_id = fields.Many2one('hr.equipment.request.category', string="Sub Category")
+
+    @api.onchange('request_sub_categ_id')
+    def onchange_request_categ(self):
+        if not self.description:
+            self.description = self.request_sub_categ_id.note
+
 
 HrEquipmentRequest()
 

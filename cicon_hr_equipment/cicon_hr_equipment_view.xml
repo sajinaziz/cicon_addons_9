@@ -85,7 +85,7 @@
                  </field>
                 <field name="description" position="before">
                     <group>
-                        <field name ="request_categ_id" domain="[('parent_id','=', False)]" options="{'no_open':True,'no_create': True}"/>
+                        <field name ="request_categ_id" domain="[('parent_id','=', False),('asset_categ_ids','in', category_id)]" options="{'no_open':True,'no_create': True}"/>
                         <field name ="request_sub_categ_id" domain="[('parent_id','=', request_categ_id)]"  options="{'no_open':True,'no_create': True}"/>
                     </group>
                 </field>

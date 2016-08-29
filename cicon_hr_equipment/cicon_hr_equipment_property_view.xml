@@ -52,6 +52,10 @@
                             <group>
                                 <field name="parent_id" domain="[('parent_id','=', False)]"/>
                                 <field name="name"/>
+                                <field name="asset_categ_ids" widget="many2many_tags" attrs="{'invisible':[('parent_id','!=',False)]}" />
+                                <field name="note" attrs="{'invisible':[('parent_id','=',False)]}"/>
+
+
                             </group>
                         </sheet>
                     </form>
