@@ -105,6 +105,7 @@
                 <pivot string="Equipment Request">
                     <field name="request_categ_id" type="row"/>
                     <field name="request_sub_categ_id" type="row"/>
+                    <field name="stage_id" type="col"/>
                 </pivot>
             </field>
           </record>
