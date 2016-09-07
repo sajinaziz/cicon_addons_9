@@ -48,7 +48,7 @@ class HrEquipment(models.Model):
         if self.name:
             self.asset_code = str(self.name)
             if self.serial_no:
-                self.asset_code += '-' + str(self.serial_no)
+                self.asset_code += '/' + str(self.serial_no)
 
     def _get_default_status(self):
         _status = self.env['hr.equipment.status'].search([], order='sequence desc', limit=1)
