@@ -90,11 +90,19 @@
                     </group>
                 </field>
 
-                <field name="description" position="after">
-                    <field name="solution" placeholder="Solution ......." />
-                </field>
-
-            </field>
+                <xpath expr="//sheet/field[@name='description']" position="replace">
+                    <notebook>
+                        <page string="Internal Note">
+                           <field name='description' placeholder="Internal Note ......."/>
+                        </page>
+                    </notebook>
+                </xpath>
+               <xpath expr="//notebook" position="inside">
+                   <page string="Solution">
+                       <field name="solution" placeholder="Solution ......." />
+                    </page>
+                </xpath>
+           </field>
         </record>
 
 
@@ -110,7 +118,7 @@
             </field>
           </record>
 
-         <record id="hr_equipment.hr_equipment_request_action" model="ir.actions.act_window">
+            <record id="hr_equipment.hr_equipment_request_action" model="ir.actions.act_window">
                 <!--<field name="name">Maintenance Requests</field>-->
                 <field name="res_model">hr.equipment.request</field>
                 <field name="view_mode">kanban,tree,form,pivot</field>
@@ -124,19 +132,39 @@
                 <!--</field>-->
             </record>
 
+                <!-- Equipment pivot view -->
+            <record model="ir.ui.view" id="equipment_pivot_view">
+                <field name="name">Equipments</field>
+                <field name="model">hr.equipment</field>
+                <field name="arch" type="xml">
+                    <pivot string="Equipments">
+                        <field name="category_id" type="row"/>
+                        <field name="department_id" type="row"/>
+                    </pivot>
+                </field>
+            </record>
 
+             <record id="hr_equipment.hr_equipment_action" model="ir.actions.act_window">
+                <field name="name">Equipments</field>
+                <field name="res_model">hr.equipment</field>
+                <field name="view_mode">kanban,tree,form,pivot</field>
+             </record>
 
-         <record model="ir.actions.act_window" id="action_hr_equip_categ_property">
-            <field name="name">Category Property</field>
-            <field name="res_model">hr.equipment.category.property</field>
-        </record>
+             <record model="ir.actions.act_window" id="action_hr_equip_categ_property">
+                <field name="name">Category Property</field>
+                <field name="res_model">hr.equipment.category.property</field>
+            </record>
 
+             <record model="ir.actions.act_window" id="action_hr_equip_status">
+                <field name="name">Equipment Status</field>
+                <field name="res_model">hr.equipment.status</field>
+            </record>
 
-         <record model="ir.actions.act_window" id="action_hr_equip_status">
-            <field name="name">Equipment Status</field>
-            <field name="res_model">hr.equipment.status</field>
-        </record>
-
+           <record id="hr_equipment_employee" model="ir.actions.act_window">
+               <field name="name">Equipments</field>
+               <field name="res_model">hr.equipment</field>
+               <field name="view_mode">tree,form</field>
+           </record>
 
 
           <menuitem
@@ -152,6 +180,14 @@
             action="action_hr_equip_status"
             groups="base.group_no_one"
             sequence="99"/>
+
+        <!-- menu item for employee module -->
+            <menuitem
+            id="menu_equip_employee"
+            parent="hr.menu_hr_root"
+            groups="base.group_hr_user,base.group_user"
+            action="hr_equipment_employee"
+            sequence="1"/>
 
 
 
