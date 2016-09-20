@@ -35,6 +35,7 @@
                             <field name="reference"/>
                             <field name="category_id" options="{'no_create': True, 'no_open': True}" />
                             <field name="report_type" widget="radio"/>
+                            <field name="qc_check_ids" widget="many2many_tags" domain="[('state','=','fail')]" />
                         </group>
                         <group>
                             <group>
@@ -87,6 +88,19 @@
                 </form>
             </field>
         </record>
+
+
+
+        <!--TODO: Kanban View for QC Observation & add to menu action-->
+        <record model="ir.ui.view" id="cicon_qc_observation_kanban_view">
+			<field name="name">cicon.qc.observation.tree</field>
+			<field name="model">cicon.qc.observation</field>
+			<field name="arch" type="xml" >
+				<kanban string="QC Observation">
+
+				</kanban>
+			</field>
+		</record>
 
 
          <record model="ir.ui.view" id="cicon_qc_observation_categ_tree">

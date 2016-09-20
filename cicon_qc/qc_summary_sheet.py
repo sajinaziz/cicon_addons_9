@@ -16,7 +16,8 @@ class QcSummary(models.Model):
         for d in self.dn_line_ids:
             _code_ids.extend([o.id for o in d.order_code_ids])
         for m in self.certificate_line_ids:
-            _mill_ids.extend([h.id for h in m.certificate_ids])
+           #_mill_ids.extend([h.id for h in m.certificate_ids])
+           _mill_ids.extend([m.certificate_id.id])
         self.order_codes = _code_ids
         self.heat_numbers = _mill_ids
 
@@ -30,13 +31,15 @@ class QcSummary(models.Model):
     def _search_heat_number(self, operator, value):
         _heat_nos = self.env['cic.qc.mill.cert.line'].search([('name', operator, value)])
         _heat_ids = [o.id for o in _heat_nos]
-        _cert_line_ids = self.env['cic.qc.cert.line'].search([('certificate_ids', 'in', _heat_ids)])
+        #_cert_line_ids = self.env['cic.qc.cert.line'].search([('certificate_ids', 'in', _heat_ids)])
+        _cert_line_ids = self.env['cic.qc.cert.line'].search([('certificate_id', 'in', _heat_ids)])
         _summary_ids = [s.qc_summary_id.id for s in _cert_line_ids]
         return [('id', 'in', _summary_ids)]
 
     def _get_attachments(self):
         if self.certificate_line_ids:
-            _cert_ids = self.certificate_line_ids.mapped('certificate_ids')
+            #_cert_ids = self.certificate_line_ids.mapped('certificate_ids')
+            _cert_ids = self.certificate_line_ids.mapped('certificate_id')
             _file_ids = _cert_ids.mapped('cert_file_id')
             _attach_ids = self.env['ir.attachment'].search([('res_model', '=', 'cic.qc.mill.cert.file'),
                                                             ('res_id', 'in', _file_ids._ids)])
@@ -75,13 +78,24 @@ class QcCertLine(models.Model):
     _description = 'CICON Certificates Note'
 
     qc_summary_id = fields.Many2one('cic.qc.summary', string='QC Summary', required=True, ondelete='cascade')
-    dia_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Diameter' )]", string='Diameter')
-    origin_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
-    certificate_ids = fields.Many2many('cic.qc.mill.cert.line', 'qc_summary_cert_line_mill_cert_line_rel',
-                                       'cert_line_id', 'mill_cert_id', string='Heat Numbers')
+    certificate_id = fields.Many2one('cic.qc.mill.cert.line', string='Heat Number')
+    dia_attrib_value_id = fields.Many2one('product.attribute.value', related='certificate_id.dia_attrib_value_id',
+                                          readonly=True, string='Diameter', store=False)
+    origin_attrib_value_id = fields.Many2one('product.attribute.value', related='certificate_id.origin_attrib_value_id',
+                                          readonly=True, string='Origin', store=False)
+    length_attrib_value_id = fields.Many2one('product.attribute.value', related='certificate_id.length_attrib_value_id',
+                                          readonly=True, string='Length', store=False)
+    issued_date = fields.Date('Issued Date', related='certificate_id.cert_file_id.issued_date', readonly=True)
+
+    #dia_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Diameter' )]", string='Diameter')
+    #origin_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Steel Origin' )]", string='Origin')
+    #certificate_ids = fields.Many2many('cic.qc.mill.cert.line', 'qc_summary_cert_line_mill_cert_line_rel',
+    #                                   'cert_line_id', 'mill_cert_id', string='Heat Numbers')
+
     quantity = fields.Float('Remarks', digits=(10, 3))
 
-    _sql_constraints = [('uniq_line', 'UNIQUE(qc_summary_id,dia_attrib_value_id,origin_attrib_value_id)', 'Cert Line Name Must be Unique')]
+    #_sql_constraints = [('uniq_line', 'UNIQUE(qc_summary_id,dia_attrib_value_id,origin_attrib_value_id)', 'Cert Line Name Must be Unique')]
+    _sql_constraints = [('uniq_line', 'CHECK(1=1)','Cert Line Name Must be Unique')]
 
 QcCertLine()
 
@@ -89,16 +103,19 @@ QcCertLine()
 class QcDnLine(models.Model):
     _name = 'cic.qc.dn.line'
     _description = 'CICON Delivery Note'
-    _rec_name = 'dn_no'
+    # _rec_name = 'dn_no'
 
-    dn_no = fields.Char('Delivery Note Number', required=True)
+    # dn_no = fields.Char('Delivery Note Number', required=True)
+    delivery_order_id = fields.Many2one('cicon.prod.delivery.order', string="Delivery Note", required=True)
     qc_summary_id = fields.Many2one('cic.qc.summary', string='QC Summary', ondelete='cascade')
-    order_code_ids = fields.Many2many('cic.qc.order.code', 'dn_line_id', 'order_code_id', string='Order Codes')
+    #order_code_ids = fields.Many2many('cic.qc.order.code', 'dn_line_id', 'order_code_id', string='Order Codes')
+    order_code_ids = fields.Many2many('cicon.prod.order', related='delivery_order_id.prod_order_ids',
+                                      string='Order Codes', readonly=True)
 
-    _sql_constraints = [('uniq_dn', 'UNIQUE(dn_no)', 'DN  Must be Unique')]
+    #_sql_constraints = [('uniq_dn', 'UNIQUE(dn_no)', 'DN  Must be Unique')]
+    _sql_constraints = [('uniq_dn', 'UNIQUE(delivery_order_id,qc_summary_id)', 'DN  Must be Unique')]
 
 QcDnLine()
-
 
 class QcOrderCode(models.Model):
     _name = 'cic.qc.order.code'
@@ -213,6 +230,8 @@ class QcMillCertLine(models.Model):
                                           domain="[('attribute_id.name','=','Diameter')]", string='Diameter')
     length_attrib_value_id = fields.Many2one('product.attribute.value', domain="[('attribute_id.name','=','Length')]",
                                              string='Length')
+    issued_date = fields.Date( related='cert_file_id.issued_date', readonly=True, store=False)
+
 
     _sql_constraints = [('uniq_cert', 'UNIQUE(name,cert_file_id)', 'Summary Name Must be Unique')]
 

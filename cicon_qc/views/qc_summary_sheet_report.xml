@@ -103,7 +103,8 @@
                                 </thead>
                                 <tbody>
                                 <tr t-foreach="o.dn_line_ids" t-as="dline">
-                                    <td> <span t-field="dline.dn_no" /> </td>
+                                    <!--<td> <span t-field="dline.dn_no" /> </td>-->
+                                    <td> <span t-field="dline.delivery_order_id.name" /> </td>
                                     <td>
                                         <span t-esc="', '.join(map(lambda  x:x.name, dline.order_code_ids))"/>
                                     </td>
@@ -118,6 +119,7 @@
                                     <th>Origin</th>
                                     <th>Remarks</th>
                                     <th>Cert.s</th>
+                                    <th>Date</th>
                                 </thead>
                                 <tbody>
                                      <tr t-foreach="o.certificate_line_ids" t-as="mline">
@@ -129,13 +131,16 @@
                                              </t>
                                           </td>
                                          <td>
-                                             <ul class="list-unstyled">
-                                                 <li t-foreach="mline.certificate_ids" t-as="c">
-                                                     <span t-esc="c.name"/>
-                                                 </li>
-                                                <!--<span t-esc="', '.join(map(lambda x: x.name, mline.certificate_ids))"/>-->
-                                             </ul>
+                                             <!--<ul class="list-unstyled">-->
+                                                 <!--<li t-foreach="mline.certificate_ids" t-as="c">-->
+                                                     <!--<span t-esc="c.name"/>-->
+                                                 <!--</li>-->
+                                                <!--&lt;!&ndash;<span t-esc="', '.join(map(lambda x: x.name, mline.certificate_ids))"/>&ndash;&gt;-->
+                                             <!--</ul>-->
+                                             <span t-field="mline.certificate_id.name"/>
+
                                          </td>
+                                         <td> <span t-field="mline.certificate_id.issued_date" t-field-options='{"format": "dd-MM-yyyy"}' /> </td>
                                      </tr>
                                 </tbody>
                             </table>

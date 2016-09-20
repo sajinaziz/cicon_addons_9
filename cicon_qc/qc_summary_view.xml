@@ -23,12 +23,20 @@
 			<field name="name">cic.qc.cert.line.tree</field>
 			<field name="model">cic.qc.cert.line</field>
 			<field name="arch" type="xml" >
-				<tree string="Mill Certificates" editable="bottom">
-                    <field name="dia_attrib_value_id" required="True"  options="{'no_create':True,'no_open':True}" />
-                    <field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True}"/>
-                    <field name="certificate_ids" widget="many2many_tags" domain="[('dia_attrib_value_id','=',dia_attrib_value_id),
-                    ('origin_attrib_value_id','=',origin_attrib_value_id)]" />
-                    <field name="quantity" />
+				<tree string="Mill Certificates" editable="bottom" >
+                    <!--<field name="dia_attrib_value_id" required="True"  options="{'no_create':True,'no_open':True}" />-->
+                    <!--<field name="origin_attrib_value_id" options="{'no_create':True,'no_open':True}"/>-->
+                    <!--<field name="certificate_ids" widget="many2many_tags" domain="[('dia_attrib_value_id','=',dia_attrib_value_id),-->
+                    <!--('origin_attrib_value_id','=',origin_attrib_value_id)]" />-->
+                    <!--<field name="quantity" />-->
+                    <field name="certificate_id"  />
+                    <field name="dia_attrib_value_id" />
+                    <field name="origin_attrib_value_id" />
+                    <field name="length_attrib_value_id" />
+                    <field name="issued_date"/>
+
+
+
 				</tree>
 			</field>
 		</record>
@@ -57,14 +65,15 @@
                         <group>
                             <field name="dn_line_ids">
                                 <tree editable="bottom">
-                                    <field name="dn_no"/>
+                                    <!--<field name="dn_no"/>-->
+                                    <field name="delivery_order_id"/>
                                     <field name="order_code_ids" widget="many2many_tags"/>
                                 </tree>
                             </field>
                         </group>
                         <notebook>
                             <page string="Certificates">
-                                <field name="certificate_line_ids"/>
+                                <field name="certificate_line_ids" />
                             </page>
                             <!--<page string="Heat Nos">-->
                                 <!--<field name="heat_number_ids"/>-->
@@ -242,6 +251,7 @@
                     <field name="dia_attrib_value_id"/>
                     <field name="origin_attrib_value_id"/>
                     <field name="length_attrib_value_id"/>
+                    <field name="issued_date"/>
 				</tree>
 			</field>
 		</record>

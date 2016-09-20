@@ -11,7 +11,8 @@
                  'qc_summary_view.xml',
                  'qc_reports.xml',
                  'qc_summary_seq.xml',
-                 'qc_observation_view.xml'
+                 'qc_observation_view.xml',
+                 'qc_check_view.xml'
                  ],
     "description": "CICON QA/QC",
     "init_xml": [],

@@ -49,6 +49,7 @@ class cicon_qc_observation(models.Model):
     _description = "CICON QC Observation"
 
     name = fields.Char('Report No :', readonly=True)
+    qc_check_ids = fields.Many2many( comodel_name='cicon.qc.check', relation='cicon_qc_observation_check_rel', column1='qc_observation_id', column2='qc_check_id', string='QC Checks' )
     reference = fields.Char('Reference No#', readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
     category_id = fields.Many2one('cicon.qc.observation.category', string='Category', required=True ,
                                   readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]}, track_visibility='onchange')
@@ -66,7 +67,7 @@ class cicon_qc_observation(models.Model):
     root_cause = fields.Text('Root Cause', readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
     corr_act = fields.Text('Corrective Action',readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
     prev_act = fields.Text('Preventive Action', readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
-    state = fields.Selection([('new', 'New'), ('open', 'In Progress'), ('close', 'Closed'), ('cancel', 'Cancelled')], string='Status', default='new', track_visibility='onchange' )
+    state = fields.Selection([('new', 'New'), ('confirm', 'Confirmed'), ('action', 'Action Proposed'), ('done', 'Solved') ,('cancel', 'Cancelled')], string='Status', default='new', track_visibility='onchange' )
     condition = fields.Selection([('use', 'Use'), ('re_work', 'Re-Work'), ('scope', 'Scope'), ('other', 'Others')],
                                  string='Condition', readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
     condition_text = fields.Text('Comments', readonly=True, states={'new': [('readonly', False)], 'open': [('readonly', False)]})
