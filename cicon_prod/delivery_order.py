@@ -1,4 +1,4 @@
-from openerp import models, fields, api
+from openerp import models, fields, api, tools
 
 
 class CiconProdDeliveryOrder(models.Model):
@@ -7,15 +7,17 @@ class CiconProdDeliveryOrder(models.Model):
 
     name = fields.Char("DN Number", required=True)
     dn_date = fields.Date("DN Date", required=True)
+    dn_delivered_date = fields.Date("Delivered Date", required=True, default=fields.Date.context_today)
     partner_id = fields.Many2one('res.partner', string="Customer",related="customer_order_id.partner_id", store=True)
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
-    customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order", required=True)
+    customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order")
     prod_order_ids = fields.Many2many('cicon.prod.order', 'cicon_prod_order_dn_rel', 'dn_id', 'prod_order_id', "Production Orders",
                                       domain="[('customer_order_id','=', customer_order_id)]")
     remarks = fields.Char("Remarks")
     product_tmpl_ids = fields.Many2many('product.template','cicon_dn_product_tmpl_rel','dn_id', 'product_tmpl_id', "Product Templates")
     state = fields.Selection([('pending', 'Pending'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
     dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines")
+    dn_product_line_ids = fields.One2many('cicon.prod.delivery.product.line.view', 'dn_id', readonly=True, string="DN Product Lines")
     trip_details = fields.Char('Trailer/Driver')
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(name)', "DN Should be unique")]
@@ -40,13 +42,24 @@ class CiconProdDeliveryOrder(models.Model):
                     'prod_order_id': _order_line.prod_order_id,
                     'product_qty': _order_line.product_qty
                 })
-        self.dn_line_ids = _dn_lines
+            self.dn_line_ids = _dn_lines
+
+            _prods = _order_lines.mapped('product_id')
+            _prod_lines = []
+            for _prod in _prods:
+                _prod_sum = sum([x.product_qty for x in _order_lines if x.product_id.id == _prod.id])
+                _prod_lines.append({'product_id': _prod, 'product_qty': _prod_sum})
+            self.dn_product_line_ids = _prod_lines
+
+
+
+
 
 
 CiconProdDeliveryOrder()
 
 
-class CiconProdDeliveryOerderLine(models.Model):
+class CiconProdDeliveryOrderLine(models.Model):
     _name = 'cicon.prod.delivery.order.line'
     _description = "Delivery Line"
 
@@ -80,5 +93,42 @@ class CiconProdDeliveryOerderLine(models.Model):
                                           store=True)
 
 
-CiconProdDeliveryOrder()
+class CiconProdDeliveryProductLineView(models.Model):
+    _name = 'cicon.prod.delivery.product.line.view'
+    _description = "Delivery Product Line"
+    _auto = False
+
+    dn_id = fields.Many2one('cicon.prod.delivery.order', string="DN",readonly=True)
+    product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string='Product', readonly=True)
+    product_qty = fields.Float('Quantity', digits=(10, 3), readonly=True)
+    unit_id = fields.Many2one('product.uom', related='product_id.uom_id', string='Unit', readonly=True)
+    categ_id = fields.Many2one('product.category', related='product_id.categ_id', string='Category', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', readonly=True)
+
+
+    def _from(self):
+        from_str = """
+        cicon_prod_delivery_order_line
+        """
+        return from_str
+
+    def _select(self):
+        select_str = """
+        SELECT MAX(id) as id,dn_id,product_id, sum( product_qty) as product_qty"""
+        return select_str
+
+    def _group_by(self):
+        group_by_str = """GROUP BY dn_id,product_id"""
+        return group_by_str
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("""CREATE or REPLACE VIEW %s as (
+            %s
+            FROM  %s
+            %s
+            )""" % (self._table, self._select(), self._from(), self._group_by()))
+
+
+
 

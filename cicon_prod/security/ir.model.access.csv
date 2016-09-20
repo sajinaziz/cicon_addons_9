@@ -20,4 +20,11 @@ acc_cic_contract_weight_type_admin,cic.contract.weight.type_admin,model_cicon_co
 acc_cic_contract_line_admin,cic.contract.line_admin,model_cicon_contract_line,group_prod_admin,1,1,1,1
 access_cic_prod_group_temp_admin,cicon.prod.group.temp admin,cicon_product_group_template.model_cicon_product_group_template,group_prod_admin,1,1,1,1
 access_cic_prod_group_attr_admin,cicon.prod.group.attr admin,cicon_product_group_template.model_cicon_product_group_attribute,group_prod_admin,1,1,1,1
+acc_cic_prod_plan_wizard,cic.prod.plan.wizard_admin,model_cic_prod_plan_wizard,group_prod_admin,1,1,1,1
+acc_cic_prod_del_order_user,cicon.prod.delivery.order_user,model_cicon_prod_delivery_order,group_prod_user,1,0,0,0
+acc_cic_prod_del_order_admin,cicon.prod.delivery.order_admin,model_cicon_prod_delivery_order,group_prod_admin,1,1,1,0
+acc_cic_prod_del_order_line_user,cicon.prod.delivery.order.line_user,model_cicon_prod_delivery_order_line,group_prod_user,1,0,0,0
+acc_cic_prod_del_order_line_admin,cicon.prod.delivery.order.line_admin,model_cicon_prod_delivery_order_line,group_prod_admin,1,1,1,0
+acc_cic_prod_del_product_line_user,cicon.prod.delivery.product.line_user,model_cicon_prod_delivery_product_line_view,group_prod_user,1,0,0,0
+
 

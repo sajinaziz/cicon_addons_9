@@ -2,32 +2,12 @@
 <openerp>
   <data>
 
-    <!--<report id="report_cover_sheet"-->
-            <!--name="report_cover_sheet_webkit"-->
-            <!--auto="False"-->
-            <!--model="cicon.customer.order"-->
-            <!--file="cicon_prod/report/cover_sheet.mako"-->
-            <!--string="Order Cover Sheet"-->
-            <!--report_type="webkit" />-->
-
           <report id="report_cust_requisition"
             name="cicon_prod.customer_requisition_template"
             model="cicon.customer.order"
             file="cicon_prod.customer_requisition"
             string="Cover Sheet"
             report_type="qweb-pdf" />
-           <!--webkit_header="cicon_reports_portrait_header" />-->
-
-
-      <!--<report id="report_order_hand_steel"-->
-            <!--name="report_order_hand_steel_webkit"-->
-            <!--auto="False"-->
-            <!--model="cicon.prod.order"-->
-            <!--file="cicon_prod/report/steel_order_in_hand.mako"-->
-            <!--string="Order In Hand - Steel"-->
-            <!--report_type="webkit"-->
-            <!--multi="True"/>-->
-
 
 
         <report
@@ -49,16 +29,6 @@
             name="cicon_prod.cic_prod_plan_report_template"
         />
 
-
-
-        <!--<report-->
-            <!--id="report_steel_trip_summary_qweb"-->
-            <!--string="Trip Summary"-->
-            <!--model="cicon.trip.summary"-->
-            <!--report_type="qweb-pdf"-->
-            <!--file="cicon_prod.trip_summary_report.xml"-->
-            <!--name="cicon_prod.cicon_steel_trip_summary_template"-->
-        <!--/>-->
 
 
 

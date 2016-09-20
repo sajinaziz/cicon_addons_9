@@ -41,7 +41,7 @@ class cicon_prod_order(models.Model):
     sequence = fields.Integer('Sequence')
     template_ids = fields.Many2many('product.template', compute=_get_tonnage, store=False, string='Products')
     template_str = fields.Char(compute=_get_tonnage,store=False, string='Products')
-    load = fields.Integer("Load Priority")
+    load = fields.Float("Load Priority")
 
     _order = "load, sequence, required_date desc"
     # _sequence = 'load'
@@ -72,10 +72,15 @@ class cicon_prod_order(models.Model):
         default.update(state='pending')
         return super(cicon_prod_order, self).copy(default)
 
-    @api.model
-    def plan_groups(self, present_ids, domain, **kwargs):
-        _plans = self.env['cicon.prod.plan'].search([('state', '!=', 'done')]).name_get()
-        return _plans, None
+    @api.multi
+    def plan_groups(self,  domain, **kwargs):
+        _plans_valid = self.env['cicon.prod.plan'].search([('state', '=', 'done')])
+        _plans = [category.name_get()[0] for category in _plans_valid]
+        _fold = {}
+        for _plan in _plans:
+            _fold[_plan[0]] = True
+        print _fold
+        return _plans, _fold
 
     _group_by_full = {
         'plan_id': plan_groups,
