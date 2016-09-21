@@ -82,11 +82,11 @@ class cicon_qc_observation(models.Model):
 
     @api.multi
     def close_action(self):
-        self.write({'state': 'close'})
+        self.write({'state': 'done'})
 
-    @api.multi
+    @api.multif
     def re_open_action(self):
-        self.write({'state': 'open'})
+        self.write({'state': 'new'})
 
     _sql_constraints = [('uniq_name', 'UNIQUE(name)', 'Unique Name ')]
 
