@@ -30,7 +30,7 @@ class cicon_prod_order(models.Model):
     bar_mark_count = fields.Integer('Bar Marks', readonly=True, states={'pending': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', related='customer_order_id.project_id.partner_id', string='Customer', readonly=True)
     project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project', readonly=True)
-    state = fields.Selection([('pending', 'New'), ('progress', 'In Progress'), ('transit', 'Transit'),
+    state = fields.Selection([('pending', 'New'), ('progress', 'In Progress'),
                               ('delivered', 'Delivered'), ('cancel', 'Cancel'),
                               ('hold', 'On Hold'), ('transfer', 'Transfer')], default='pending',  string='Status', track_visibility="onchange")
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
@@ -58,10 +58,25 @@ class cicon_prod_order(models.Model):
     def set_pending(self):
         return self.write({'state': 'pending'})
 
-    #Removed for Test In Production
-    # @api.multi
-    # def set_transit(self):
-    #     return self.write({'state': 'transit'})
+    @api.multi
+    def create_dn(self):
+        self.ensure_one()  # One Record
+        # Find form view and pass context for default values
+        form_id = self.env.ref('cicon_prod.cicon_dn_form_view')
+        ctx = dict(
+            default_customer_order_id=self.customer_order_id.id,
+            default_prod_order_ids=[self.id],
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'cicon.prod.delivery.order',
+            'views': [(form_id.id, 'form')],
+            'view_id': form_id.id,
+            'target': 'current',
+            'context': ctx,
+        }
 
     @api.one
     def copy(self, default=None):

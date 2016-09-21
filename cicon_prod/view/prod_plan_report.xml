@@ -23,6 +23,7 @@
                             <td> Status </td>
                         </thead>
                         <t t-set="_load" t-value="list(set([x.load for x in o.prod_order_ids]))"/>
+                        <t t-esc="_load.sort()" />
                         <t t-foreach="_load"  t-as="l">
                             <tr>
                                <td colspan="9"> Load #: <span t-esc="l"/> </td>

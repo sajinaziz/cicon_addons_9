@@ -6,21 +6,28 @@ class CiconProdDeliveryOrder(models.Model):
     _description = "Delivery Order"
 
     name = fields.Char("DN Number", required=True)
-    dn_date = fields.Date("DN Date", required=True)
-    dn_delivered_date = fields.Date("Delivered Date", required=True, default=fields.Date.context_today)
-    partner_id = fields.Many2one('res.partner', string="Customer",related="customer_order_id.partner_id", store=True)
+    dn_date = fields.Date("DN Date", required=True,  default=fields.Date.context_today)
+    dn_delivered_date = fields.Date("Delivered Date")
+    partner_id = fields.Many2one('res.partner', string="Customer", related="customer_order_id.partner_id", store=True)
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
     customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order")
     prod_order_ids = fields.Many2many('cicon.prod.order', 'cicon_prod_order_dn_rel', 'dn_id', 'prod_order_id', "Production Orders",
                                       domain="[('customer_order_id','=', customer_order_id)]")
     remarks = fields.Char("Remarks")
-    product_tmpl_ids = fields.Many2many('product.template','cicon_dn_product_tmpl_rel','dn_id', 'product_tmpl_id', "Product Templates")
-    state = fields.Selection([('pending', 'Pending'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
+    product_tmpl_ids = fields.Many2many('product.template', 'cicon_dn_product_tmpl_rel', 'dn_id', 'product_tmpl_id', "Product Templates")
+    state = fields.Selection([('pending', 'Pending'), ('partial', 'Partially Delivered'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
     dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines")
     dn_product_line_ids = fields.One2many('cicon.prod.delivery.product.line.view', 'dn_id', readonly=True, string="DN Product Lines")
     trip_details = fields.Char('Trailer/Driver')
+    #TODO : Total Tonnage
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(name)', "DN Should be unique")]
+
+
+    @api.onchange('customer_order_id')
+    def _change_customer_order(self):
+        if self.prod_order_ids:
+            self.prod_order_ids = []
 
     @api.onchange('prod_order_ids')
     def _change_prod_order(self):
@@ -33,6 +40,7 @@ class CiconProdDeliveryOrder(models.Model):
     @api.onchange('product_tmpl_ids')
     def _change_prod_tmpl(self):
         _dn_lines = []
+        #TODO: Check for balance quantity
         if self.prod_order_ids and self.product_tmpl_ids:
             _order_lines = self.env['cicon.prod.order.line'].search([('prod_order_id', 'in', self.prod_order_ids._ids),
                                                                      ('product_tmpl_id', 'in', self.product_tmpl_ids._ids)])
@@ -51,10 +59,17 @@ class CiconProdDeliveryOrder(models.Model):
                 _prod_lines.append({'product_id': _prod, 'product_qty': _prod_sum})
             self.dn_product_line_ids = _prod_lines
 
+    @api.multi
+    def set_done(self):
+        self.ensure_one()
+        self.write({'state': 'done'})
+        for p_order in self.prod_order_ids:
+            p_order.write({'state': 'delivered'})
 
-
-
-
+    @api.multi
+    def set_pending(self):
+        self.ensure_one()
+        self.write({'state': 'pending'})
 
 CiconProdDeliveryOrder()
 
@@ -91,6 +106,7 @@ class CiconProdDeliveryOrderLine(models.Model):
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', readonly=True)
     dia_attrib_value_id = fields.Many2one('product.attribute.value', compute=_get_dia_value, string='Diameter',
                                           store=True)
+    state = fields.Selection(related='prod_order_id.state', string='State', store=False, readonly=True)
 
 
 class CiconProdDeliveryProductLineView(models.Model):
