@@ -84,7 +84,7 @@ class cicon_qc_observation(models.Model):
     def close_action(self):
         self.write({'state': 'done'})
 
-    @api.multif
+    @api.multi
     def re_open_action(self):
         self.write({'state': 'new'})
 
