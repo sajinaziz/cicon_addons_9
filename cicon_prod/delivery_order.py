@@ -4,24 +4,25 @@ from openerp import models, fields, api, tools
 class CiconProdDeliveryOrder(models.Model):
     _name = 'cicon.prod.delivery.order'
     _description = "Delivery Order"
+    _inherit = ['mail.thread']
 
     @api.depends('dn_line_ids')
     def _get_tonnage(self):
         for rec in self:
             rec.total_tonnage = sum([r.product_qty for r in rec.dn_line_ids if r.unit_id.name == 'TON'])
 
-    name = fields.Char("DN Number", required=True)
-    dn_date = fields.Date("DN Date", required=True,  default=fields.Date.context_today)
-    dn_delivered_date = fields.Date("Delivered Date")
+    name = fields.Char("DN Number", required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
+    dn_date = fields.Date("DN Date", required=True,  default=fields.Date.context_today, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
+    dn_delivered_date = fields.Date("Delivered Date", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string="Customer", related="customer_order_id.partner_id", store=True)
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
-    customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order")
+    customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     prod_order_ids = fields.Many2many('cicon.prod.order', 'cicon_prod_order_dn_rel', 'dn_id', 'prod_order_id', "Production Orders",
-                                      domain="[('customer_order_id','=', customer_order_id),('state','=', 'pending' )]")
+                                      domain="[('customer_order_id','=', customer_order_id),('state','=', 'pending' )]", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     remarks = fields.Char("Remarks")
-    product_tmpl_ids = fields.Many2many('product.template', 'cicon_dn_product_tmpl_rel', 'dn_id', 'product_tmpl_id', "Product Templates")
-    state = fields.Selection([('pending', 'Pending'), ('partial', 'Partially Delivered'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
-    dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines")
+    product_tmpl_ids = fields.Many2many('product.template', 'cicon_dn_product_tmpl_rel', 'dn_id', 'product_tmpl_id', "Product Templates", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
+    state = fields.Selection([('pending', 'Pending'), ('partial', 'Partially Delivered'), ('done', 'Delivered')], string="Status", required=True, default='pending' , readonly=True)
+    dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     dn_product_line_ids = fields.One2many('cicon.prod.delivery.product.line.view', 'dn_id', readonly=True, string="DN Product Lines")
     trip_details = fields.Char('Trailer/Driver')
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
