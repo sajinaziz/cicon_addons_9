@@ -34,7 +34,7 @@ class cicon_prod_order(models.Model):
                               ('delivered', 'Delivered'), ('cancel', 'Cancel'),
                               ('hold', 'On Hold'), ('transfer', 'Transfer')], default='pending',  string='Status', track_visibility="onchange")
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
-    created_user = fields.Many2one('res.users', string="Created By", default=lambda self: self.env.user.id)
+    created_user = fields.Many2one('res.users', string="Created By", readonly=True, states={'pending': [('readonly', False)]}, default=lambda self: self.env.user.id)
     # prod_note = fields.Char(store=False, string="Warning", readonly=True)
     planned_date = fields.Date('Planned Date')
     plan_id = fields.Many2one('cicon.prod.plan', string="Production Plan")
@@ -168,11 +168,27 @@ class cicon_customer_order(models.Model):
     _inherit = 'cicon.customer.order'
 
     def _get_prod_order_count(self):
+        #TODO: Check status requirement in calculation
         for rec in self:
             rec.prod_order_count = len(self.prod_order_ids) or 0
+            rec.delivery_order_count= len(self.delivery_order_ids) or 0
+            rec.prod_order_tonnage = sum([x.total_tonnage for x in self.prod_order_ids if x.state not in ('cancel')])
+            print rec.prod_order_tonnage
+            rec.delivery_order_tonnage = sum([x.total_tonnage for x in self.delivery_order_ids])
+            rec.delivery_perc = int((rec.delivery_order_tonnage / rec.prod_order_tonnage )* 100)
 
     prod_order_ids = fields.One2many('cicon.prod.order', 'customer_order_id', string='Production Orders', copy=False)
     prod_order_count = fields.Integer('Production Order Count', compute=_get_prod_order_count, store=False, readonly=True)
+    prod_order_tonnage = fields.Float('Production Tonnage', digits=(10,3), compute=_get_prod_order_count, store=False,
+                                      readonly=True)
+    delivery_order_ids = fields.One2many('cicon.prod.delivery.order', 'customer_order_id', string='Delivery Orders', copy=False)
+    delivery_order_count = fields.Integer('Delivery Order Count', compute=_get_prod_order_count, store=False,
+                                      readonly=True)
+    delivery_order_tonnage = fields.Float('Delivery Tonnage', digits=(10,3), compute=_get_prod_order_count, store=False,
+                                      readonly=True)
+    delivery_perc = fields.Integer('Delivery Percentage', compute=_get_prod_order_count, store=False,
+                                      readonly=True)
+
 
     @api.multi
     def order_cancel(self):

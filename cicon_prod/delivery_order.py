@@ -5,6 +5,11 @@ class CiconProdDeliveryOrder(models.Model):
     _name = 'cicon.prod.delivery.order'
     _description = "Delivery Order"
 
+    @api.depends('dn_line_ids')
+    def _get_tonnage(self):
+        for rec in self:
+            rec.total_tonnage = sum([r.product_qty for r in rec.dn_line_ids if r.unit_id.name == 'TON'])
+
     name = fields.Char("DN Number", required=True)
     dn_date = fields.Date("DN Date", required=True,  default=fields.Date.context_today)
     dn_delivered_date = fields.Date("Delivered Date")
@@ -12,14 +17,14 @@ class CiconProdDeliveryOrder(models.Model):
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
     customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order")
     prod_order_ids = fields.Many2many('cicon.prod.order', 'cicon_prod_order_dn_rel', 'dn_id', 'prod_order_id', "Production Orders",
-                                      domain="[('customer_order_id','=', customer_order_id)]")
+                                      domain="[('customer_order_id','=', customer_order_id),('state','=', 'pending' )]")
     remarks = fields.Char("Remarks")
     product_tmpl_ids = fields.Many2many('product.template', 'cicon_dn_product_tmpl_rel', 'dn_id', 'product_tmpl_id', "Product Templates")
     state = fields.Selection([('pending', 'Pending'), ('partial', 'Partially Delivered'), ('done', 'Delivered')], string="Status", required=True, default='pending' )
     dn_line_ids = fields.One2many('cicon.prod.delivery.order.line', 'dn_id', string="DN Lines")
     dn_product_line_ids = fields.One2many('cicon.prod.delivery.product.line.view', 'dn_id', readonly=True, string="DN Product Lines")
     trip_details = fields.Char('Trailer/Driver')
-    #TODO : Total Tonnage
+    total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(name)', "DN Should be unique")]
 
@@ -27,7 +32,9 @@ class CiconProdDeliveryOrder(models.Model):
     @api.onchange('customer_order_id')
     def _change_customer_order(self):
         if self.prod_order_ids:
-            self.prod_order_ids = []
+            _cust_order_id = self.prod_order_ids.mapped('customer_order_id')
+            if len(_cust_order_id) > 1 or self.customer_order_id != _cust_order_id:
+                self.prod_order_ids =[]
 
     @api.onchange('prod_order_ids')
     def _change_prod_order(self):

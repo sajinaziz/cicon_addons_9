@@ -275,6 +275,15 @@
 
 
 
+          <act_window id="cicon_delivery_order_from_customer_action"
+            multi="False"
+            key2="client_action_multi" name="Delivery Order"
+            res_model="cicon.prod.delivery.order" src_model="cicon.customer.order"
+            view_mode="tree,form"
+            view_type="form"
+            target="current"
+            context="{'default_customer_order_id': active_id, 'search_default_customer_order_id': active_id}"    />
+
 
 
 
@@ -300,13 +309,21 @@
                 <!--</xpath>-->
                 <xpath expr="//form/sheet/group" position="before">
                      <div class="oe_right oe_button_box">
-                        <button class="oe_inline oe_stat_button"
+                       <button class="oe_inline oe_stat_button"
                                 name="%(cicon_prod_order_from_customer_action)d"  type="action"
                                 attrs="{'invisible':[('state','=','new')]}"
-                                icon="fa-building-o">
+                                icon="fa-tags">
                             <field name="prod_order_count"
-                             string="Production Orders"
+                             string="Production"
                              widget="statinfo" />
+                        </button>
+
+                         <button class="oe_inline oe_stat_button"
+                                name="%(cicon_delivery_order_from_customer_action)d"  type="action"
+                                attrs="{'invisible':[('state','=','new')]}">
+                            <field name="delivery_perc"
+                             string="Delivery"
+                             widget="percentpie" />
                         </button>
 
                     </div>

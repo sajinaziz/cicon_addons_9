@@ -11,6 +11,8 @@
                     <field name="partner_id"/>
                     <field name="project_id"/>
                     <field name="customer_order_id"/>
+                    <field name="prod_order_ids"/>
+                    <field name="total_tonnage"/>
                     <field name="remarks"/>
                     <field name="state"/>
                 </tree>
@@ -40,8 +42,7 @@
                                 <field name="customer_order_id" options="{'no_create': True}"   />
                                 <field name="name"/>
                                 <field name="dn_date"/>
-
-
+                                <field name="total_tonnage"/>
                             </group>
                             <group>
                                 <field name="prod_order_ids" widget="many2many_tags" options="{'no_create': True}" />
@@ -58,7 +59,7 @@
                                         <field name="prod_order_id" domain="[('id', 'in', parent.prod_order_ids)]" />
                                         <field name="product_id"/>
                                         <field name="product_qty" sum="Total"/>
-                                        <field name="prod_order_qty"/>
+                                        <field name="prod_order_qty" sum="Total"/>
                                         <field name="unit_id"/>
                                         <field name="dia_attrib_value_id"/>
                                         <field name="state"/>
@@ -81,6 +82,22 @@
             </field>
         </record>
 
+
+        <record id="delivery_order_search_form" model="ir.ui.view">
+            <field name="name">cicon.delivery.order.search.form</field>
+            <field name="model">cicon.prod.delivery.order</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Order">
+                    <field name="name"/>
+                    <field name="partner_id" widget="selection"/>
+                    <field name="project_id" widget="selection"/>
+                    <field name="customer_order_id" widget="selection"/>
+                    <field name="prod_order_ids" widget="selection"/>
+                    <filter name="pending_order" string="Pending" domain="[('state','not in',['done'])]"/>
+                    <!--#TODO: Search by Product Template-->
+                </search>
+            </field>
+        </record>
 
 
 
