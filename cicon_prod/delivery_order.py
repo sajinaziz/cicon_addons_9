@@ -1,5 +1,5 @@
 from openerp import models, fields, api, tools
-
+from openerp.exceptions import UserError
 
 class CiconProdDeliveryOrder(models.Model):
     _name = 'cicon.prod.delivery.order'
@@ -70,10 +70,12 @@ class CiconProdDeliveryOrder(models.Model):
     @api.multi
     def set_done(self):
         self.ensure_one()
-        if self.dn_line_ids:
+        if self.dn_line_ids and self.dn_date:
             self.write({'state': 'done'})
-        for p_order in self.prod_order_ids:
-            p_order.write({'state': 'delivered'})
+            for p_order in self.prod_order_ids:
+                p_order.write({'state': 'delivered'})
+        else:
+            raise UserError('Select Delivery Date')
 
     @api.multi
     def set_pending(self):

@@ -43,6 +43,7 @@
                                 <field name="name"/>
                                 <field name="dn_date"/>
                                 <field name="total_tonnage"/>
+                                <field name="trip_details"/>
                             </group>
                             <group>
                                 <field name="prod_order_ids" widget="many2many_tags"/>

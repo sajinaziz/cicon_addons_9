@@ -6,7 +6,8 @@ class cic_order_state_wizard(models.TransientModel):
     _description = "Change Order State"
 
     #state = fields.Selection([('delivered', 'Delivered'),('cancel', 'Cancel'),
-    state = fields.Selection([('hold', 'On Hold'), ('transfer', 'Transfer')], string='Status', required=True)
+    #TODO: to be remove Delivered State in case using DN Order
+    state = fields.Selection([('delivered', 'Delivered'),('hold', 'On Hold'), ('transfer', 'Transfer')], string='Status', required=True)
     prod_order_ids = fields.Many2many('cicon.prod.order', 'order_state_wizard_rel', 'wizard_id', 'prod_order_id', string='Production Orders',required=True)
 
     @api.one
