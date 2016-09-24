@@ -1,5 +1,6 @@
 from openerp import models, osv, fields, api
 from dateutil import parser
+from openerp.exceptions import UserError
 
 
 class cicon_prod_order(models.Model):
@@ -30,7 +31,8 @@ class cicon_prod_order(models.Model):
     bar_mark_count = fields.Integer('Bar Marks', readonly=True, states={'pending': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', related='customer_order_id.project_id.partner_id', string='Customer', readonly=True)
     project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project', readonly=True)
-    state = fields.Selection([('pending', 'New'), ('progress', 'In Progress'),
+    state = fields.Selection([('pending', 'New'), ('confirm', 'Confirm'), ('progress', 'In Progress'),
+                              ('ready', 'Ready To Deliver'), ('partial_delivery', 'Partially Delivered'),
                               ('delivered', 'Delivered'), ('cancel', 'Cancel'),
                               ('hold', 'On Hold'), ('transfer', 'Transfer')], default='pending',  string='Status', track_visibility="onchange")
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
@@ -42,21 +44,29 @@ class cicon_prod_order(models.Model):
     template_ids = fields.Many2many('product.template', compute=_get_tonnage, store=False, string='Products')
     template_str = fields.Char(compute=_get_tonnage,store=False, string='Products')
     load = fields.Float("Load Priority")
+    delivery_order_ids = fields.Many2many('cicon.prod.delivery.order', 'cicon_prod_order_dn_rel', 'prod_order_id', 'dn_id', "Delivery Orders",
+                                        readonly=True)
 
     _order = "load, sequence, required_date desc"
     # _sequence = 'load'
 
     @api.multi
-    def set_deliver(self):
-        return self.write({'state': 'delivered'})
+    def set_pending(self):
+        return self.write({'state': 'pending'})
 
     @api.multi
     def set_cancel(self):
-        return self.write({'state': 'cancel'})
+        if len(self.delivery_order_ids) == 0:
+            return self.write({'state': 'cancel'})
+        else:
+            raise UserError("Please remove Order from Delivery Note!")
 
     @api.multi
-    def set_pending(self):
-        return self.write({'state': 'pending'})
+    def set_confirm(self):
+        if self.customer_order_id:
+            return self.write({'state': 'confirm'})
+        else:
+            raise UserError("Please Select Customer Order!")
 
     @api.multi
     def create_dn(self):
@@ -173,7 +183,6 @@ class cicon_customer_order(models.Model):
             rec.prod_order_count = len(self.prod_order_ids) or 0
             rec.delivery_order_count= len(self.delivery_order_ids) or 0
             rec.prod_order_tonnage = sum([x.total_tonnage for x in self.prod_order_ids if x.state not in ('cancel')])
-            print rec.prod_order_tonnage
             rec.delivery_order_tonnage = sum([x.total_tonnage for x in self.delivery_order_ids])
             rec.delivery_perc = int((rec.delivery_order_tonnage / rec.prod_order_tonnage )* 100)
 
@@ -193,11 +202,14 @@ class cicon_customer_order(models.Model):
     @api.multi
     def order_cancel(self):
         self.ensure_one()
-        #TODO: Check for production Orders status
-        if self.prod_order_count == 0:
-            self.write({'state': 'cancel'})
+        if self.prod_order_count != 0:
+            _status  =  self.prod_order_ids.mapped('state')
+            if len(_status) == 1 and _status[0] == 'cancel':
+                return self.write({'state': 'cancel'})
+            else:
+                raise UserError("Please Cancel Production Order !")
         else:
-            raise UserWarning("Please Cancel Production Order !")
+            return  self.write({'state': 'cancel'})
 
 
 cicon_customer_order()

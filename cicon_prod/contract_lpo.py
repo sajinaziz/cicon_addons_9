@@ -77,7 +77,7 @@ class CiconContract(models.Model):
         _product_ids.extend(i for x in self.contract_line_ids for i in x.prod_group_tmpl_id.product_ids._ids )
         _set_prod_ids = list(set(_product_ids))
         if len(_set_prod_ids) < len(_product_ids):
-            raise Warning("Duplicate Products Found , Please Remove !")
+            raise UserError("Duplicate Products Found , Please Remove !")
 
     @api.multi
     def set_active(self):

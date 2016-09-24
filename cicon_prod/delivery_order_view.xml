@@ -45,7 +45,7 @@
                                 <field name="total_tonnage"/>
                             </group>
                             <group>
-                                <field name="prod_order_ids" widget="many2many_tags" options="{'no_create': True}" />
+                                <field name="prod_order_ids" widget="many2many_tags"/>
                                 <field name="product_tmpl_ids" widget="many2many_tags" options="{'no_create': True}" />
                                 <field name="remarks"/>
                                 <field name="dn_delivered_date"/>

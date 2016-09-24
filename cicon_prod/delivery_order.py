@@ -12,7 +12,7 @@ class CiconProdDeliveryOrder(models.Model):
             rec.total_tonnage = sum([r.product_qty for r in rec.dn_line_ids if r.unit_id.name == 'TON'])
 
     name = fields.Char("DN Number", required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
-    dn_date = fields.Date("DN Date", required=True,  default=fields.Date.context_today, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
+    dn_date = fields.Date("DN Date", required=True,  track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     dn_delivered_date = fields.Date("Delivered Date", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string="Customer", related="customer_order_id.partner_id", store=True)
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
@@ -70,7 +70,8 @@ class CiconProdDeliveryOrder(models.Model):
     @api.multi
     def set_done(self):
         self.ensure_one()
-        self.write({'state': 'done'})
+        if self.dn_line_ids:
+            self.write({'state': 'done'})
         for p_order in self.prod_order_ids:
             p_order.write({'state': 'delivered'})
 

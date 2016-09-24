@@ -68,12 +68,12 @@
 			<field name="arch" type="xml">
                 <form string="Production Order" >
                     <header>
-                        <button name="set_pending" confirm='Confirm , Status Change to Pending ?' states="delivered,transit,cancel,transfer,progress,hold" string="Set Pending" type="object" />
-                        <!--groups="cicon_prod.group_prod_delivery_user"/>-->
-                        <button name="set_cancel" confirm='Confirm , Status Change to Cancel ?'  states="pending" string="Cancel Order" type="object" />
-                        <button name="create_dn" confirm='Confirm , Create DN ?'  states="progress" groups="cicon_prod.group_prod_admin" string="Delivery Note"  type="object" />
+                        <button name="set_confirm" confirm='Status Change to Confrim?' states="pending" string="Confirm" class="oe_highlight"  type="object" />
+                        <button name="set_pending" confirm='Reset Status to Pending ?'  states="confirm" string="Set as Pending" groups="cicon_prod.group_prod_admin" type="object" />
+                        <button name="set_cancel" confirm='Confirm , Status Change to Cancel ?' groups="cicon_prod.group_prod_admin"  states="pending,progress,confirm" string="Cancel Order" type="object" />
+                        <button name="create_dn" confirm='Confirm , Create DN ?'  states="confirm,progress" groups="cicon_prod.group_prod_admin" string="Delivery Note"  type="object" />
                         <!--<button name="set_transit" confirm="Confirm , Status Change to Cancel ?" states="pending,progress" string="Transit" type="object"/>-->
-                        <field name="state" widget="statusbar" statusbar_visible="new,progress,delivered"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,confirm,progress,delivered"/>
                     </header>
                     <sheet>
 
@@ -167,6 +167,7 @@
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer'])]"/>
                 <filter name="no_plan_order" string="Not Planned/Pending Order" domain="[('state','not in',['delivered','cancel','transfer']),('plan_id','=',False)]"/>
+                <filter name="to_do" string="Need Action" domain="[('customer_order_id','=',False)]"/>
                 <!--#TODO: Search by Product Template-->
                 <filter name="delivered" string="Delivered" domain="[('state','in',['delivered','cancel'])]"/>
                 <group expand="0" string="Group By...">

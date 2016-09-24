@@ -226,9 +226,6 @@
                     <field name="contract_id"  invisible="1" />
                 </xpath>
 
-                <xpath expr="//form/header/button[@name='set_pending']" position="before">
-                    <button name="set_progress" confirm="Confirm , Status Change to Progress ?" states="pending" string="Ready Production" class="oe_highlight" type="object"/>
-                </xpath>
 
                 <field name="product_lines" position="attributes">
                     <attribute name="context">{'default_contract_id': contract_id }</attribute>

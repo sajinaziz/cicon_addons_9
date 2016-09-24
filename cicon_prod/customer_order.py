@@ -26,8 +26,7 @@ class cicon_customer_order(models.Model):
     bbs_weight = fields.Float('Order Tonnage', digits=(10, 3), required =False, readonly=True, states={'new': [('readonly', False)]})
     company_id = fields.Many2one('res.company', "Company", required=True, default=lambda self: self.env.user.company_id)
     state = fields.Selection([('new', 'New'),
-            ('confirmed', 'Pending'),
-            ('progress', 'In Process'),
+            ('confirmed', 'Confirm'),
             ('close', 'Completed'),
             ('cancel', 'Cancelled')], 'Status', default='new', track_visibility='onchange')
     last_order = fields.Many2one('cicon.customer.order', string='Previous Order', store=False, readonly=True)
@@ -60,6 +59,7 @@ class cicon_customer_order(models.Model):
     @api.multi
     def order_reopen(self):
         self.write({'state': 'new'})
+
 
     @api.one
     def copy(self, default=None):
