@@ -12,6 +12,7 @@ class cicon_prod_order(models.Model):
     def _get_tonnage(self):
         for rec in self:
             rec.total_tonnage = sum([r.product_qty for r in rec.product_lines if r.unit_id.name == 'TON'])
+            #rec.total_tonnage = sum([r.product_qty for r in rec.product_lines])
             _temp = []
             for line in rec.product_lines:
                 _temp.extend(line.mapped('product_tmpl_id')._ids)
@@ -19,6 +20,7 @@ class cicon_prod_order(models.Model):
             rec.template_ids = list(set(_temp))
             if rec.template_ids:
                 rec.template_str = ','.join([x.name for x in rec.template_ids])
+
 
     name = fields.Char('Armaor Code / Internal Ref.', size=12, required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     revision_no = fields.Integer('Revision No', required=True, readonly=True, track_visibility="onchange", states={'pending': [('readonly', False)]})
@@ -184,7 +186,8 @@ class cicon_customer_order(models.Model):
             rec.delivery_order_count= len(self.delivery_order_ids) or 0
             rec.prod_order_tonnage = sum([x.total_tonnage for x in self.prod_order_ids if x.state not in ('cancel')])
             rec.delivery_order_tonnage = sum([x.total_tonnage for x in self.delivery_order_ids])
-            rec.delivery_perc = int((rec.delivery_order_tonnage / rec.prod_order_tonnage )* 100)
+            if rec.prod_order_tonnage > 0:
+                rec.delivery_perc = int((rec.delivery_order_tonnage / rec.prod_order_tonnage )* 100)
 
     prod_order_ids = fields.One2many('cicon.prod.order', 'customer_order_id', string='Production Orders', copy=False)
     prod_order_count = fields.Integer('Production Order Count', compute=_get_prod_order_count, store=False, readonly=True)
