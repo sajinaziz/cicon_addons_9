@@ -18,7 +18,7 @@ class CiconProdDeliveryOrder(models.Model):
     project_id = fields.Many2one('res.partner.project', string="Project", related="customer_order_id.project_id", store=True)
     customer_order_id = fields.Many2one('cicon.customer.order', " Customer Order", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     prod_order_ids = fields.Many2many('cicon.prod.order', 'cicon_prod_order_dn_rel', 'dn_id', 'prod_order_id', "Production Orders",
-                                      domain="[('customer_order_id','=', customer_order_id), ('state','in', ('confirm,pending'))]",
+                                      domain="[('customer_order_id','=', customer_order_id), ('state','in', ('confirm','pending'))]",
                                       track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     remarks = fields.Char("Remarks")
     product_tmpl_ids = fields.Many2many('product.template', 'cicon_dn_product_tmpl_rel', 'dn_id', 'product_tmpl_id', "Product Templates", track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
