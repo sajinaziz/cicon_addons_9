@@ -63,7 +63,6 @@ class cicon_customer_order(models.Model):
 
     @api.one
     def copy(self, default=None):
-        print default
         if default is None:
             default = {}
         if not default.get('name', False):
@@ -73,8 +72,8 @@ class cicon_customer_order(models.Model):
 
     @api.multi
     def print_order(self):
-        assert len(self) == 1, 'This option should only be used for a single id at a time.'
-        self.state = 'confirmed'
+        self.ensure_one(), 'This option should only be used for a single id at a time.'
+        self.write({'state': 'confirmed'})
         return self.env['report'].get_action(self, 'cicon_prod.customer_requisition_template')
 
     # For Report
