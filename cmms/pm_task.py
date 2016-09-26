@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from dateutil import rrule, parser
 from datetime import datetime
 
@@ -36,6 +36,7 @@ class CmmsBaseSchedule(models.Model):
     10: "October", 11: "November", 12: "December"}
 
     #store week days in a list of tuples with key
+
     _week_list= [('MO', 'Monday'), ('TU', 'Tuesday'), ('WE', 'Wednesday'), ('TH', 'Thursday'), ('FR', 'Friday'), ('SA', 'Saturday'), ('SU', 'Sunday')]
 
     date = fields.Date('Date', required=True, default=fields.Date.context_today)
@@ -85,7 +86,7 @@ class CmmsPmScheduleMaster(models.Model):
         def get_month_string(freq):
             if freq == 'monthly':
                 if self.select1 == 'date' and self.day < 1 or self.day > 31:
-                    raise Warning('Please select a proper day of the month.')
+                    raise UserError('Please select a proper day of the month.')
                 if self.select1 =='day':
                     return ';BYDAY=' + str(self.byday) + str(self.week_list)
                 elif self.select1 =='date':

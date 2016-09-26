@@ -75,10 +75,6 @@ class CmmsJobOrder(models.Model):
     machine_type = fields.Many2one('cmms.machine.type', string='Machine Type', related='machine_id.type_id', store=False, readonly=True)
     job_order_date = fields.Date('Job Order Date', required=True, readonly=True,
                                  states={'open': [('readonly', False)]}, track_visibility='onchange')
-    breakdown_datetime = fields.Datetime('Breakdown Time', readonly=True,
-                                         states={'open': [('readonly', False)]})
-    reported_datetime = fields.Datetime('Reported Date', readonly=True,
-                                        states={'open': [('readonly', False)]})
     description = fields.Char(string='Description', size=200, readonly=True,
                               states={'open': [('readonly', False)]})
     # job category id, create a relation to category table and store job category
@@ -87,9 +83,15 @@ class CmmsJobOrder(models.Model):
     #company id, create a relation to company , store company and set the current logged user company as the default company
     company_id = fields.Many2one('res.company',  string="Company",
                                  default=lambda self: self.env.user.company_id)
+
+    breakdown_datetime = fields.Datetime('Breakdown Time', readonly=True,
+                                         states={'open': [('readonly', False)]})
+    reported_datetime = fields.Datetime('Reported Date', readonly=True,
+                                        states={'open': [('readonly', False)]})
+
     reported_by = fields.Char("Reported/Operated By", size=50, readonly=True,
                               states={'open': [('readonly', False)]})
-    #foreman, store the foreman in charge
+    #foreman,  the foreman in charge
     foreman = fields.Char('Foreman In charge', size=50, readonly=True,
                           states={'open': [('readonly', False)]})
     #technician, store the person who is in charge of maintenance
@@ -104,9 +106,6 @@ class CmmsJobOrder(models.Model):
     service = fields.Boolean('Service Assistance', readonly=True,
                              states={'open': [('readonly', False)]})
     #priority, store the different type of priorities
-    priority = fields.Selection([('low', 'LOW PRIORITY'), ('normal', 'PRIORITY REPAIR'),
-                                 ('high', 'PRIORITY NEXT DAY'), ('highest', 'URGENT REPAIR')], "Priority", readonly=True,
-                                states={'open': [('readonly', False)]}, default='low', track_visibility='onchange')
     attended_by = fields.Char('Attended By', size=100, readonly=True,
                               states={'open': [('readonly', False)]})
 
