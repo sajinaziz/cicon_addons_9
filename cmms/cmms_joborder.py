@@ -106,6 +106,11 @@ class CmmsJobOrder(models.Model):
     service = fields.Boolean('Service Assistance', readonly=True,
                              states={'open': [('readonly', False)]})
     #priority, store the different type of priorities
+    priority = fields.Selection([('low', 'LOW PRIORITY'), ('normal', 'PRIORITY REPAIR'),
+                                 ('high', 'PRIORITY NEXT DAY'), ('highest', 'URGENT REPAIR')], "Priority",
+                                readonly=True,
+                                states={'open': [('readonly', False)]}, default='low', track_visibility='onchange')
+
     attended_by = fields.Char('Attended By', size=100, readonly=True,
                               states={'open': [('readonly', False)]})
 
