@@ -101,7 +101,7 @@ class CmmsMachine(models.Model):
     #condition, store the machine condition like working or not working
     condition = fields.Selection([('working', 'WORKING'), ('not_working', 'NOT WORKING')], 'Condition', required=True, track_visibility='onchange')
     is_machinery = fields.Boolean('Is Machinery', help="If it is real Machine", default=True, required=True)
-    unit = fields.Selection([('ton', 'TON'), ('nos', 'Numbers')], string="Unit")
+    #unit = fields.Selection([('ton', 'TON'), ('nos', 'Numbers')], string="Unit")
     #state, store the different states
     state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'),
                               ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status',
