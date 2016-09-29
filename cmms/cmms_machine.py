@@ -100,14 +100,14 @@ class CmmsMachine(models.Model):
     set_code = fields.Char('Set Code', size=8, help="If machine is Part of  Set")
     #condition, store the machine condition like working or not working
     condition = fields.Selection([('working', 'WORKING'), ('not_working', 'NOT WORKING')], 'Condition', required=True, track_visibility='onchange')
-    is_machinery = fields.Boolean('Is Machinery', help="If it is real Machine", default=True, required=True)
+    is_machinery = fields.Boolean('Is Machinery', help="If it is real Machine", default=True)
     #unit = fields.Selection([('ton', 'TON'), ('nos', 'Numbers')], string="Unit")
     #state, store the different states
     state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'),
                               ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status',
                              required=True, track_visibility='onchange')
-    active = fields.Boolean('Active', default=True, required=True)
-    is_active = fields.Boolean('Is Active', default=True, help="Is Machine Active or  Stand by", track_visibility='onchange')
+    active = fields.Boolean('Active in System', default=True,   help="Is Machine Active in System")
+    is_active = fields.Boolean('Is Active Machine', default=True, help="Is Machine Active or  Stand by", track_visibility='onchange')
     last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, "
                                                                             "Please Select a group to show !.")
     #pm scheme id, relate to scheme table and store the scheme name
