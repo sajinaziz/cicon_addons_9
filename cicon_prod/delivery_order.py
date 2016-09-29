@@ -10,6 +10,7 @@ class CiconProdDeliveryOrder(models.Model):
     def _get_tonnage(self):
         for rec in self:
             rec.total_tonnage = sum([r.product_qty for r in rec.dn_line_ids if r.unit_id.name == 'TON'])
+            #rec.tot_del_qty = sum([r.product_qty for r in rec.dn_line_ids])
 
     name = fields.Char("DN Number", required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     dn_date = fields.Date("DN Date", required=True,  track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
@@ -27,6 +28,7 @@ class CiconProdDeliveryOrder(models.Model):
     dn_product_line_ids = fields.One2many('cicon.prod.delivery.product.line.view', 'dn_id', readonly=True, string="DN Product Lines")
     trip_details = fields.Char('Trailer/Driver')
     total_tonnage = fields.Float(compute=_get_tonnage, digits=(10, 3), store=True, string='Total Tonnage')
+    #tot_del_qty = fields.Float("Tot Qty", digits=(10, 3),compute=_get_tonnage, store=True)
 
     _sql_constraints = [('uniq_dn', 'UNIQUE(name)', "DN Should be unique")]
 
@@ -53,13 +55,35 @@ class CiconProdDeliveryOrder(models.Model):
         if self.prod_order_ids and self.product_tmpl_ids:
             _order_lines = self.env['cicon.prod.order.line'].search([('prod_order_id', 'in', self.prod_order_ids._ids),
                                                                      ('product_tmpl_id', 'in', self.product_tmpl_ids._ids)])
-            for _order_line in _order_lines:
-                _dn_lines.append({
-                    'product_id': _order_line.product_id,
-                    'prod_order_id': _order_line.prod_order_id,
-                    'product_qty': _order_line.product_qty
-                })
-            self.dn_line_ids = _dn_lines
+
+            for _p_order in self.prod_order_ids:
+                _prod_ids =_order_lines.mapped('product_id')
+                _prod_del_order_lines = self.env['cicon.prod.delivery.order.line'].search([('prod_order_id', '=',_p_order.id)])
+                for _p_id in _prod_ids:
+                    _total_prod_qty = sum([x.product_qty for x in _p_order.product_lines if x.product_id.id == _p_id.id])
+                    _total_prod_del_qty = sum([x.product_qty for x in _prod_del_order_lines if x.product_id == _p_id])
+                    if _total_prod_qty > _total_prod_del_qty or _total_prod_qty == _total_prod_del_qty:
+                        if _total_prod_del_qty!=0:
+                            bal_qty = _total_prod_qty - _total_prod_del_qty
+                            if bal_qty != 0:
+                                _dn_lines.append({
+                                    'product_id': _p_id,
+                                    'prod_order_id': _p_order.id,
+                                    'product_qty': bal_qty,
+                                    'tot_del_qty':_total_prod_del_qty
+
+                                })
+                        elif _total_prod_qty > 0:
+                            _dn_lines.append({
+                                'product_id': _p_id,
+                                'prod_order_id': _p_order.id,
+                                'product_qty': _total_prod_qty,
+                                'tot_del_qty': 0
+                            })
+                    elif _total_prod_qty < _total_prod_del_qty:
+                        raise UserError('Exceed Quantity')
+
+                self.dn_line_ids = _dn_lines
 
             _prods = _order_lines.mapped('product_id')
             _prod_lines = []
@@ -68,13 +92,26 @@ class CiconProdDeliveryOrder(models.Model):
                 _prod_lines.append({'product_id': _prod, 'product_qty': _prod_sum})
             self.dn_product_line_ids = _prod_lines
 
+    def _check_prod_qty(self, prod_order):
+        _previous_del = self.env['cicon.prod.delivery.order'].search([('prod_order_ids','in',prod_order.id)])
+
+
     @api.multi
     def set_done(self):
         self.ensure_one()
         if self.dn_line_ids and self.dn_date:
             self.write({'state': 'done'})
             for p_order in self.prod_order_ids:
-                p_order.write({'state': 'delivered'})
+                _total_prod_qty = sum([x.product_qty for x in p_order.product_lines])
+                _prod_del_ids= self.env['cicon.prod.delivery.order.line'].search([('prod_order_id','=', p_order.ids)])
+                _total_prod_del_qty = sum([x.product_qty for x in _prod_del_ids])
+                if _total_prod_del_qty == _total_prod_qty:
+                    p_order.write({'state': 'delivered'})
+                elif _total_prod_qty > _total_prod_del_qty:
+                    p_order.write({'state': 'partial_delivery'})
+                else:
+                    raise UserError('Exceed Quantity')
+
         else:
             raise UserError('Select Delivery Date')
 
@@ -82,6 +119,17 @@ class CiconProdDeliveryOrder(models.Model):
     def set_pending(self):
         self.ensure_one()
         self.write({'state': 'pending'})
+    #
+    # '''' check quantity constains  '''
+    #
+    # @api.constrains('prod_order_qty', 'tot_del_qty', 'dn_line_ids')
+    # def _check_qty(self):
+    #     for record in self:
+    #         print record.product_qty
+    #         if record.tot_del_qty > record.prod_order_qty:
+    #             raise UserError(
+    #                 "Total Quantity supplied cannot greater than Order Qty:supplied qty - %s" % record.tot_del_qty)
+
 
 CiconProdDeliveryOrder()
 
@@ -106,13 +154,16 @@ class CiconProdDeliveryOrderLine(models.Model):
                 _order_lines = self.env['cicon.prod.order.line'].search([('prod_order_id', '=', self.prod_order_id.id),
                                                                          ('product_id', '=', self.product_id.id)])
                 self.prod_order_qty = sum([x.product_qty for x in _order_lines])
+                # _prod_order_lines = self.env['cicon.prod.delivery.order.line'].search([('prod_order_id', '=', self.prod_order_id.id),
+                #                                                          ('product_id', '=', self.product_id.id)])
+                # self.tot_del_qty = sum([x.product_qty for x in _prod_order_lines])
 
     dn_id = fields.Many2one('cicon.prod.delivery.order', string="DN")
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string='Product', required=True)
     prod_order_id = fields.Many2one('cicon.prod.order', string="Production Order")
-    product_qty = fields.Float('Quantity', digits=(10, 3), required=True)
-    prod_order_qty = fields.Float('Order Quantity', compute=_get_dia_value, digits=(10, 3),
-                                  readonly=True)
+    product_qty = fields.Float('Quantity To Deliver', digits=(10, 3), required=True)
+    prod_order_qty = fields.Float('Order Quantity',compute=_get_dia_value, digits=(10, 3),readonly=True,store=True)
+    tot_del_qty = fields.Float('Delivered Quantity',  digits=(10, 3), readonly=True)
     unit_id = fields.Many2one('product.uom', related='product_id.uom_id', string='Unit', readonly=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id', string='Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', readonly=True)

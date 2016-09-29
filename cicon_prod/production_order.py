@@ -147,6 +147,7 @@ class cicon_prod_order_line(models.Model):
     prod_order_id = fields.Many2one('cicon.prod.order', string="Production Order")
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string='Product', required=True)
     product_qty = fields.Float('Quantity', digits=(10, 3), required=True)
+
     unit_id = fields.Many2one('product.uom', related='product_id.uom_id', string='Unit', readonly=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id', string='Category', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', readonly=True)
