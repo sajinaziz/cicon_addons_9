@@ -69,7 +69,7 @@
                                     <group>
                                         <field name="set_code"/>
                                         <field name="is_machinery"/>
-                                        <field name="unit"/>
+                                        <!--<field name="unit"/>-->
                                         <field name="pm_scheme_id" options="{'no_open':True,'no_create': True}"/>
                                    </group>
                                     <group>
@@ -296,7 +296,7 @@
 
                             <field name="interval_id" options="{'no_open':True,'no_create': True}" />
                             <field name="action_by"/>
-                            <field name="duration"/>
+                            <field name="duration" />
                             <field name="approx_cost"/>
                             <field name="active"/>
                          </group>

@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-
+from openerp.exceptions import UserError
 # store spare part type
 class CmmsSparePartType(models.Model):
     _name = 'cmms.spare.part.type'
@@ -74,7 +74,7 @@ class CmmsStoreInvoice(models.Model):
         _stock_move_obj = self.env['stock.move']
         for move_prod in self.invoice_line_ids:
             if move_prod.quantity <= 0 or move_prod.state != 'confirmed' or move_prod.move_id.id:
-                raise Warning('Please provide a positive quantity !')
+                raise UserError('Please provide a positive quantity !')
             else:
                 # 'picking_type_id': self.picking_type_id.id,
                 default_val = {
@@ -92,7 +92,7 @@ class CmmsStoreInvoice(models.Model):
                 move_prod.write({'move_id': scrap_move.id})
                 scrap_move.action_done()
         if self.invoice_line_ids.filtered(lambda l: l.move_state != 'done'):
-            raise Warning('Error ! Not all items are posted !')
+            raise UserError('Error ! Not all items are posted !')
         else:
             self.write({'state': 'done'})
 
@@ -109,7 +109,7 @@ class CmmsStoreInvoice(models.Model):
             res = super(CmmsStoreInvoice, self).unlink()
             return res
         else:
-            raise Warning('Delete can perform only in draft state !')
+            raise UserError('Delete can perform only in draft state !')
 
     _sql_constraints = [('uniq_ref', 'UNIQUE(qb_ref)', 'Unique QB Reference'),
                         ('uniq_name', 'UNIQUE(name)', 'Unique Reference')]
@@ -300,7 +300,7 @@ class CmmsStoreInvoiceLine(models.Model):
         self.ensure_one()
         _stock_move_obj = self.env['stock.move']
         if self.quantity <= 0 or self.state != 'confirmed' or self.move_id.id:
-            raise Warning('Please provide a positive quantity !')
+            raise UserError('Please provide a positive quantity !')
         else:
             default_val = {
                     'name': 'Consume: ' + self.product_id.name,
