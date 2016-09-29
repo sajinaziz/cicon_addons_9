@@ -14,6 +14,7 @@ class CiconQcCheckOperation(models.Model):
 class CiconQcCheck(models.Model):
     _name = 'cicon.qc.check'
     _description = "Quality Checks"
+
     #TODO: Inherit Mail Addon if need
 
     name = fields.Char('QC Check Ref:', readonly=True)
