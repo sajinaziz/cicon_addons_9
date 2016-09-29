@@ -71,9 +71,9 @@
                         <button name="set_confirm" confirm='Status Change to Confrim?' states="pending" string="Confirm" class="oe_highlight"  type="object" />
                         <button name="set_pending" confirm='Reset Status to Pending ?'  states="confirm" string="Set as Pending" groups="cicon_prod.group_prod_admin" type="object" />
                         <button name="set_cancel" confirm='Confirm , Status Change to Cancel ?' groups="cicon_prod.group_prod_admin"  states="pending,progress,confirm" string="Cancel Order" type="object" />
-                        <button name="create_dn" confirm='Confirm , Create DN ?'  states="confirm,progress" groups="cicon_prod.group_prod_admin" string="Delivery Note"  type="object" />
+                        <button name="create_dn" confirm='Confirm , Create DN ?'  states="confirm,progress,partial_delivery" groups="cicon_prod.group_prod_admin" string="Delivery Note"  type="object" />
                         <!--<button name="set_transit" confirm="Confirm , Status Change to Cancel ?" states="pending,progress" string="Transit" type="object"/>-->
-                        <field name="state" widget="statusbar" statusbar_visible="new,confirm,progress,delivered"/>
+                         <field name="state" widget="statusbar" statusbar_visible="new,confirm,progress,delivered"/>
                     </header>
                     <sheet>
 

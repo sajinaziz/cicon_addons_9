@@ -61,6 +61,7 @@
                                         <field name="product_id"/>
                                         <field name="product_qty" sum="Total"/>
                                         <field name="prod_order_qty" sum="Total"/>
+                                        <field name="tot_del_qty" sum="Total"/>
                                         <field name="unit_id"/>
                                         <field name="dia_attrib_value_id"/>
                                         <field name="state"/>
