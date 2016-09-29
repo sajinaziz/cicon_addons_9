@@ -106,8 +106,8 @@ class CmmsMachine(models.Model):
     state = fields.Selection([('working', 'WORKING'), ('pending', 'PENDING'), ('repair', 'UNDER REPAIR'),
                               ('standby', 'STAND BY'), ('unstable', 'UNSTABLE CONDITION')], 'Status',
                              required=True, track_visibility='onchange')
-    active = fields.Boolean('Active', default=True, required=True)
-    is_active = fields.Boolean('Is Active', default=True, help="Is Machine Active or  Stand by", track_visibility='onchange')
+    active = fields.Boolean('Active in System', default=True,  required=True, help="Is Machine Active in System")
+    is_active = fields.Boolean('Is Active Machine', default=True, help="Is Machine Active or  Stand by", track_visibility='onchange')
     last_machine_code = fields.Char('Last Machine Code',  store=False, help="Show Last Machine Code Created, "
                                                                             "Please Select a group to show !.")
     #pm scheme id, relate to scheme table and store the scheme name

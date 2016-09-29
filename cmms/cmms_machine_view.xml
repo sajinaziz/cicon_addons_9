@@ -13,7 +13,6 @@
                     <field name="name"/>
                     <field name="model"/>
                     <field name="supplier_id"/>
-
                     <field name="serial_no"/>
                     <field name="note"/>
                     <field name="condition"/>
@@ -76,6 +75,7 @@
                                         <field name="condition" />
                                         <field name="state"/>
                                         <field name="is_active"/>
+                                        <field name="active" groups="base.group_no_one"/>
                                     </group>
                                 </group>
                             </page>
@@ -296,7 +296,7 @@
 
                             <field name="interval_id" options="{'no_open':True,'no_create': True}" />
                             <field name="action_by"/>
-                            <field name="duration" />
+                            <field name="duration" widget="float_time" />
                             <field name="approx_cost"/>
                             <field name="active"/>
                          </group>
