@@ -12,7 +12,7 @@ class CmmsJobCategory(models.Model):
     _description = "Job Category"
     _log_access = False
 
-    name = fields.Char('Job Category')
+    name = fields.Char('Job Category', required=True)
 
     _sql_constraint = [("unique_name", "unique(name)", "Job Category must be Unique")]
 
