@@ -1,5 +1,6 @@
 from openerp import models, api
 from calendar import Calendar
+import  sys
 
 
 class PmSchPlanReport(models.AbstractModel): # Report File Name
@@ -23,6 +24,11 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
         _date = list(_cal.itermonthdates(self._context.get('rpt_year'), self._context.get('rpt_month')))
         return _date
 
+    def _get_duration(self, _duration):
+        _duartion_to_hour = '{0:02.0f}:{1:02.0f}'.format(*divmod(_duration * 60, 60))
+        _task_duration = str(_duartion_to_hour)
+        return _duartion_to_hour
+
     def _get_pm_details(self, _pm_date):
         _pm_list = {}
         if _pm_date:
@@ -36,8 +42,15 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
                     _m_task_count = {}
                     for m in _machines:
                         _sch_intv_machine = _sch_intv.filtered(lambda r: m in r.machine_ids)
-                        _m_task_count[m.code] = len(_sch_intv_machine.mapped('pm_task_ids'))
+                        _pm_task_ids = _sch_intv_machine.mapped('pm_task_ids')
+                        _duration = sum([x.duration for x in _pm_task_ids])
+                        _pm_task_duration = self._get_duration(_duration)
+                        _m_task_count[m.code] = str(len(_sch_intv_machine.mapped('pm_task_ids'))) + '/' + _pm_task_duration
+                        #print _pm_task_duration
                     _pm_list[_intv.name] = _m_task_count
+
         return _pm_list
+
+
 
 PmSchPlanReport()

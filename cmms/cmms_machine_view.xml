@@ -275,6 +275,7 @@
                     <field name="name" />
                     <field name="pm_scheme_id"/>
                     <field name="interval_id"/>
+                    <field name="duration" widget="float_time"/>
                     <field name="action_by"/>
 
                 </tree>
