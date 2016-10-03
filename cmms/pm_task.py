@@ -164,7 +164,23 @@ class CmmsPmScheduleMaster(models.Model):
     #company id, create a relation to res company . store companies and set the current logged users company as the default company
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
 
-    _sql_constraints = [('unique_schedule', 'unique(pm_scheme_id,interval_id)', "Task/Day/Machine should be Unique")]
+
+    @api.onchange('interval_id')
+    def _check_machine_not_scheduled(self):
+        _dm = {}
+        _exists = self.env['cmms.pm.schedule.master'].search([('pm_scheme_id','=',self.pm_scheme_id.id),('interval_id','=',self.interval_id.id)])
+        _machines = _exists.mapped('machine_ids')
+        _dm['machine_ids'] = [('id', 'not in', _machines._ids),('pm_scheme_id','=',self.pm_scheme_id.id)]
+        return {'domain': _dm }
+
+
+
+
+    #TODO:Need to remove
+    _sql_constraints = [('unique_schedule', 'CHECK(1=1)', "Task/Day/Machine should be Unique")]
+
+
+
 
 CmmsPmScheduleMaster()
 

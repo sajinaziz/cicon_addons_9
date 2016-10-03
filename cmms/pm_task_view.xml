@@ -13,14 +13,15 @@
                             <h3>
                                 <field name="pm_scheme_id"/>
                             </h3>
+                             <label for="interval_id" />
+                            <h4>
+                               <field name="interval_id" />
+                            </h4>
                             <label for="machine_ids"/>
                             <h4>
                                 <field name="machine_ids" widget="many2many_tags"/> <!--on_change="onchange_machine_list(machine_ids)" -->
                             </h4>
-                            <label for="interval_id" />
-                            <h4>
-                               <field name="interval_id" />
-                            </h4>
+
                         </div>
 
                         <notebook>

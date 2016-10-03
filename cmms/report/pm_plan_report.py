@@ -45,7 +45,7 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
                         _pm_task_ids = _sch_intv_machine.mapped('pm_task_ids')
                         _duration = sum([x.duration for x in _pm_task_ids])
                         _pm_task_duration = self._get_duration(_duration)
-                        _m_task_count[m.code] = str(len(_sch_intv_machine.mapped('pm_task_ids'))) + '/' + _pm_task_duration
+                        _m_task_count[m.code] = str(len(_sch_intv_machine.mapped('pm_task_ids'))) + '[' + _pm_task_duration + ']'
                         #print _pm_task_duration
                     _pm_list[_intv.name] = _m_task_count
 
