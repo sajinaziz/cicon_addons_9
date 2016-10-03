@@ -41,7 +41,7 @@ class CmmsBaseSchedule(models.Model):
 
     date = fields.Date('Date', required=True, default=fields.Date.context_today)
     create_date = fields.Datetime('Created', readonly=True)
-    end_type = fields.Selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence Termination')
+    end_type = fields.Selection([('count', 'Number of repetitions'), ('end_date','End date'), ('no_end', 'No End')], 'Recurrence Termination')
     count = fields.Integer('Repeat', help="Repeat x times")
     select1 = fields.Selection([('date', 'Date of month'), ('day', 'Day of month')], 'Option')
     day = fields.Integer('Date of month', default=1)

@@ -180,7 +180,7 @@ class CmmsJobOrder(models.Model):
     def print_job_order(self):
         """Print Job Order form button click"""
         self.ensure_one()
-        return self.env['report'].get_action(self, 'cmms.report_job_order_cmms')
+        return self.env['report'].get_action(self, 'cmms.cmms_job_order_template')
 
 CmmsJobOrder()
 

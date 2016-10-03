@@ -450,10 +450,10 @@
         <div class="page" style="margin-top:15px;">
             <div class="row" style="border-bottom:1px" >
                 <div class="text-center col-xs-4 col-xs-offset-4">
-                    <u> JOB ORDER ( <span t-field="o.job_order_type" /> ) </u>
+                    <h4> <u> JOB ORDER ( <span t-field="o.job_order_type" /> ) </u> </h4>
                 </div>
                 <div class="text-center col-xs-2 col-xs-offset-2" style="border:1px solid" >
-                    <strong> <span t-field="o.name"/></strong>
+                   <h4> <strong> <span t-field="o.name"/></strong> </h4>
                 </div>
             </div>
             <t t-if="o.job_order_type == 'preventive'">
@@ -504,25 +504,22 @@
         <div class="row">
             <table class="table table-bordered">
                 <thead>
-                    <th> Sno. </th>
-                    <th> Task Description </th>
-                    <th> Interval </th>
-                    <th> Status </th>
-                    <th> Remarks</th>
-                    <th> Completed Date</th>
+                    <th style="width:5%"> Sno. </th>
+                    <th style="width:60%"> Task Description </th>
+                    <th style="width:10%"> Duration</th>
+                    <th style="width:25%" > Remarks</th>
                 </thead>
                 <tbody>
                     <tr t-foreach="o.sch_pm_task_ids" t-as="t">
                         <td > <span t-esc="t_index + 1"/> </td>
                         <td> <span t-field="t.pm_task_id.name"/> </td>
-                        <td> <span t-field="t.pm_task_id.interval_id.name"/> </td>
-                        <td>
-                            <t t-if="t.state != 'pending'">
-                                <span t-field="t.state"/>
-                            </t>
-                        </td>
+                        <td> <span t-field="t.pm_task_id.duration_str"/> </td>
                         <td> <span t-field="t.remarks"/> </td>
-                        <td> <span t-field="t.date_completed"/> </td>
+                        <!--<td>-->
+                            <!--<t t-if="t.state != 'pending'">-->
+                                <!--<span t-field="t.state"/>-->
+                            <!--</t>-->
+                        <!--</td>-->
                     </tr>
                 </tbody>
             </table>
@@ -538,14 +535,14 @@
                 <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <td style="width:5%">S/N</td>
-                                    <td style="width:15%">Part Number</td>
+                                    <td style="width:4%">S/N</td>
+                                    <td style="width:20%">Part Number</td>
                                     <td style="width:25%">Description</td>
                                     <td style="width:10%">Required</td>
                                     <td style="width:10%">Available</td>
-                                    <td style="width:15%">To be Used</td>
-                                    <td style="width:10%" >Spare</td>
-                                    <td style="width:10%" >Type**</td>
+                                    <td style="width:16%">To be Used</td>
+                                    <td style="width:8%" >Spare</td>
+                                    <td style="width:7%" >Type**</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -830,9 +827,9 @@
               <tbody>
                   <tr t-foreach="o.spare_part_ids" t-as="r">
                       <td> <span t-esc="r_index +1"/> </td>
-                      <td> <span t-field="r.invoice_id.inv_ref"/> </td>
+                      <td> <span t-field="r.invoice_id.qb_inv_ref"/> </td>
                       <td> <span t-field="r.invoice_date"/> </td>
-                      <td> <span t-field="r.prod_name"/> </td>
+                      <td> <span t-field="r.qb_prod_desc"/> </td>
                       <td> <span t-field="r.quantity" /> </td>
                       <td><span t-field="r.spare_part_type_id"/> </td>
                   </tr>

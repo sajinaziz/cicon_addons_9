@@ -141,7 +141,14 @@ class CmmsPmTaskMaster(models.Model):
     _name = "cmms.pm.task.master"
     _description = "Preventive Maintenance Tasks"
 
-    _log_access = False
+
+    @api.multi
+    @api.depends('duration')
+    def _calc_str_duration(self):
+        for rec in self:
+            if rec.duration >0:
+                _duration_to_hour = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.duration * 60, 60))
+                rec.duration_str = str(_duration_to_hour)
 
     name = fields.Char('PM Task Description', size=200, required=True)
     #pm scheme id, relate to scheme table and store the pm scheme names
@@ -155,6 +162,7 @@ class CmmsPmTaskMaster(models.Model):
     #approx. cost , approximate cost for performing the task.
     approx_cost = fields.Float('Approx. Cost', digits=(10, 2), help="Approx. Cost to perform this Task")
     duration = fields.Float('Duration', digits=(4, 2), help="Approx. Duration to perform Task")
+    duration_str = fields.Char(string='Duration', store=False, compute=_calc_str_duration)
 
     _order = 'pm_scheme_id,interval_id'
 
