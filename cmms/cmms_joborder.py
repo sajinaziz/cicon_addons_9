@@ -152,6 +152,12 @@ class CmmsJobOrder(models.Model):
             _latest_rec = self.env['cmms.job.order.code'].search([('printed', '=', True), ('created', '=', False), ('cancelled', '=', False), ('company_id', '=', self.env.user.company_id.id), ('job_order_type', '=',  self.job_order_type), ('id', '>', _last_id)], order='id',   limit=1)
             self.job_order_code_id = _latest_rec.id
             self.name = _latest_rec.name
+            _dm = {}
+            if self.job_order_type == 'general':
+               _dm['machine_id'] = [('is_machinery', '=', False)]
+            elif self.job_order_type == 'breakdown' or self.job_order_type== 'preventive':
+                _dm['machine_id'] = [('is_machinery', '=', True)]
+            return {'domain': _dm }
 
     @api.multi
     def unlink(self):
