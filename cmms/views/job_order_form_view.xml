@@ -510,16 +510,32 @@
                     <th style="width:25%" > Remarks</th>
                 </thead>
                 <tbody>
-                    <tr t-foreach="o.sch_pm_task_ids" t-as="t">
+                    <t t-set="intvs" t-value="list(set([x.interval_id for x in o.sch_pm_task_ids]))"/>
+                    <t t-foreach="intvs" t-as="intv">
+                    <tr>
+                        <td  colspan="4">   <span t-esc="intv.name"/> </td>
+                    </tr>
+                    <t t-set="task_ids" t-value="[tp for tp in  o.sch_pm_task_ids if tp.interval_id.id == intv.id]"/>
+                    <tr t-foreach="task_ids" t-as="t">
                         <td > <span t-esc="t_index + 1"/> </td>
                         <td> <span t-field="t.pm_task_id.name"/> </td>
-                        <td> <span t-field="t.pm_task_id.duration_str"/> </td>
+                        <td class="text-center"> <span t-field="t.pm_task_id.duration_str"/> </td>
                         <td> <span t-field="t.remarks"/> </td>
                         <!--<td>-->
                             <!--<t t-if="t.state != 'pending'">-->
                                 <!--<span t-field="t.state"/>-->
                             <!--</t>-->
                         <!--</td>-->
+                    </tr>
+                    </t>
+                    <tr>
+                        <t t-set="delay" t-value="sum([x.pm_task_id.duration for x in o.sch_pm_task_ids])" />
+                        <td colspan="2" class="text-center" > Total Duration </td>
+                        <td class="text-center">
+                            <span t-esc="'%s:%s' % ( str('%02d' % delay).split('.')[0], int(float(str('%.2f' % delay).split('.')[1])/100*60))"/>
+                        </td>
+                        <td colspan="1"/>
+
                     </tr>
                 </tbody>
             </table>

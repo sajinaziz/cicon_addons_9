@@ -27,11 +27,16 @@ class CmmsPmGenerateWizard(models.TransientModel):
                 _exist = self.env['cmms.job.order'].search([('machine_id', '=', m.id),
                                                             ('job_order_type', '=', 'preventive'),
                                                             ('job_order_date', '=', self.pm_date)], limit=1)
+                _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
+                _task_ids = _m_sch_ids.mapped('pm_task_ids')
                 if _exist:
                     _pm_job_ids.append(_exist.id)
+                    _ex_task_ids = _exist.sch_pm_task_ids.mapped('pm_task_id')
+                    _need_to_create = _task_ids - _ex_task_ids
+                    if _need_to_create:
+                        _pm_new_task = map(lambda x: dict(pm_task_id=x), _need_to_create.ids)
+                        _exist.write({'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_new_task)})
                 else:
-                    _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
-                    _task_ids = _m_sch_ids.mapped('pm_task_ids')
                     _pm_task_list = map(lambda x: dict(pm_task_id=x), _task_ids.ids)
                     _seq_obj_pm = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.preventive'),
                                                                ('company_id', '=', self.env.user.company_id.id)])
