@@ -298,12 +298,14 @@
         <record model="ir.actions.act_window" id="action_cic_qc_mill_cert_file">
             <field name="name" >QC Mill Certificates Files</field>
             <field name="res_model">cic.qc.mill.cert.file</field>
+            <field name="limit">25</field>
         </record>
 
 
         <record model="ir.actions.act_window" id="action_cic_qc_mill_cert">
             <field name="name" >QC Mill Certificates</field>
             <field name="res_model">cic.qc.mill.cert.line</field>
+            <field name="limit">25</field>
         </record>
 
 
