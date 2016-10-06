@@ -27,7 +27,7 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
     def _get_duration(self, _duration):
         _duartion_to_hour = '{0:02.0f}:{1:02.0f}'.format(*divmod(_duration * 60, 60))
         _task_duration = str(_duartion_to_hour)
-        return _duartion_to_hour
+        return _task_duration
 
     def _get_pm_details(self, _pm_date):
         _pm_list = {}
@@ -45,7 +45,7 @@ class PmSchPlanReport(models.AbstractModel): # Report File Name
                         _pm_task_ids = _sch_intv_machine.mapped('pm_task_ids')
                         _duration = sum([x.duration for x in _pm_task_ids])
                         _pm_task_duration = self._get_duration(_duration)
-                        _m_task_count[m.code] = str(len(_sch_intv_machine.mapped('pm_task_ids'))) + '/' + _pm_task_duration
+                        _m_task_count[m.code] = str(len(_sch_intv_machine.mapped('pm_task_ids'))) + '[' + _pm_task_duration + ']'
                         #print _pm_task_duration
                     _pm_list[_intv.name] = _m_task_count
 

@@ -65,6 +65,13 @@ class CmmsStoreInvoice(models.Model):
         if self.src_location_id and self.consu_location_id:
             self.write({'state': 'confirmed'})
 
+
+    @api.multi
+    def set_draft(self):
+        #TODO: extra checks needs in case of Stock move
+        self.ensure_one()
+        self.write({'state': 'draft'})
+
     @api.multi
     def move_consume(self):
         """
@@ -240,12 +247,14 @@ class CmmsStoreInvoiceLine(models.Model):
                 if _job:
                     rec.job_order_id = _job.id
 
-
-    @api.depends('unit_price', 'quantity')
+    @api.depends('unit_price', 'quantity', 'qb_amount')
     def _total_amount(self):
         # calculate total amount from unit price and qunatity
         for _rec in self:
-            _rec.amount = _rec.unit_price * _rec.quantity
+            if _rec.qb_amount > 0:
+                _rec.amount = _rec.qb_amount
+            else:
+                _rec.amount = _rec.unit_price * _rec.quantity
 
     #invoice id, invoice id relation
     invoice_id = fields.Many2one('cmms.store.invoice', ondelete='cascade', string='Invoice')

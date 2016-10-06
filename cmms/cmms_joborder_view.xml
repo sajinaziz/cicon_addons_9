@@ -10,7 +10,7 @@
             <field name="arch" type="xml" >
                  <form string="CMMS Job Order" >
                      <header>
-                         <button name="print_job_order" string="Print" type="object" class="oe_highlight"/>
+                         <button name="print_job_order" string="Print" type="object" class="oe_highlight" icon="fa-print" />
                          <field name="status_id" widget="statusbar"  options="{'fold_field': 'fold'}" clickable="True"  />
                          <!--<button name="done_job_order" string="Done" type="object" class="oe_highlight" attrs="{'invisible':[('job_order_type','in',('preventive'))]}"/>-->
                          <!--<button name="cancel_job_order" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible':[('job_order_type','in',('preventive'))]}"/>-->
@@ -19,8 +19,11 @@
                          <field name="id" invisible="True"/>
                          <div class="oe_left">
                            <label for='name'/>
-                           <h2><field name="job_order_code_id" attrs="{'readonly':[('id','!=',False)],'invisible':[('job_order_type','=','preventive')],'required':[('job_order_type','!=','preventive')]}" options="{'no_create':True,'no_open':True}"/> </h2>
-                           <h2> <field name="name" attrs="{'invisible':[('job_order_type','!=','preventive')]}" /> </h2>
+                           <h2><field name="job_order_code_id" attrs="{'readonly':[('id','!=',False)],
+                                                                        'invisible':[('job_order_type','=','preventive')],
+                                                                        'required':[('job_order_type','!=','preventive')]}" options="{'no_create':True,'no_open':True}"/> </h2>
+                           <h2> <field name="name" attrs="{'invisible':[('job_order_type','!=','preventive')],
+                                                            'readonly':[('job_order_type','=','preventive')]}" /> </h2>
                            <label for='machine_id'/>
                            <h2><field name="machine_id" options="{'no_create':True}"/></h2>
                          </div>
@@ -73,10 +76,11 @@
                                  <page string="Scheduled  Tasks" attrs ="{'invisible':[('job_order_type','!=','preventive')]}">
                                     <field name="sch_pm_task_ids">
                                         <tree string="Scheduled Tasks" default_order="interval_id" editable="bottom" delete="false">
-                                            <field name="pm_task_id" />
+                                            <field name="pm_task_id" readonly="1"/>
                                             <field name="interval_id"/>
                                             <field name="date_completed"/>
-                                            <field name="state"/>
+                                            <field name="remarks"/>
+                                            <!--<field name="state"/>-->
                                         </tree>
                                     </field>
                                  </page>

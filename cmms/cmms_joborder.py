@@ -60,11 +60,22 @@ class CmmsJobOrder(models.Model):
         if _status:
             return _status
 
+    @api.multi
+    @api.depends('work_end_datetime','job_order_date')
+    def _get_job_completed_date(self):
+        for rec in self:
+            if rec.work_end_datetime:
+                rec.completed_date = datetime.strptime(rec.work_end_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            else:
+                rec.completed_date = rec.job_order_date
+
+
     # job order code id, store job order code  for created and cancelled are false
     job_order_code_id = fields.Many2one("cmms.job.order.code",
                                         domain="[('job_order_type','=',job_order_type),('printed','=',True),"
                                                "('created','=',False),('cancelled','=',False)]")
-    name = fields.Char("Code", required=True, track_visibility='always')
+
+    name = fields.Char("Code", required=True, track_visibility='always', readonly=True, states={'open': [('readonly', False)]})
     # store the type of job orders
     job_order_type = fields.Selection(JOB_ORDER_TYPE, "JobOrderType", required=True)
     #machine id, store the machine ids (eg: SL-13)
@@ -118,7 +129,7 @@ class CmmsJobOrder(models.Model):
                                           states={'open': [('readonly', False)]})
     work_end_datetime = fields.Datetime('Work End', readonly=True,
                                         states={'open': [('readonly', False)]})
-
+    completed_date = fields.Date( compute=_get_job_completed_date, string="Completed Date", store=True)
     #status id, relate to job order status table and store status, then find out the default job order status
     status_id = fields.Many2one('cmms.job.order.status', string="Status", default=_get_default_status, track_visibility='onchange')
     state = fields.Selection(related='status_id.state_name', string="State",
@@ -180,7 +191,7 @@ class CmmsJobOrder(models.Model):
     def print_job_order(self):
         """Print Job Order form button click"""
         self.ensure_one()
-        return self.env['report'].get_action(self, 'cmms.report_job_order_cmms')
+        return self.env['report'].get_action(self, 'cmms.cmms_job_order_template')
 
 CmmsJobOrder()
 
@@ -227,14 +238,13 @@ class CmmsPmTaskJobOrderLine(models.Model):
     #job_order_id, relate to job order and store the job order ids
     job_order_id = fields.Many2one('cmms.job.order', string="Job Order")
     #pm task id, relate to pm task manager and store the tasks
-    pm_task_id = fields.Many2one('cmms.pm.task.master', string="PM Task")
+    pm_task_id = fields.Many2one('cmms.pm.task.master', string="PM Task", readonly=True)
     #interval_id, relate to pm interval and store the task intervals
     interval_id = fields.Many2one('cmms.pm.interval', related='pm_task_id.interval_id', string='Interval', store=False, readonly=True)
     #machine id, relate to machine table and store the machine ids
     machine_id = fields.Many2one('cmms.machine', ralated='job_order_id.machine_id', string="Machine", store=False)
-    date_completed = fields.Date('Completed Date', required=False, readonly=True, states={'done': [('readonly', False), ('required', True)]})
-    state = fields.Selection([('pending', 'Pending'), ('done', 'Done'), ('cancel', 'Cancelled')],
-                             string="State", default='pending')
+    date_completed = fields.Date('Completed Date', related='job_order_id.completed_date', store=True, readonly=True)
+    state = fields.Selection(related='job_order_id.state', store=True, string = "Status", readonly=True)
     remarks = fields.Char('Remarks')
 
     @api.onchange('state')

@@ -20,15 +20,23 @@ class CmmsPmGenerateWizard(models.TransientModel):
         _sch_obj = self.env['cmms.pm.schedule.master']
         _job_obj = self.env['cmms.job.order']
         _sch_recs = _sch_obj.search([('next_date', '=', self.pm_date)])
+        _pm_job_ids = []
         if _sch_recs:
             _machines = _sch_recs.mapped('machine_ids')
             for m in _machines.sorted(key=lambda r: r.code):
                 _exist = self.env['cmms.job.order'].search([('machine_id', '=', m.id),
                                                             ('job_order_type', '=', 'preventive'),
                                                             ('job_order_date', '=', self.pm_date)], limit=1)
-                if not _exist:
-                    _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
-                    _task_ids = _m_sch_ids.mapped('pm_task_ids')
+                _m_sch_ids = _sch_recs.filtered(lambda s: m in s.machine_ids)
+                _task_ids = _m_sch_ids.mapped('pm_task_ids')
+                if _exist:
+                    _pm_job_ids.append(_exist.id)
+                    _ex_task_ids = _exist.sch_pm_task_ids.mapped('pm_task_id')
+                    _need_to_create = _task_ids - _ex_task_ids
+                    if _need_to_create:
+                        _pm_new_task = map(lambda x: dict(pm_task_id=x), _need_to_create.ids)
+                        _exist.write({'sch_pm_task_ids': map(lambda x: (0, 0, x), _pm_new_task)})
+                else:
                     _pm_task_list = map(lambda x: dict(pm_task_id=x), _task_ids.ids)
                     _seq_obj_pm = self.env['ir.sequence'].search([('code', '=', 'cmms.job.order.preventive'),
                                                                ('company_id', '=', self.env.user.company_id.id)])
@@ -43,8 +51,14 @@ class CmmsPmGenerateWizard(models.TransientModel):
                         'company_id': m.company_id.id
 
                     }
-                    _job_obj.create(_pm_job_order)
-        return True
+                    _job_order =  _job_obj.create(_pm_job_order)
+                    if _job_order:
+                        _pm_job_ids.append(_job_order.id)
+        if len(_pm_job_ids) > 0:
+            _pm_jobs =_job_obj.search([('id','in',_pm_job_ids)])
+            return self.env['report'].get_action(_pm_jobs, 'cmms.cmms_job_order_template')
+        else:
+            return False
 
         # _pm_date = None
         # if ids:

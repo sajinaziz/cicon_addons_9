@@ -141,7 +141,20 @@ class CmmsPmTaskMaster(models.Model):
     _name = "cmms.pm.task.master"
     _description = "Preventive Maintenance Tasks"
 
-    _log_access = False
+    def _str_hour(self, _duration):
+        duration_str ='00:00'
+        if _duration > 0:
+            _duration_to_hour = '{0:02.0f}:{1:02.0f}'.format(*divmod(_duration * 60, 60))
+            duration_str = str(_duration_to_hour)
+        return duration_str
+
+
+
+    @api.multi
+    @api.depends('duration')
+    def _calc_str_duration(self):
+        for rec in self:
+            rec.duration_str = self._str_hour(rec.duration)
 
     name = fields.Char('PM Task Description', size=200, required=True)
     #pm scheme id, relate to scheme table and store the pm scheme names
@@ -155,6 +168,7 @@ class CmmsPmTaskMaster(models.Model):
     #approx. cost , approximate cost for performing the task.
     approx_cost = fields.Float('Approx. Cost', digits=(10, 2), help="Approx. Cost to perform this Task")
     duration = fields.Float('Duration', digits=(4, 2), help="Approx. Duration to perform Task")
+    duration_str = fields.Char(string='Duration', store=False, compute=_calc_str_duration)
 
     _order = 'pm_scheme_id,interval_id'
 
@@ -177,7 +191,7 @@ class CmmsMachineTaskView(models.Model):
 
     machine_id = fields.Many2one('cmms.machine', string="Machine", readonly=True)
     task_id = fields.Many2one('cmms.pm.task.master', string="Task", readonly=True)
-    pm_scheme_id = fields.Many2one('cmms.pm.scheme', related="machine_id.pm_scheme_id", string="Pm Scheme", readonly=True)
+    pm_scheme_id = fields.Many2one('cmms.pm.scheme', related="machine_id.pm_scheme_id", string="PM Scheme", readonly=True)
     interval_id = fields.Many2one('cmms.pm.interval', string="Interval", readonly=True)
     next_date = fields.Date('Next Run Date', readonly=True, compute=_get_next_date)
     last_date = fields.Date('Last Run Date', readonly=True, compute=_get_next_date)
