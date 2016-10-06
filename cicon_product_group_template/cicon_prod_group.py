@@ -5,6 +5,17 @@ class cicon_product_group_template(models.Model):
     _name = 'cicon.product.group.template'
     _description = "CICON Product Group template"
 
+
+
+
+    @api.onchange('template_ids')
+    def _get_products(self):
+        _dm = {'product_ids': ''}
+        if self.template_ids:
+            _dm = {'product_ids': [('product_tmpl_id', 'in', self.template_ids.ids)]}
+        return {'domain': _dm}
+
+
     name = fields.Char("Group Template Name", required=True)
     code = fields.Char('Group Code')
     description = fields.Char('Description')
@@ -25,8 +36,8 @@ class cicon_product_group_template(models.Model):
         default.update(state='pending')
         return super(cicon_product_group_template, self).copy(default)
 
-cicon_product_group_template()
 
+cicon_product_group_template()
 
 class cicon_product_group_attribute(models.Model):
     _name = 'cicon.product.group.attribute'
