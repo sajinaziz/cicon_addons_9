@@ -505,9 +505,9 @@
             <table class="table table-bordered">
                 <thead>
                     <th style="width:5%"> Sno. </th>
-                    <th style="width:60%"> Task Description </th>
+                    <th style="width:50%"> Task Description </th>
                     <th style="width:10%"> Duration</th>
-                    <th style="width:25%" > Remarks</th>
+                    <th style="width:35%" > Remarks</th>
                 </thead>
                 <tbody>
                     <t t-set="intvs" t-value="list(set([x.interval_id for x in o.sch_pm_task_ids]))"/>
