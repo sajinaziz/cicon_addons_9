@@ -15,6 +15,7 @@ class cicon_product_group_template(models.Model):
             _dm = {'product_ids': [('product_tmpl_id', 'in', self.template_ids.ids)]}
         return {'domain': _dm}
 
+
     name = fields.Char("Group Template Name", required=True)
     code = fields.Char('Group Code')
     description = fields.Char('Description')
