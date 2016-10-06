@@ -25,7 +25,7 @@ class CmmsJobOrderMasterWizard(models.TransientModel):
     def generate_job_order(self):
         _job_obj = self.env['cmms.job.order.code']
         _j_ids = []
-        for x in range(1, self.to_number):
+        for x in range(1, self.to_number + 1):
             _job = {
                 'created': False,
                 'printed': True,
