@@ -61,7 +61,7 @@
             <field name="name">CMMS See Store Line for allowed Company</field>
             <field name="model_id" ref="model_cmms_store_invoice_line"/>
             <field name="groups" eval="[(4, ref('group_cmms_user'))]"/>
-            <field name="domain_force">[('company_id', 'in', user.company_ids._ids)]</field>
+            <field name="domain_force">[('invoice_id.company_id', 'in', user.company_ids._ids)]</field>
         </record>
 
 
