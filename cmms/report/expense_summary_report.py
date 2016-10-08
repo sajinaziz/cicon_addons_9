@@ -20,7 +20,8 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
             'get_invoice': self._get_invoices,
             'get_total_machine': self._get_invoice_total_machine,
             'get_total_categ': self._get_invoice_total_categ,
-            'get_total_type': self._get_invoice_total_type
+            'get_total_type': self._get_invoice_total_type,
+            'get_grand_total': self._get_grand_total
         }
         return report_obj.render('cmms.cmms_inventory_expense_report_summary', docargs)
 
@@ -33,7 +34,7 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
         return _types
 
     def _get_categories(self, _type):
-        _categs = self._inv_lines.filtered(lambda r: r.machine_id.type_id == _type).mapped('machine_id.category_id')
+        _categs = self._inv_lines.filtered(lambda r: r.machine_id.type_id == _type).mapped('machine_id.category_id').sorted(key=lambda r: r.name)
         return _categs
 
     def _get_machines(self, _type, _categ):
@@ -54,6 +55,10 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
 
     def _get_invoice_total_type(self, _type):
         _total = sum(x.amount for x in self._inv_lines.filtered(lambda r: r.machine_id.type_id == _type))
+        return _total
+
+    def _get_grand_total(self):
+        _total = sum(x.amount for x in self._inv_lines)
         return _total
 
 
