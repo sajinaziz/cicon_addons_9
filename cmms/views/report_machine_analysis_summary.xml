@@ -6,7 +6,6 @@
          <t t-call="cmms.cmms_internal_layout"/>
             <div class="page">
                  <div class="row">
-
                      <div class="col-xs-12 text-center"><h3>Machine Breakdown Analysis Report</h3></div>
                  </div>
                  <table  class="table table-bordered">
@@ -30,7 +29,7 @@
                     </thead>
                     <tbody>
                         <t t-foreach="docs" t-as="o">
-                            <tr>
+                            <tr style="page-break-inside: avoid">
                                 <th colspan="15" class="text-center"><span t-esc="o.name"/></th>
                             </tr>
                                 <t t-set="categs" t-value="get_category(o)"/>
@@ -38,20 +37,14 @@
                                     <tr><th colspan="15" class="text-left"><span t-field="c.name"/></th></tr>
                                     <t t-set="macs" t-value="get_machine(o,c)" />
                                        <t t-foreach="macs" t-as="m">
-                                            <tr rowspan="3">
+                                            <tr rowspan="3" style="page-break-inside: avoid">
                                                 <t t-set="m_val" t-value="m.get('machine_id')"/>
                                                 <td> <span t-esc="m_val.code"/></td>
                                                 <td> <span t-esc="m_val.name"/></td>
                                                 <td>Breakdown</td>
                                                 <t t-set="breakdowns" t-value="get_breakdown_count(m_val.id)" />
                                                     <t t-foreach="breakdowns" t-as="b">
-                                                        <td><t t-if="b.get('January')!=''">
-                                                                <span t-esc="b.get('January')" />
-                                                            </t>
-                                                            <t t-if="b.get('January')==''">
-                                                                <span>-</span>
-                                                            </t>
-                                                        </td>
+                                                        <td><span t-esc="b.get('January')" /></td>
                                                         <td><span t-esc="b.get('February')" /></td>
                                                         <td><span t-esc="b.get('March')" /></td>
                                                         <td><span t-esc="b.get('April')" /></td>
@@ -63,9 +56,10 @@
                                                         <td><span t-esc="b.get('October')" /></td>
                                                         <td><span t-esc="b.get('November')" /></td>
                                                         <td><span t-esc="b.get('December')" /></td>
+
                                                     </t>
                                             </tr>
-                                            <tr  rowspan="3">
+                                            <tr  rowspan="3" style="page-break-inside: avoid">
                                                 <td colspan="2"></td>
                                                 <td>Expense</td>
                                                 <td><span t-esc="m.get('January')" /></td>
@@ -80,8 +74,9 @@
                                                 <td><span t-esc="m.get('October')" /></td>
                                                 <td><span t-esc="m.get('November')" /></td>
                                                 <td><span t-esc="m.get('December')" /></td>
+
                                             </tr>
-                                            <tr  rowspan="3">
+                                            <tr  rowspan="3" style="page-break-inside: avoid">
                                                 <td colspan="2"></td>
                                                 <td>Idle Time</td>
                                                 <td colspan="12"></td>

@@ -36,8 +36,10 @@ class CmmsCommonReportWizard(models.TransientModel):
 
 
     report_by = fields.Selection([('this_month','This Month'),('this_week','This Week'),('last_month','Last Month'),('last_week','Last Week')],string='Report By')
-    report_list = fields.Selection([('expense_report', 'Expense Report'),
-                                   ('expense_detailed', 'Expense Detailed'),('job_order_report','Job Order Report'),('parts_by_producttype_report','Parts Summary By Product Type Report'),('machine_analysis_report','Machine Analysis Report')],string='Report', required=True)
+    report_list = fields.Selection([('expense_report', 'Expense Summary'),
+                                   ('expense_detailed', 'Expense Detailed'),
+                                    ('job_order_report','Job Order Report'),
+                                    ('parts_by_producttype_report','Parts Summary By Product Type Report'),('machine_analysis_report','Machine Analysis Report')],string='Report', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
 
     start_date = fields.Date('Start Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
@@ -71,12 +73,24 @@ class CmmsCommonReportWizard(models.TransientModel):
     def show_report(self):
         self.ensure_one()
         ctx = dict(self._context)
-        ctx['from_date'] = self.start_date
-        ctx['to_date'] = self.end_date
+        start_date = datetime.strptime(self.start_date, '%Y-%m-%d').strftime('%d-%b-%Y')
+        end_date = datetime.strptime(self.end_date, '%Y-%m-%d').strftime('%d-%b-%Y')
+        ctx['from_date'] = start_date
+        ctx['to_date'] = end_date
         ctx['company_id'] = self.company_id.id
         if self.report_list == 'expense_report':
-            ctx['heading'] = "Expense Report - Detailed [ " + self.start_date + '-' + self.end_date + ' ]'
-            return self.with_context(ctx).env['report'].get_action(self, report_name='cmms.cmms_inventory_expense_report_summary', data={})
+            ctx['show_summary'] = 1
+            ctx['heading'] = "Expense Report - Summary [ " + start_date + ' To ' + end_date + ' ]'
+            return self.with_context(ctx).env['report'].get_action(self,
+                                                                   report_name='cmms.cmms_inventory_expense_report_summary',
+                                                                   data={})
+        elif self.report_list == 'expense_detailed':
+            ctx['show_summary'] = 0
+            ctx['heading'] = "Expense Report - Detailed [ " + start_date + ' To ' + end_date + ' ]'
+            return self.with_context(ctx).env['report'].get_action(self,
+                                                                   report_name='cmms.cmms_inventory_expense_report_summary',
+                                                                   data={})
+
         if self.report_list == "job_order_report":
             _qry = [('job_order_date', '>=', self.start_date), ('job_order_date', '<=', self.end_date)]
             #_qyery = _qry.append([('company_id','=', self.company_id and 'company_id','!=','NULL')])
@@ -84,7 +98,7 @@ class CmmsCommonReportWizard(models.TransientModel):
             #print _job_orders
             return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')
         if self.report_list == 'parts_by_producttype_report':
-            ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + self.start_date + '-' + self.end_date + ' ]'
+            ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + start_date + ' To ' + end_date + ' ]'
             return self.with_context(ctx).env['report'].get_action(self,
                                                                    report_name='cmms.report_partsby_producttype_summary_template',
                                                                    data={})

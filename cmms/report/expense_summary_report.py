@@ -15,6 +15,7 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
             'doc_model': report.model,
             'docs': _docs,
             'heading': self._context.get('heading'),
+            'show_summary': self._context.get('show_summary'),
             'get_category': self._get_categories,
             'get_machine': self._get_machines,
             'get_invoice': self._get_invoices,
