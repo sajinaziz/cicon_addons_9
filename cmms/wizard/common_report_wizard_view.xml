@@ -9,6 +9,7 @@
             <form string="CMMS Report">
                 <group>
                     <field name="report_list"/>
+                    <field name="job_order_type" attrs="{'invisible': [('report_list','!=','job_order_report')]}"/>
                     <field name="report_by" attrs="{'invisible': [('report_list','=','machine_analysis_report')]}" />
                 </group>
                 <group>

@@ -2,6 +2,7 @@ from openerp import models, fields, api
 from datetime import datetime,date,timedelta
 import calendar
 
+JOB_ORDER_TYPE = [('breakdown', 'BREAKDOWN'), ('general', 'GENERAL'),('preventive','PREVENTIVE')]
 
 class CmmsCommonReportWizard(models.TransientModel):
     _name = 'cmms.common.report.wizard'
@@ -44,6 +45,7 @@ class CmmsCommonReportWizard(models.TransientModel):
 
     start_date = fields.Date('Start Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
     end_date = fields.Date('End Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
+    job_order_type = fields.Selection(JOB_ORDER_TYPE, "Job Order Type")
 
    # print report_year
 
@@ -93,9 +95,10 @@ class CmmsCommonReportWizard(models.TransientModel):
 
         if self.report_list == "job_order_report":
             _qry = [('job_order_date', '>=', self.start_date), ('job_order_date', '<=', self.end_date)]
-            #_qyery = _qry.append([('company_id','=', self.company_id and 'company_id','!=','NULL')])
+            if self.job_order_type=="breakdown" or self.job_order_type=="general" or self.job_order_type=="preventive":
+                _qry.append(['job_order_type','=',self.job_order_type])
+
             _job_orders = self.env['cmms.job.order'].search(_qry)
-            #print _job_orders
             return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')
         if self.report_list == 'parts_by_producttype_report':
             ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + start_date + ' To ' + end_date + ' ]'
