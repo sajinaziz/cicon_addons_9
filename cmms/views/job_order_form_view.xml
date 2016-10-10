@@ -768,11 +768,12 @@
                             DATE/ TIME WORK COMPLETED :
                         </div>
                           <div class="col-xs-5" style="border:1px solid">
-                             <span t-field="o.work_start_datetime"/>
+                            <span t-field="o.work_end_datetime"/>
                         </div>
-
-                          <div class="col-xs-2 col-xs-offset-1" style="border:1px solid">
-                             <![CDATA[&nbsp;]]>
+                        <div class="col-xs-2 col-xs-offset-1" style="border:1px solid">
+                              <t t-if="o.work_hour > 0">
+                                  <span t-esc="'%s:%s' % ( str('%02d' % o.work_hour).split('.')[0], str('%02d' %  int(float(str('%.2f' % o.work_hour).split('.')[1])/100*60)))"/>
+                              </t>
                         </div>
                     </div>
                     <div class="row mt8">
