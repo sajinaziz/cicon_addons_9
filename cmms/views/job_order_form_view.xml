@@ -545,6 +545,7 @@
                 <p>Work Start:   <span t-field="o.work_start_datetime" /> </p>
                 <p>Work End : <span t-field="o.work_end_datetime" /> </p>
                 <p>Work Time:</p>
+                <p>Attend By : <span t-field="o.attended_by"/> </p>
             </div>
             <div class="col-xs-9">
                 <table class="table table-bordered">
@@ -579,13 +580,6 @@
                  </p>
             </div>
         </div>
-
-         <div class="row">
-            <div class="col-xs-2">Attend By : </div>
-             <div class="col-xs-10"><span t-field="o.attended_by"/></div>
-        </div>
-
-
 
 
     </template>
