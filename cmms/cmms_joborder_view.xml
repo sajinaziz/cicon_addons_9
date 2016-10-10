@@ -78,7 +78,7 @@
                                         <tree string="Scheduled Tasks" default_order="interval_id" editable="bottom" delete="false">
                                             <field name="pm_task_id" readonly="1"/>
                                             <field name="interval_id"/>
-                                            <field name="date_completed"/>
+                                            <!--<field name="date_completed"/>-->
                                             <field name="remarks"/>
                                             <!--<field name="state"/>-->
                                         </tree>

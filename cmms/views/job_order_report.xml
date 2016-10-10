@@ -34,7 +34,7 @@
                                    <td> <span t-field="o.priority"/> </td>
                                    <td> <span t-field="o.job_category_id.name"/> </td>
                                    <t t-set="_wh" t-value="o.work_hour" />
-                                   <td> <span t-esc="'%s:%s' % (str(_wh).split('.')[0], int(float(str('%.2f' % _wh).split('.')[1])/100*60))" /></td>
+                                   <td> <span t-esc="'%s:%s' % ( str('%02d' % _wh).split('.')[0], str('%02d' %  int(float(str('%.2f' % _wh).split('.')[1])/100*60)))"/></td>
                                    <td> <span t-field="o.total_amount"/>  </td>
                                    <td> <span t-field="o.status_id.name"/> </td>
                                 </tr>

@@ -507,13 +507,14 @@
                     <th style="width:5%"> Sno. </th>
                     <th style="width:50%"> Task Description </th>
                     <th style="width:10%"> Duration</th>
-                    <th style="width:35%" > Remarks</th>
+                    <th style="width:30%" > Remarks</th>
+                    <th style="width:5%"> Status </th>
                 </thead>
                 <tbody>
                     <t t-set="intvs" t-value="list(set([x.interval_id for x in o.sch_pm_task_ids]))"/>
                     <t t-foreach="intvs" t-as="intv">
                     <tr>
-                        <td  colspan="4">   <span t-esc="intv.name"/> </td>
+                        <td  colspan="5">   <span t-esc="intv.name"/> </td>
                     </tr>
                     <t t-set="task_ids" t-value="[tp for tp in  o.sch_pm_task_ids if tp.interval_id.id == intv.id]"/>
                     <tr t-foreach="task_ids" t-as="t">
@@ -521,20 +522,18 @@
                         <td> <span t-field="t.pm_task_id.name"/> </td>
                         <td class="text-center"> <span t-field="t.pm_task_id.duration_str"/> </td>
                         <td> <span t-field="t.remarks"/> </td>
-                        <!--<td>-->
-                            <!--<t t-if="t.state != 'pending'">-->
-                                <!--<span t-field="t.state"/>-->
-                            <!--</t>-->
-                        <!--</td>-->
+                        <td class="text-center">
+                             <input type="checkbox" t-att-checked="'checked' if t.state == 'done' else ''"  />
+                        </td>
                     </tr>
                     </t>
                     <tr>
                         <t t-set="delay" t-value="sum([x.pm_task_id.duration for x in o.sch_pm_task_ids])" />
                         <td colspan="2" class="text-center" > Total Duration </td>
                         <td class="text-center">
-                            <span t-esc="'%s:%s' % ( str('%02d' % delay).split('.')[0], int(float(str('%.2f' % delay).split('.')[1])/100*60))"/>
+                            <span t-esc="'%s:%s' % ( str('%02d' % delay).split('.')[0], str('%02d' % int(float(str('%.2f' % delay).split('.')[1])/100*60)))"/>
                         </td>
-                        <td colspan="1"/>
+                        <td colspan="2"/>
 
                     </tr>
                 </tbody>
