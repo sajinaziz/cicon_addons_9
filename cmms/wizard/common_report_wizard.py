@@ -1,5 +1,6 @@
 from openerp import models, fields, api
 from datetime import datetime,date,timedelta
+from openerp.exceptions import UserError
 import calendar
 
 JOB_ORDER_TYPE = [('breakdown', 'BREAKDOWN'), ('general', 'GENERAL'),('preventive','PREVENTIVE')]
@@ -99,7 +100,10 @@ class CmmsCommonReportWizard(models.TransientModel):
                 _qry.append(['job_order_type','=',self.job_order_type])
 
             _job_orders = self.env['cmms.job.order'].search(_qry)
-            return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')
+            if _job_orders.ids:
+                return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')
+            else:
+                raise UserError("No Report Exists For This Period")
         if self.report_list == 'parts_by_producttype_report':
             ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + start_date + ' To ' + end_date + ' ]'
             return self.with_context(ctx).env['report'].get_action(self,
