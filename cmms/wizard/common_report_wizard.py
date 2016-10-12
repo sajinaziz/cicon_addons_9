@@ -81,7 +81,8 @@ class CmmsCommonReportWizard(models.TransientModel):
         end_date = datetime.strptime(self.end_date, '%Y-%m-%d').strftime('%d-%b-%Y')
         ctx['from_date'] = start_date
         ctx['to_date'] = end_date
-        ctx['company_id'] = self.company_id.id
+        if self.company_id:
+            ctx['company_id'] = self.company_id.id
         if self.report_list == 'expense_report':
             ctx['show_summary'] = 1
             ctx['heading'] = "Expense Report - Summary [ " + start_date + ' To ' + end_date + ' ]'
@@ -98,8 +99,9 @@ class CmmsCommonReportWizard(models.TransientModel):
         if self.report_list == "job_order_report":
             _qry = [('job_order_date', '>=', self.start_date), ('job_order_date', '<=', self.end_date)]
             if self.job_order_type=="breakdown" or self.job_order_type=="general" or self.job_order_type=="preventive":
-                _qry.append(['job_order_type','=',self.job_order_type])
-
+                _qry.append(('job_order_type','=',self.job_order_type))
+            if self.company_id:
+                _qry.append(('company_id', '=', self.company_id.id))
             _job_orders = self.env['cmms.job.order'].search(_qry)
             if _job_orders.ids:
                 return self.env['report'].get_action(_job_orders, 'cmms.job_order_report_template')

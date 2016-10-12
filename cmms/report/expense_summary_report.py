@@ -29,8 +29,10 @@ class InventoryExpenseReports(models.AbstractModel): # Report File Name
     def _get_report_data(self):
         _start_date = self._context.get('from_date')
         _end_date = self._context.get('to_date')
-        self._inv_lines = self.env['cmms.store.invoice.line'].search([('invoice_date', '>=', _start_date),
-                                                                 ('invoice_date', '<=', _end_date)])
+        _qry = [('invoice_date', '>=', _start_date),('invoice_date', '<=', _end_date)]
+        if self._context.get('company_id'):
+            _qry.append(('company_id','=', self._context.get('company_id')))
+        self._inv_lines = self.env['cmms.store.invoice.line'].search(_qry)
         _types = self._inv_lines.mapped('machine_id.type_id')
         return _types
 

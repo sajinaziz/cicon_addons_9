@@ -31,7 +31,10 @@ class ReportMachineAnalysisSummary(models.AbstractModel): # Report File Name
         return report_obj.render('cmms.report_machine_analysis_summary_template', docargs)
 
     def _get_report_data(self):
-        self._machines = self.env['cmms.machine'].search([('id', '>', 0)])
+        _qry =[]
+        if self._context.get('company_id'):
+            _qry.append(('company_id','=',self._context.get('company_id')))
+        self._machines = self.env['cmms.machine'].search(_qry)
         _types = self._machines.mapped('type_id')
         return _types
 
