@@ -61,9 +61,6 @@ class CmmsMachine(models.Model):
     _rec_name = 'code'
     _inherit = ['mail.thread']
 
-    def get_user_company(self):
-        return self.env.user.company_id.id
-
     def _job_order_count(self):
         """" Calculate the total job order count, based on the job order type as breakdown.
         Calulate the total parts cost count."""
@@ -88,7 +85,7 @@ class CmmsMachine(models.Model):
 
     # company id, create a relation to company , store company and set the current logged user company as the default company
     company_id = fields.Many2one('res.company', string='Company', ondelete='restrict', required=True,
-                                 default= get_user_company, track_visibility='onchange')
+                                 default=lambda self: self.env.user.company_id, track_visibility='onchange')
 
     #model, store the machine model name
     model = fields.Char('Model', size=50, help="Machine Model", track_visibility='onchange')
@@ -123,7 +120,7 @@ class CmmsMachine(models.Model):
     #location id, relate to machine location table and store the location
     location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
 
-    _sql_constraint = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
+    _sql_constraints = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
 
     _order = 'set_code'
 

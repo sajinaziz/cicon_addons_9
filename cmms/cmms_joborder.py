@@ -106,7 +106,7 @@ class CmmsJobOrder(models.Model):
     foreman = fields.Char('Foreman In charge', size=50, readonly=True,
                           states={'open': [('readonly', False)]})
     #technician, store the person who is in charge of maintenance
-    technician = fields.Char('Maintenance In charge', size=50, readonly=True,
+    technician = fields.Char('Maintenance/Technician In charge', size=50, readonly=True,
                              states={'open': [('readonly', False)]})
     #reason, store the breakdown reason
     reason = fields.Text('Reason', size=500, readonly=True,
@@ -165,9 +165,9 @@ class CmmsJobOrder(models.Model):
             self.name = _latest_rec.name
             _dm = {}
             if self.job_order_type == 'general':
-               _dm['machine_id'] = [('is_machinery', '=', False)]
+               _dm['machine_id'] = [('is_machinery', '=', False),('company_id', '=', self.company_id.id)]
             elif self.job_order_type == 'breakdown' or self.job_order_type== 'preventive':
-                _dm['machine_id'] = [('is_machinery', '=', True)]
+                _dm['machine_id'] = [('is_machinery', '=', True), ('company_id', '=', self.company_id.id)]
             return {'domain': _dm }
 
     @api.multi

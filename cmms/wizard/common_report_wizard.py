@@ -5,6 +5,7 @@ import calendar
 
 JOB_ORDER_TYPE = [('breakdown', 'BREAKDOWN'), ('general', 'GENERAL'),('preventive','PREVENTIVE')]
 
+
 class CmmsCommonReportWizard(models.TransientModel):
     _name = 'cmms.common.report.wizard'
     _description = "CMMS Reports"

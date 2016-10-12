@@ -12,7 +12,7 @@ class CmmsPmGenerateWizard(models.TransientModel):
     @api.onchange('pm_date')
     def date_change(self):
         _sch_obj = self.env['cmms.pm.schedule.master']
-        _sch_recs = _sch_obj.search([('next_date', '=', self.pm_date)])
+        _sch_recs = _sch_obj.search([('next_date', '=', self.pm_date),('company_id', '=', self.env.user.company_id.id)])
         self.pm_schedule_ids = _sch_recs
 
     @api.multi
@@ -23,7 +23,7 @@ class CmmsPmGenerateWizard(models.TransientModel):
         _pm_job_ids = []
         if _sch_recs:
             _machines = _sch_recs.mapped('machine_ids')
-            for m in _machines.sorted(key=lambda r: r.code):
+            for m in _machines.filtered(lambda m: m.company_id == self.env.user.company_id.id).sorted(key=lambda r: r.code):
                 _exist = self.env['cmms.job.order'].search([('machine_id', '=', m.id),
                                                             ('job_order_type', '=', 'preventive'),
                                                             ('job_order_date', '=', self.pm_date)], limit=1)

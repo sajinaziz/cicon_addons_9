@@ -21,11 +21,13 @@
                            <label for='name'/>
                            <h2><field name="job_order_code_id" attrs="{'readonly':[('id','!=',False)],
                                                                         'invisible':[('job_order_type','=','preventive')],
-                                                                        'required':[('job_order_type','!=','preventive')]}" options="{'no_create':True,'no_open':True}"/> </h2>
+                                                                        'required':[('job_order_type','!=','preventive')]}"
+                                      domain="[('company_id','=', company_id)]"
+                                      options="{'no_create':True,'no_open':True}"/> </h2>
                            <h2> <field name="name" attrs="{'invisible':[('job_order_type','!=','preventive')],
                                                             'readonly':[('job_order_type','=','preventive')]}" /> </h2>
                            <label for='machine_id'/>
-                           <h2><field name="machine_id" options="{'no_create':True}"/></h2>
+                           <h2><field name="machine_id"  options="{'no_create':True}" /></h2>
                          </div>
                          <group>
                          <div>

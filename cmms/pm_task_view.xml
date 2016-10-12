@@ -30,7 +30,8 @@
                             </page>
                             <page string="Schedule Details">
                              <group>
-                                 <field name="rrule_str"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="rrule_str"/>
                                 <field name="date" string="Starting at" />
                              </group>
                                 <group>
