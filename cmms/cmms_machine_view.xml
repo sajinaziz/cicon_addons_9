@@ -315,7 +315,7 @@
                 <field name="name">cmms.machine.kanban</field>
                 <field name="model">cmms.machine</field>
                 <field name="arch" type="xml">
-                    <kanban default_group_by="type_id" edit="false">
+                    <kanban default_group_by="type_id" delete="false"  edit="false"  create="false"  quick_create="false">
                          <field name="code"/>
                          <field name="type_id"/>
                          <field name="name" />
