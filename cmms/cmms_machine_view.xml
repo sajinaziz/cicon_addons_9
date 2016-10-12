@@ -321,7 +321,7 @@
                          <field name="name" />
                          <field name="serial_no" />
                          <field name="category_id" />
-
+                         <field name="job_order_open_count"   />
                         <templates>
                              <t t-name="kanban-box">
                                 <div  class="oe_kanban_card  oe_kanban_global_click">
@@ -332,6 +332,11 @@
                                            <li> <field name="serial_no" /> </li>
                                            <li> <field name="category_id" /> </li>
                                         </ul>
+                                        <t t-if="record.job_order_open_count.raw_value">
+                                            <button type="button" class="btn btn-danger">
+                                               Joborders  <t t-raw="record.job_order_open_count.raw_value"/>
+                                            </button>
+                                        </t>
                                     </div>
                                 </div>
                              </t>

@@ -1,4 +1,5 @@
 from openerp import models, fields, api, tools
+from openerp import _, tools
 
 #To store machine location
 class CmmsMachineLocation(models.Model):
@@ -73,6 +74,14 @@ class CmmsMachine(models.Model):
                     self.breakdown_count = r['job_order_type_count']
             self.parts_cost = round(sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount')),2)
 
+    @api.one
+    def compute_joborder_open_count(self):
+        """" Calculate the total job order pending count, based on the job order type as breakdown. """
+        for _rec in self:
+            self.job_order_open_count = 0
+            count = len(self.env['cmms.job.order'].search([('machine_id','=',_rec.id),('job_order_type','=','breakdown'),('state','=','open')]).mapped('id'))
+            self.job_order_open_count = count
+
     #code, store the machine code
     code = fields.Char('Code', size=10, help="Machine Code", required=True, track_visibility='always')
     name = fields.Char('Name', help="Machine Name", required=True)
@@ -119,6 +128,8 @@ class CmmsMachine(models.Model):
     parts_cost = fields.Float('Parts Cost', compute=_job_order_count)
     #location id, relate to machine location table and store the location
     location_id = fields.Many2one('cmms.machine.location', string="Location",  track_visibility='onchange')
+
+    job_order_open_count = fields.Integer('Pending Job Orders', compute = compute_joborder_open_count)
 
     _sql_constraints = [("unique_machine_code", "UNIQUE(code)", "Machine Code Must be Unique")]
 
