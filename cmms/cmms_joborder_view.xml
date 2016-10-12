@@ -149,6 +149,10 @@
                 <search string="Job Order" >
                     <field name="name"/>
                     <field name="machine_id"/>
+                    <field name="status_id" widget="selection"/>
+                    <filter name="this_month" string="This Month" domain="[('job_order_date','&gt;=',(context_today()).strftime('%%Y-%%m-01')),('job_order_date','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01'))]" />
+                    <seperator/>
+                    <filter name="last_month" string="Last Month" domain="[('job_order_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%%Y-%%m-01')),('job_order_date','&lt;',time.strftime('%%Y-%%m-01'))]" />
                 </search>
 			</field>
         </record>
@@ -161,19 +165,31 @@
             <!--</field>-->
         <!--</record>-->
 
+
+        <record model="ir.ui.view" id="cmms_job_order_pivot">
+            <field name="name">Job Orders</field>
+            <field name="model">cmms.job.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Job Orders">
+                    <field name="machine_id" type="row"/>
+                    <field name="status_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_cmms_job_order_form_view">
             <field name="name" >Job Order</field>
             <field name="res_model">cmms.job.order</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{"default_job_order_type":'breakdown'}</field>
+            <field name="view_mode">tree,form,calendar,pivot</field>
+            <field name="context">{"default_job_order_type":'breakdown',"search_default_this_month":1}</field>
             <field name="domain">[('job_order_type','in',['breakdown'])]</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_cmms_job_order_pm_view">
             <field name="name" >Job Order</field>
             <field name="res_model">cmms.job.order</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{"default_job_order_type":'preventive'}</field>
+            <field name="view_mode">tree,form,calendar,pivot</field>
+            <field name="context">{"default_job_order_type":'preventive',"search_default_this_month":1}</field>
             <field name="domain">[('job_order_type','=','preventive')]</field>
         </record>
 
@@ -181,7 +197,7 @@
             <field name="name" >Job Order</field>
             <field name="res_model">cmms.job.order</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{"default_job_order_type":'general'}</field>
+            <field name="context">{"default_job_order_type":'general', "search_default_this_month":1}</field>
             <field name="domain">[('job_order_type','=','general')]</field>
         </record>
 
