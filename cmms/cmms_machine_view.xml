@@ -315,7 +315,7 @@
                 <field name="name">cmms.machine.kanban</field>
                 <field name="model">cmms.machine</field>
                 <field name="arch" type="xml">
-                    <kanban default_group_by="type_id">
+                    <kanban default_group_by="type_id" edit="false">
                          <field name="code"/>
                          <field name="type_id"/>
                          <field name="name" />
@@ -324,16 +324,14 @@
 
                         <templates>
                              <t t-name="kanban-box">
-                                <div  t-attf-class="oe_kanban_global_click">
-                                    <div t-attf-class="oe_kanban_details">
-                                        <strong>
-                                            <field name="code"/>
-                                            <span>(<field name="name"/>)</span>
-                                        </strong>
-                                        <div name="tags"/>
-                                            <field name="serial_no" />
-                                        <div name="tags"/>
-                                            <strong><field name="category_id" /></strong>
+                                <div  class="oe_kanban_card  oe_kanban_global_click">
+                                    <div class="oe_kanban_content">
+                                        <h4 class="text-primary"> <field name="code"/> </h4>
+                                         <h5> <field name="name"/> </h5>
+                                        <ul>
+                                           <li> <field name="serial_no" /> </li>
+                                           <li> <field name="category_id" /> </li>
+                                        </ul>
                                     </div>
                                 </div>
                              </t>
