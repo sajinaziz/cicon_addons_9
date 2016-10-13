@@ -62,23 +62,24 @@ class CmmsMachine(models.Model):
     _rec_name = 'code'
     _inherit = ['mail.thread']
 
+    @api.multi
     def _job_order_count(self):
         """" Calculate the total job order count, based on the job order type as breakdown.
         Calulate the total parts cost count."""
         for _rec in self:
-            self.breakdown_count = 0
-            self.parts_cost = 0
+            _rec.breakdown_count = 0
+            _rec.parts_cost = 0
             _res = self.env['cmms.job.order'].read_group(domain=[('machine_id', '=', _rec.id)], fields=['job_order_type'], groupby='job_order_type')
             for r in _res:
                 if r['job_order_type'] == 'breakdown':
-                    self.breakdown_count = r['job_order_type_count']
-            self.parts_cost = round(sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount')),2)
+                    _rec.breakdown_count = r['job_order_type_count']
+            _rec.parts_cost = round(sum(self.env['cmms.store.invoice.line'].search([('machine_id','=',_rec.id)]).mapped('amount')),2)
 
-    @api.one
+    @api.multi
     def compute_joborder_open_count(self):
         """" Calculate the total job order pending count, based on the job order type as breakdown. """
         for _rec in self:
-            self.job_order_open_count = self.env['cmms.job.order'].search_count([('machine_id','=',_rec.id),('job_order_type','=','breakdown'),('state','=','open')])
+            _rec.job_order_open_count = self.env['cmms.job.order'].search_count([('machine_id','=',_rec.id),('job_order_type','=','breakdown'),('state','=','open')])
 
     #code, store the machine code
     code = fields.Char('Code', size=10, help="Machine Code", required=True, track_visibility='always')
