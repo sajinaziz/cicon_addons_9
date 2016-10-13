@@ -333,8 +333,8 @@
                                            <li> <field name="category_id" /> </li>
                                         </ul>
                                         <t t-if="record.job_order_open_count.raw_value">
-                                            <button type="button" class="btn btn-danger">
-                                               Joborders  <t t-raw="record.job_order_open_count.raw_value"/>
+                                            <button type="button" class="btn btn-danger btn-xs">
+                                               Breakdown(<t t-raw="record.job_order_open_count.raw_value"/>)
                                             </button>
                                         </t>
                                     </div>

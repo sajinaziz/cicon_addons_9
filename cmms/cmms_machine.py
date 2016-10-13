@@ -78,8 +78,7 @@ class CmmsMachine(models.Model):
     def compute_joborder_open_count(self):
         """" Calculate the total job order pending count, based on the job order type as breakdown. """
         for _rec in self:
-            self.job_order_open_count = 0
-            self.job_order_open_count = len(self.env['cmms.job.order'].search([('machine_id','=',_rec.id),('job_order_type','=','breakdown'),('state','=','open')]).mapped('id'))
+            self.job_order_open_count = self.env['cmms.job.order'].search_count([('machine_id','=',_rec.id),('job_order_type','=','breakdown'),('state','=','open')])
 
     #code, store the machine code
     code = fields.Char('Code', size=10, help="Machine Code", required=True, track_visibility='always')
