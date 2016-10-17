@@ -42,11 +42,13 @@ class CmmsCommonReportWizard(models.TransientModel):
     report_list = fields.Selection([('expense_report', 'Expense Summary'),
                                    ('expense_detailed', 'Expense Detailed'),
                                     ('job_order_report','Job Order Report'),
-                                    ('parts_by_producttype_report','Parts Summary By Product Type Report'),('machine_analysis_report','Machine Analysis Report')],string='Report', required=True)
+                                    ('parts_by_producttype_report','Parts Summary By Product Type Report'),
+                                    ('machine_analysis_report','Machine Analysis Report'),
+                                    ('machine_status_report','Machine Status Report')],string='Report', required=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id)
 
-    start_date = fields.Date('Start Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
-    end_date = fields.Date('End Date', required=True,report_list={'machine_analysis_report': [('invisible', True)]})
+    start_date = fields.Date('Start Date', required=True, default=fields.Date.context_today)
+    end_date = fields.Date('End Date', required=True, default=fields.Date.context_today)
     job_order_type = fields.Selection(JOB_ORDER_TYPE, "Job Order Type")
     machine_categ_ids = fields.Many2many('cmms.machine.category','cmms_report_machine_categ_sel_rel', 'wizard_id', 'categ_id',
                                          string="Machine Category")
@@ -121,3 +123,11 @@ class CmmsCommonReportWizard(models.TransientModel):
             return self.with_context(ctx).env['report'].get_action(self,
                                                                    report_name='cmms.report_machine_analysis_summary_template',
                                                                    data={})
+        if self.report_list == 'machine_status_report':
+            if self.company_id:
+                _qry = [('company_id', '=', self.company_id.id),('is_machinery','=', 'True')]
+            _machines = self.env['cmms.machine'].search(_qry)
+            if _machines.ids:
+                return self.env['report'].get_action(_machines, 'cmms.report_machine_status_template')
+            else:
+                raise UserError("No Report Exists")
