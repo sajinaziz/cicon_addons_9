@@ -14,6 +14,8 @@
                 </group>
                 <group>
                     <field name="report_year"  attrs="{'invisible': [('report_list','!=','machine_analysis_report')],'required':[('report_list','==','machine_analysis_report')]}" />
+                    <field name="machine_categ_ids"  attrs="{'invisible': [('report_list','!=','machine_analysis_report')]}" widget="many2many_tags" options="{'no_open': True, 'no_create':True}"/>
+
                 </group>
                 <group col="4">
                     <field name="start_date" attrs="{'invisible': [('report_list','=','machine_analysis_report')]}"/>
