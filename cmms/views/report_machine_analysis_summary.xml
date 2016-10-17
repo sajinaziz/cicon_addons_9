@@ -12,7 +12,7 @@
                      <caption class="text-center">Year:<span t-esc="year"/></caption>
                     <thead>
                          <tr>
-                             <th style="width:30%" colspan="3">Machine</th>
+                             <th style="width:32%" colspan="3">Machine</th>
                              <th style="width:5%">JAN</th>
                              <th style="width:5%">FEB</th>
                              <th style="width:5%">MAR</th>
@@ -25,7 +25,7 @@
                              <th style="width:5%">OCT</th>
                              <th style="width:5%">NOV</th>
                              <th style="width:5%">DEC</th>
-                             <th style="width:10%">Total</th>
+                             <th style="width:8%">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,48 +40,45 @@
                                     <t t-foreach="macs" t-as="m">
                                             <tr  style="page-break-inside:avoid !important">
                                                 <t t-set="m_val" t-value="m.get('machine_id')"/>
-                                                <td style="width:5%" rowspan="2"> <span t-esc="m_val.code"/></td>
-                                                <td style="width:20%" rowspan="2">  <span t-esc="m_val.name"/></td>
+                                                <td style="width:15%" rowspan="2"> <span t-esc="m_val.code"/></td>
+                                                <td style="width:10%" rowspan="2">  <span t-esc="m_val.name"/></td>
                                                 <td style="width:5%">Breakdown</td>
                                                 <t t-set="breakdowns" t-value="get_breakdown_count(m_val.id)" />
                                                     <t t-foreach="breakdowns" t-as="b">
-                                                        <td  class="text-right"><span t-esc="b.get('January')" /></td>
-                                                        <td  class="text-right"><span t-esc="b.get('February')" /></td>
-                                                        <td  class="text-right"><span t-esc="b.get('March')" /></td>
-                                                        <td  class="text-right"><span t-esc="b.get('April')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('May')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('June')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('July')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('August')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('September')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('October')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('November')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('December')" /></td>
-                                                        <td class="text-right"><span t-esc="b.get('total_job_order')"/> </td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('January')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('February')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('March')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('April')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('May')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('June')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('July')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('August')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('September')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('October')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('November')" /></td>
+                                                        <td style="width:5%" class="text-right"><span t-esc="b.get('December')" /></td>
+                                                        <td style="width:8%" class="text-right"><span t-esc="b.get('total_job_order')"/> </td>
                                                     </t>
                                             </tr>
                                             <tr style="page-break-inside:avoid !important">
 
-                                                <td class="text-right">Expense</td>
-                                                <td class="text-right"><span t-esc="m.get('January')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('February')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('March')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('April')" /></td>
-                                                <td class="text-right" ><span t-esc="m.get('May')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('June')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('July')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('August')" /></td>
-                                                <td class="text-right"><span t-esc="m.get('September')" /></td>
-                                                <td class="text-right"><span t-esc="m.get('October')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('November')" /></td>
-                                                <td  class="text-right"><span t-esc="m.get('December')" /></td>
-                                                <td class="text-right"><strong t-esc="m.get('total_expense')"/> </td>
+                                                <td style="width:5%" class="text-right">Expense</td>
+                                                <td  style="width:5%" class="text-right"><span t-esc="m.get('January')" /></td>
+                                                <td  style="width:5%" class="text-right"><span t-esc="m.get('February')" /></td>
+                                                <td  style="width:5%" class="text-right"><span t-esc="m.get('March')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('April')" /></td>
+                                                <td  style="width:5%"  class="text-right" ><span t-esc="m.get('May')" /></td>
+                                                <td   style="width:5%" class="text-right"><span t-esc="m.get('June')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('July')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('August')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('September')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('October')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('November')" /></td>
+                                                <td  style="width:5%"  class="text-right"><span t-esc="m.get('December')" /></td>
+                                                <td  style="width:8%"  class="text-right"><strong t-esc="m.get('total_expense')"/> </td>
 
                                             </tr>
-                                            <!--<tr  style="page-break-inside:avoid !important">-->
-                                                <!--<td>Idle Time</td>-->
-                                                <!--<td colspan="13"></td>-->
-                                            <!--</tr>-->
+
                                     </t>
                              </t>
 
