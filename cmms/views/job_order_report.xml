@@ -45,12 +45,22 @@
                                             <table style="border:1px solid gray;" width="100%" >
                                                 <caption>Spare Parts</caption>
                                                 <thead style="border:1px lightgray;">
-                                                    <th> Ref </th>
-                                                    <th> Date </th>
-                                                    <th> Product </th>
-                                                    <th class="text-right"> Quantity </th>
-                                                    <th class="text-right"> Rate </th>
-                                                    <th class="text-right"> Amount </th>
+                                                    <tr>
+                                                        <th> Ref </th>
+                                                        <th> Date </th>
+                                                        <th> Product </th>
+                                                        <th class="text-right"> Quantity </th>
+                                                        <th class="text-right"> Rate </th>
+                                                        <th class="text-right" > Amount </th>
+                                                        <th colspan="3" class="text-center" style="border-left:1px solid gray;"> History </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="6"/>
+                                                        <th class="text-center" style="border-left:1px solid gray;"> Used </th>
+                                                        <th class="text-center" > Last Date </th>
+                                                        <th class="text-center" > Life Span </th>
+                                                    </tr>
+
                                                 </thead>
                                                 <tbody>
                                                 <tr t-foreach="o.spare_part_ids" t-as="p" style="border:1px solid lightgray;page-break-inside: avoid !important;">
@@ -60,6 +70,9 @@
                                                     <td class="text-right" style="height:20px;padding:2px;"> <span t-field="p.quantity"/> </td>
                                                     <td class="text-right" style="height:20px;padding:2px;"> <span t-field="p.unit_price"  t-esc-options='{"widget": "monetary"}'/> </td>
                                                     <td class="text-right" style="height:20px;padding:2px;"> <span t-field="p.amount"  t-esc-options='{"widget": "monetary"}'/> </td>
+                                                    <td class="text-center" style="border-left:1px solid gray;"> <span t-esc="p.part_used_count"/>  </td>
+                                                    <td class="text-center"> <span t-esc="p.part_last_used" /> </td>
+                                                    <td class="text-center"> <span t-esc="p.part_life_span" /> (Days) </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
