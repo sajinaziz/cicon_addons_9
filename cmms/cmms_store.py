@@ -1,5 +1,6 @@
 from openerp import models, fields, api
 from openerp.exceptions import UserError
+from datetime import datetime
 # store spare part type
 class CmmsSparePartType(models.Model):
     _name = 'cmms.spare.part.type'
@@ -256,6 +257,20 @@ class CmmsStoreInvoiceLine(models.Model):
             else:
                 _rec.amount = _rec.unit_price * _rec.quantity
 
+    def _calc_history(self):
+        _store_lines = self.env['cmms.store.invoice.line']
+        for rec in self:
+           _parts_history = _store_lines.search([('machine_id', '=', rec.machine_id.id), ('product_desc', '=', rec.product_desc),('invoice_date','<', rec.invoice_date)],
+                                                order='id desc')
+           if len(_parts_history) > 0:
+               rec.part_used_count = len(_parts_history)
+               rec.part_last_used = _parts_history[0].invoice_date
+               rec.part_last_job_order_id = _parts_history[0].job_order_id.id
+               _last_date = datetime.strptime(_parts_history[0].invoice_date, fields.DATE_FORMAT)
+               _current_date = datetime.strptime(rec.invoice_date , fields.DATE_FORMAT)
+               rec.part_life_span = (_current_date - _last_date).days
+
+
     #invoice id, invoice id relation
     invoice_id = fields.Many2one('cmms.store.invoice', ondelete='cascade', string='Invoice')
     invoice_date = fields.Date('Date', related='invoice_id.invoice_date', store=True, readonly=True)
@@ -288,10 +303,18 @@ class CmmsStoreInvoiceLine(models.Model):
     #state, store state to be the move state
     move_state = fields.Selection(related='move_id.state', string='Move State', readonly=True, store=True)
 
+    part_used_count = fields.Integer(string="Part Used Count", compute=_calc_history, store=False, readonly=True)
+    part_last_used = fields.Date(string="Part Last Used", compute=_calc_history, store=False, readonly=True)
+    part_last_job_order_id = fields.Many2one('cmms.job.order', string="Job Order Last" , compute=_calc_history, store=False, readonly=True )
+    part_life_span = fields.Integer('Life Span' , compute=_calc_history, store=False, readonly=True)
+
     qb_line_ref = fields.Char('QB Line Reference')
     qb_prod_desc = fields.Char('QB Product Description')
     qb_amount = fields.Float('QB Total Amount', help='Sale Price in QB')
     qb_parent_product = fields.Char('QB Parent Product')
+
+
+
 
     @api.onchange('product_id')
     ###create function to change the product description and price on 'onchange' event of the product
