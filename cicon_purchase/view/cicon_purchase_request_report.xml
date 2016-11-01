@@ -4,21 +4,23 @@
 
         <report
             id="report_cicon_purchase_req_qweb"
-            string="Requests"
+            string="Quotation Requests"
             model="purchase.order"
             report_type="qweb-pdf"
             name="cicon_purchase.report_purchase_request_template"
             file="cicon_purchase.cicon_purchase_request_print_view"
+            groups="base.group_equipment_manager"
          />
-          <report
+         <report
             string="Request for Quotation"
             id="purchase.report_purchase_quotation"
             model="purchase.order"
             report_type="qweb-pdf"
             name="purchase.report_purchasequotation"
             file="purchase.report_purchasequotation"
+            groups="base.group_user"
             menu="False"
-        />
+          />
 
     </data>
 </odoo>
