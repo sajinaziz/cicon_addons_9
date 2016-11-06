@@ -22,7 +22,12 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
             'get_category': self._get_categories,
             'get_machine': self._get_machines,
             'get_invoice': self._get_invoices,
-            'get_grand_total': self._get_grand_total
+            'get_grand_total': self._get_grand_total,
+            'get_all_categ': self._get_all_categories,
+            'get_types_for_categ': self._get_type_for_categories ,
+            'get_total_categ_type': self._get_total_for_categ_type,
+            'get_total_for_machine_type': self._get_total_for_machine_type
+
         }
         return report_obj.render('cmms.report_partsby_producttype_summary_template', docargs)
 
@@ -42,9 +47,24 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
         _categs = self._inv_lines.filtered(lambda r: r.spare_part_type_id.id == _type).mapped('machine_id.category_id')
         return _categs
 
+    def _get_all_categories(self):
+        _categs = self._inv_lines.mapped('machine_id.type_id')
+        return _categs
+
+    def _get_type_for_categories(self,categ):
+        _types = self._inv_lines.filtered(lambda r: r.machine_id.type_id.id == categ).mapped('spare_part_type_id')
+        return _types
+
+    def _get_total_for_categ_type(self, _type, _categ):
+        _total = sum([x.amount for x in self._inv_lines if x.spare_part_type_id.id == _type and x.machine_id.type_id.id == _categ])
+        return _total
+
+    def _get_total_for_machine_type(self, _machinetype):
+        _total = sum([x.amount for x in self._inv_lines if x.machine_id.type_id.id == _machinetype])
+        return _total
+
     def _get_machines(self, _type, _categ):
-       _machines = self._inv_lines.filtered(
-            lambda r: r.machine_id.category_id == _categ and r.spare_part_type_id.id == _type).mapped('machine_id')
+       _machines = self._inv_lines.filtered(lambda r: r.machine_id.category_id == _categ and r.spare_part_type_id.id == _type).mapped('machine_id')
        return _machines
 
     def _get_invoices(self, _machine):

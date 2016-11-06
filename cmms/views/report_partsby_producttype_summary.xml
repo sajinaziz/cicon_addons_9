@@ -28,6 +28,35 @@
                     </table>
 
 
+
+                <table class="table  table-bordered">
+                      <caption class="text-center"> Summary By Machine Type</caption>
+                        <thead>
+                            <th> Product Type</th>
+                            <th> Total Amount</th>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="get_all_categ()" t-as="_categ">
+                                <tr>
+                                    <td colspan="2" class="text-center"> <strong t-esc="_categ.name" /> </td>
+                                </tr>
+                                <tr t-foreach="get_types_for_categ(_categ.id)" t-as="tp">
+                                    <td> <span t-esc="tp.name"/> </td>
+                                    <td class="text-right"> <span t-esc="get_total_categ_type(tp.id, _categ.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> <strong> Total </strong> </td>
+                                    <td class="text-right"> <strong t-esc="get_total_for_machine_type(_categ.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                 </table>
+
+
+
+
+
+
                   <p style="page-break-after:always;">   </p>
 
                  <t t-foreach="docs" t-as="o">
