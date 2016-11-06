@@ -113,7 +113,7 @@ class CmmsCommonReportWizard(models.TransientModel):
             else:
                 raise UserError("No Report Exists For This Period")
         if self.report_list == 'parts_by_producttype_report':
-            ctx['heading'] = "Spare Parts Summary" + '\n' + "  From[ " + start_date + ' To ' + end_date + ' ]'
+            ctx['heading'] = "(" + start_date + '-' + end_date + ' )'
             return self.with_context(ctx).env['report'].get_action(self,
                                                                    report_name='cmms.report_partsby_producttype_summary_template',
                                                                    data={})

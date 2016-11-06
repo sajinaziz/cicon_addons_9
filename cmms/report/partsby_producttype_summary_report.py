@@ -21,7 +21,8 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
             'get_total': self._get_parts_total,
             'get_category': self._get_categories,
             'get_machine': self._get_machines,
-            'get_invoice': self._get_invoices
+            'get_invoice': self._get_invoices,
+            'get_grand_total': self._get_grand_total
         }
         return report_obj.render('cmms.report_partsby_producttype_summary_template', docargs)
 
@@ -49,3 +50,7 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
     def _get_invoices(self, _machine):
         _invoices = self._inv_lines.filtered(lambda r: r.machine_id == _machine)
         return _invoices
+
+    def _get_grand_total(self):
+        _total = sum([x.amount for x in self._inv_lines])
+        return _total
