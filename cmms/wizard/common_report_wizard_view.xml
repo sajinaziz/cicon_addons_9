@@ -11,6 +11,7 @@
                     <field name="report_list"/>
                     <field name="job_order_type" attrs="{'invisible': [('report_list','!=','job_order_report')]}"/>
                     <field name="report_by" attrs="{'invisible': ['|',('report_list','=','machine_analysis_report'),('report_list','=','machine_status_report')]}" />
+                    <field name="report_option" attrs="{'invisible': [('report_list','!=', 'parts_by_producttype_report' )] }"  widget="radio" />
                 </group>
                 <group>
                     <field name="report_year"  attrs="{'invisible': [('report_list','!=','machine_analysis_report')],'required':[('report_list','==','machine_analysis_report')]}" />
