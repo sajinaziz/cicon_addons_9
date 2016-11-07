@@ -36,17 +36,17 @@
                             <th> Total Amount</th>
                         </thead>
                         <tbody>
-                            <t t-foreach="get_all_categ()" t-as="_categ">
+                            <t t-foreach="get_machine_types()" t-as="_mtype">
                                 <tr>
-                                    <td colspan="2" class="text-center"> <strong t-esc="_categ.name" /> </td>
+                                    <td colspan="2" class="text-center"> <strong t-esc="_mtype.name" /> </td>
                                 </tr>
-                                <tr t-foreach="get_types_for_categ(_categ.id)" t-as="tp">
+                                <tr t-foreach="get_ptypes_for_mtype(_mtype.id)" t-as="tp">
                                     <td> <span t-esc="tp.name"/> </td>
-                                    <td class="text-right"> <span t-esc="get_total_categ_type(tp.id, _categ.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
+                                    <td class="text-right"> <span t-esc="get_total_mtype_ptype(tp.id, _mtype.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
                                 </tr>
                                 <tr>
                                     <td class="text-center"> <strong> Total </strong> </td>
-                                    <td class="text-right"> <strong t-esc="get_total_for_machine_type(_categ.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
+                                    <td class="text-right"> <strong t-esc="get_total_for_machine_type(_mtype.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
                                 </tr>
                             </t>
                         </tbody>
@@ -54,19 +54,23 @@
 
 
 
+                <p style="page-break-after:always;">   </p>
 
-
-
-                  <p style="page-break-after:always;">   </p>
-
-                 <t t-foreach="docs" t-as="o">
+                <t t-foreach="get_machine_types()" t-as="mtype">
                      <div class="row">
-                         <div class="col-xs-4  text-left"><h3><span t-esc="o.name"/></h3></div>
-                         <div class="col-xs-8  text-left"><h3><span t-esc="get_total(o.id)"/></h3></div>
-                          <div class="col-xs-12  text-left" style="border-bottom:1px solid thick;"></div>
+                         <div class="col-xs-4  text-left"><h4><span t-esc="mtype.name"/></h4></div>
+                         <div class="col-xs-8  text-left"><h4><span t-esc="get_total_for_machine_type(mtype.id) "  t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></h4></div>
+                         <div class="col-xs-12  text-left" style="border-bottom:1px solid thick;"></div>
                      </div>
+                    <t t-foreach="get_ptypes_for_mtype(mtype.id)" t-as="ptype">
+
                      <table class="table table-condensed">
                            <thead>
+                               <tr class="success">
+                                   <th colspan="3"> <span t-esc="ptype.name"/> </th>
+                                   <th colspan="4"> <span t-esc="get_total_mtype_ptype(ptype.id,mtype.id)"   t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                               </tr>
+                                <tr>
                                 <th> Job Order </th>
                                 <th> Invoice </th>
                                 <th> Invoice Date </th>
@@ -74,12 +78,13 @@
                                 <th> Quantity </th>
                                 <th> Rate </th>
                                 <th> Amount </th>
+                               </tr>
                             </thead>
                              <tbody>
-                                 <t t-set="categs" t-value="get_category(o.id)"/>
-                                 <t t-foreach="categs" t-as="c">
+
+                                 <t t-foreach="get_category(ptype.id,mtype.id)" t-as="c">
                                      <t t-if="len(c) >0">
-                                         <t t-set="macs" t-value="get_machine(o.id, c)"/>
+                                         <t t-set="macs" t-value="get_machine(ptype.id, c.id , mtype.id)"/>
                                              <tr>
                                                 <th class="text-left" colspan="7" font-size="14px">Machine Category: <span t-field="c.name" /> </th>
                                              </tr>
@@ -88,7 +93,7 @@
                                                      <th><h5><span t-field="m.code" /></h5></th>
                                                      <th colspan="6"> <span t-field="m.name" /> </th>
                                                  </tr>
-                                                 <t t-set="invoices" t-value="get_invoice(m)"/>
+                                                 <t t-set="invoices" t-value="get_invoice(m,ptype.id)"/>
                                                      <tr t-foreach="invoices" t-as="i">
                                                          <td> <span t-field="i.job_order_id.name"/> </td>
                                                          <td> <span t-field="i.invoice_id.qb_inv_ref"/> </td>
@@ -98,13 +103,14 @@
                                                          <td  class="text-right"> <span t-esc="i.unit_price"  t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' /> </td>
                                                          <td  class="text-right"> <span t-esc="i.amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}' />  </td>
                                                      </tr>
-
                                              </t>
                                      </t>
                                  </t>
                              </tbody>
                          </table>
 
+                    </t>
+                    <p style="page-break-after:always;"></p>
                  </t>
 
             </div>
