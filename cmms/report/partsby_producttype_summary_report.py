@@ -45,7 +45,8 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
 
     def _get_categories(self, _ptype ,_mtype):
         _categs = self._inv_lines.filtered(lambda r: r.spare_part_type_id.id == _ptype and r.machine_id.type_id.id == _mtype).mapped('machine_id.category_id')
-        return _categs
+        _categ_sort = _categs.sorted(lambda c: c.name)
+        return  _categ_sort
 
     def _get_machine_types(self):
         _categs = self._inv_lines.mapped('machine_id.type_id')
