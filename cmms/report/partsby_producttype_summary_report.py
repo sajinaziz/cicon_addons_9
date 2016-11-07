@@ -18,6 +18,7 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
             'doc_model': report.model,
             'docs': _docs,
             'heading': self._context.get('heading'),
+            'rpt_option': self._context.get('report_option'),
             'get_total': self._get_parts_total,
             'get_category': self._get_categories,
             'get_machine': self._get_machines,
@@ -43,10 +44,13 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
         _total = sum([x.amount for x in self._inv_lines if x.spare_part_type_id.id == _type])
         return _total
 
-    def _get_categories(self, _ptype ,_mtype):
-        _categs = self._inv_lines.filtered(lambda r: r.spare_part_type_id.id == _ptype and r.machine_id.type_id.id == _mtype).mapped('machine_id.category_id')
+    def _get_categories(self, _ptype ,_mtype=None):
+        if _mtype:
+            _categs = self._inv_lines.filtered(lambda r: r.spare_part_type_id.id == _ptype and r.machine_id.type_id.id == _mtype).mapped('machine_id.category_id')
+        else:
+            _categs = self._inv_lines.filtered(lambda r: r.spare_part_type_id.id == _ptype).mapped('machine_id.category_id')
         _categ_sort = _categs.sorted(lambda c: c.name)
-        return  _categ_sort
+        return _categ_sort
 
     def _get_machine_types(self):
         _categs = self._inv_lines.mapped('machine_id.type_id')
@@ -64,9 +68,12 @@ class ReportPartsbyProductTypeSummary(models.AbstractModel): # Report File Name
         _total = sum([x.amount for x in self._inv_lines if x.machine_id.type_id.id == _machinetype])
         return _total
 
-    def _get_machines(self, _type, _categ, _mtype):
-       _machines = self._inv_lines.filtered(lambda r: r.machine_id.category_id.id == _categ and r.machine_id.type_id.id == _mtype and r.spare_part_type_id.id == _type).mapped('machine_id')
-       return _machines
+    def _get_machines(self, _type, _categ, _mtype= None):
+        if _mtype:
+            _machines = self._inv_lines.filtered(lambda r: r.machine_id.category_id.id == _categ and r.machine_id.type_id.id == _mtype and r.spare_part_type_id.id == _type).mapped('machine_id')
+        else:
+            _machines = self._inv_lines.filtered(lambda  r: r.machine_id.category_id.id == _categ and r.spare_part_type_id.id == _type).mapped('machine_id')
+        return _machines
 
     def _get_invoices(self, _machine, _ptype):
         _invoices = self._inv_lines.filtered(lambda r: r.machine_id == _machine and r.spare_part_type_id.id == _ptype)
