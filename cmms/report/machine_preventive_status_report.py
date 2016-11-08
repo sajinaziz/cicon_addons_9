@@ -33,6 +33,7 @@ class MachinePreventiveStatusReport(models.AbstractModel): # Report File Name
         _intervals = _tasks.mapped('interval_id')
         return _intervals
 
+
     def _get_schedules(self, _machine_id ,_interval_id ):
         _pm_schs = self.env['cmms.pm.schedule.master'].search([('pm_scheme_id', '=', _machine_id.pm_scheme_id.id),('interval_id', '=', _interval_id.id)])
         _pm_schs_machine = _pm_schs.filtered(lambda m:  _machine_id.id in  m.machine_ids._ids )
