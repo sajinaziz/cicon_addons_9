@@ -26,15 +26,20 @@
                         <div class="row" style="outline: 1px solid;min-height:40px" >
                             <div class="col-xs-2"> CONSULTANT : </div>
                             <div class="col-xs-5"> </div>
-                            <div class="col-xs-5 text-center"> ATTENTION  </div>
+                            <div class="col-xs-2"> ATTENTION : </div>
+                             <div class="col-xs-3">
+                                <span  t-esc="','.join(i.display_name for i in o.site_contact_ids)"/>
+                            </div>
                         </div>
 
                         <div class="row" style="outline: 1px solid;min-height:40px">
                             <div class="col-xs-2"> ELEMENT : </div>
                             <div class="col-xs-6"> <span t-field="o.element"/> </div>
-                            <div class="col-xs-4">
-                                <span  t-esc="','.join(i.display_name for i in o.site_contact_ids)"/>
-                            </div>
+                            <div class="col-xs-4"></div>
+
+                            <!--<div class="col-xs-4">-->
+                                <!--<span  t-esc="','.join(i.display_name for i in o.site_contact_ids)"/>-->
+                            <!--</div>-->
                         </div>
                         <div class="row" style="outline: 1px solid;min-height:40px" >
                             <div class="col-xs-2"> LEVELS : </div>
