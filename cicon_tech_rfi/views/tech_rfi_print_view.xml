@@ -23,7 +23,7 @@
                             <div class="col-xs-3"> <strong t-field="o.name"/>  </div>
                         </div>
 
-                        <div class="row" style="outline: 1px solid;min-height:30px" >
+                        <div class="row" style="outline: 1px solid;min-height:40px" >
                             <div class="col-xs-2"> CONSULTANT : </div>
                             <div class="col-xs-5"> </div>
                             <div class="col-xs-2"> ATTENTION : </div>
