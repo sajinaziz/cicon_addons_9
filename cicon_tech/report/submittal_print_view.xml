@@ -95,14 +95,11 @@
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
         <t t-call="cicon_tech.tech_cicon_external_layout"/>
-        <div class="page">
+        <div class="page"  style="margin-top:0px;">
             <div class="oe_structure"/>
-            <div class="row col-xs-12" >
-              <strong> Ref: <span  t-field="o.ref_no" /> </strong>
-                    <br/>
-                    <br/>
-                    Date : <span t-field="o.submittal_date" />
-                    <br/>
+            <div class="row col-xs-12">
+              <strong  style="line-height:15px;"> Ref: <span  t-field="o.ref_no" /> </strong><br/>
+                       Date : <span t-field="o.submittal_date" />
                     <br/>
             </div>
              <div class="row col-xs-12">
