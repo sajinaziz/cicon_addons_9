@@ -4,6 +4,7 @@ import tech_submittal_revision_document
 import tech_documenttype
 import tech_project
 import tech_project_contact
+import tech_consultant
 import report
 import wizard
 
