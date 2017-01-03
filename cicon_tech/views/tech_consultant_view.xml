@@ -5,15 +5,15 @@
             <field name="name">tech.consultant.form.view</field>
             <field name="model">tech.consultant</field>
             <field name="arch" type="xml">
-                <form string="Tech Consultant">
+                <form string="Consultant">
                     <sheet>
                         <group>
-                            <group>
+
                                 <field name="name" />
                                 <field name="designation" />
                                 <field name="email" />
                                 <field name="phone_num" />
-                            </group>
+
                         </group>
                     </sheet>
                     <!--<div class="oe_chatter">-->
@@ -28,7 +28,7 @@
             <field name="name">tech.consultant.tree.view</field>
             <field name="model">tech.consultant</field>
             <field name="arch" type="xml">
-                <tree string="Tech Consultant">
+                <tree string="Manage Consultant">
                     <field name="name"/>
                     <field name="email"/>
                     <field name="phone_num"/>
@@ -41,14 +41,14 @@
             <field name="name">tech.consultant.search.form</field>
             <field name="model">tech.consultant</field>
             <field name="arch" type="xml">
-                <search string="Tech Consultant">
+                <search string="Consultant">
                     <field name="name"/>
                 </search>
             </field>
         </record>
 
         <record id="action_tech_consultant" model="ir.actions.act_window" >
-            <field name="name" >Tech Consultant</field>
+            <field name="name" >Consultant</field>
             <field name="res_model">tech.consultant</field>
         </record>
 
