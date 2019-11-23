@@ -53,17 +53,24 @@ class cicon_steel_order_in_hand(models.AbstractModel): # Report File Name
         for i, k in enumerate(_customer_project_list):
             _dia_val.extend(k['quantity'].keys()) # get all Dia Key and add  to _dia_val List for Grand Total
         _grand_total = {}
+        _dia_percent = {}
+        _total_qty = sum([sum(i['quantity'].itervalues()) for i in _customer_project_list])
+        print _total_qty
         for dia_value in _dia_val: # Loop Dia and  sum , store to _grand_total Dictionary with the Dia Key
             _grand_total[dia_value] = sum([i['quantity'].get(dia_value, 0) for i in _customer_project_list])
+            if _grand_total[dia_value] > 0 and _total_qty > 0:
+                _dia_percent[dia_value] = (_grand_total[dia_value] * 100 / _total_qty)
+            else:
+                _dia_percent[dia_value] = 0
         _vals = []
         _product_templates = self.env['product.template'].search([('id', 'in', self._context.get('prod_template_ids'))])
-        # Cretae a list of dia used in selected templates sorted with sequence
+        # Create a list of dia used in selected templates sorted with sequence
         for t in _product_templates:
             for a in t.attribute_line_ids:
                 if a.attribute_id.name in ('Diameter', 'Reduce Coupler Type'):
                     _vals.extend(a.value_ids)
         _dia_vals = sorted(list(set(_vals)), key=lambda v: v.sequence)
-        _res = dict(records=_customer_project_list, grand_total=_grand_total, diameters=_dia_vals) # Assign to parent Dictionary with then three Keys.
+        _res = dict(records=_customer_project_list, grand_total=_grand_total, dia_perc=_dia_percent, diameters=_dia_vals) # Assign to parent Dictionary with then three Keys.
         return _res
 
 #

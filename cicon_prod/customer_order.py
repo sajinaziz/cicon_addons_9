@@ -25,6 +25,8 @@ class cicon_customer_order(models.Model):
     subtitle = fields.Char('Sub List', size=200, required=False, readonly=True, states={'new': [('readonly', False)]})
     bbs_weight = fields.Float('Order Tonnage', digits=(10, 3), required =False, readonly=True, states={'new': [('readonly', False)]})
     company_id = fields.Many2one('res.company', "Company", required=True, default=lambda self: self.env.user.company_id)
+    order_division = fields.Selection([('cb', "Cut & Bend"), ('cg', "Cage")], "Division", required=True, default='cb', track_visibility='onchange')
+
     state = fields.Selection([('new', 'New'),
             ('confirmed', 'Confirm'),
             ('close', 'Completed'),

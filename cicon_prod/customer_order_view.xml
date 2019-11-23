@@ -18,6 +18,7 @@
                     <field name="required_date"/>
                     <field name="created_by"/>
                     <field name="bbs_weight"/>
+                    <field name="order_division"/>
 					<field name="state" />
 				</tree>
 			</field>
@@ -55,6 +56,7 @@
                       </group>
                         <group>
                             <group string="Order Details">
+
                                 <field name="order_date"/>
                                 <field name="page_info"/>
                                 <field name="required_date"/>
@@ -63,6 +65,7 @@
                            </group>
                            <group  string="Additional Information">
                                 <field name="received_datetime" />
+                                <field name="order_division" widget="radio"/>
                                 <field name="project_engineer" />
                                 <field name="created_by" />
                             </group>
@@ -139,6 +142,7 @@
                 <field name="partner_id" select="1" widget="selection"/>
                 <field name="project_id" select="1" widget="selection"/>
                 <field name="name"/>
+                <field name="order_division" widget="selection"/>
             </search>
         </field>
     </record>

@@ -237,17 +237,17 @@
         </record>
 
 
-        <record model="ir.ui.view" id="cicon_prod_order_tree_view_extend">
-			<field name="name">cicon.prod.order.tree</field>
-			<field name="model">cicon.prod.order</field>
-            <field name="inherit_id" ref="cicon_prod_order_tree_view"/>
-			<field name="arch" type="xml">
-                <field name="customer_order_id" position="after">
-                    <field name="contract_id" />
-                </field>
+<!--        <record model="ir.ui.view" id="cicon_prod_order_tree_view_extend">-->
+<!--			<field name="name">cicon.prod.order.tree</field>-->
+<!--			<field name="model">cicon.prod.order</field>-->
+<!--            <field name="inherit_id" ref="cicon_prod_order_tree_view"/>-->
+<!--			<field name="arch" type="xml">-->
+<!--                <field name="customer_order_id" position="after">-->
+<!--                    <field name="contract_id" />-->
+<!--                </field>-->
 
-            </field>
-        </record>
+<!--            </field>-->
+<!--        </record>-->
 
          <record id="production_order_search_form_extend" model="ir.ui.view">
         <field name="name">cicon.prod.order.search.form</field>

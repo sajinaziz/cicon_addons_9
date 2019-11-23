@@ -29,6 +29,7 @@
                         <field name="partner_id"/>
                         <field name="project_id"/>
                         <field name="template_id"/>
+                        <field name="order_division"/>
                     </group>
                     <footer>
                         <button name="show_report" string="Show Report" type="object" class="oe_highlight"/>

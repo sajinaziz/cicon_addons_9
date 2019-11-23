@@ -27,6 +27,7 @@ class cicon_prod_order(models.Model):
     description = fields.Char('Description', track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     remarks = fields.Text('Remarks')
     customer_order_id = fields.Many2one ('cicon.customer.order', "Customer Order", readonly=True, states={'pending': [('readonly', False)]})
+    order_division = fields.Selection(string="Division",related='customer_order_id.order_division', readonly=True, store=True)
     required_date = fields.Date('Required Date', readonly=True, states={'pending': [('readonly', False)]})
     product_lines = fields.One2many('cicon.prod.order.line', 'prod_order_id', string="Products", readonly=True, states={'pending': [('readonly', False)]})
     tag_count = fields.Integer('Tags', readonly=True, states={'pending': [('readonly', False)]})

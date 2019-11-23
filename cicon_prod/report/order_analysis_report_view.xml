@@ -35,8 +35,14 @@
             <search string="Order Analysis">
                 <field name="categ_id" widget="selection"/>
                 <field name="product_tmpl_id" widget="selection"/>
+
                 <filter name="pending_order" string="Pending Order" domain="[('prod_order_id.state','not in',['delivered','cancel','transfer'])]"/>
                 <!--<filter name="steel_order" string="Steel Order" domain="[('product_id.categ_id.name','not in',['delivered','cancel'])]"/>-->
+                <separator/>
+                <filter name="cage_order"  string="Cage Orders" domain="[('prod_order_id.order_division', '=', 'cg')]"/>
+                <separator/>
+                <filter name="cb_order"  string="Cut &amp; Bend Orders" domain="[('prod_order_id.order_division', '=', 'cb')]"/>
+
             </search>
         </field>
     </record>

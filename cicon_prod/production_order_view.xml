@@ -16,6 +16,7 @@
                     <field name="required_date"/>
                     <field name="template_ids"/>
                     <field name="total_tonnage" sum="Total"/>
+                    <field name="order_division"/>
                     <field name="state"/>
                     <field name="plan_id" invisible="1"/>
                     <field name="load" invisible="1"/>
@@ -91,7 +92,7 @@
                                 <field name="tag_count"/>
                                 <field name="bar_mark_count"/>
                                 <field name="plan_id"/>
-
+                                <field name="order_division"/>
                             </group>
                         </group>
                         <group>
@@ -164,6 +165,7 @@
                 <field name="partner_id" widget="selection"/>
                 <field name="project_id" widget="selection"/>
                 <field name="customer_order_id" widget="selection"/>
+                <field name="order_division" widget="selection"/>
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer'])]"/>
                 <filter name="no_plan_order" string="Not Planned/Pending Order" domain="[('state','not in',['delivered','cancel','transfer']),('plan_id','=',False)]"/>

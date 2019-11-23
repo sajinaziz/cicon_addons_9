@@ -68,7 +68,7 @@
         <div class="page">
               <div class="oe_structure"/>
               <table class="table table-bordered">
-                  <caption> <h3>  <span t-esc="heading" /> </h3>  </caption>
+                  <caption> <h4>  <span t-esc="heading" /> </h4> </caption>
                   <thead>
                       <th style="width:20%;">Customer</th>
                       <th style="width:20%;">Project</th>
@@ -112,6 +112,21 @@
                         </t>
                        <td class="text-right">
                                <b> <span t-esc="formatLang(sum(docs['grand_total'].itervalues()),digits=digit)"/> </b>
+                            </td>
+
+                      </tr>
+                      <tr>
+                           <td colspan="2" class="text-right" > <b> Dia Percentage </b> </td>
+                          <t t-foreach="docs['diameters']" t-as="dia">
+                            <td class="text-right">
+                            <t t-if="docs['dia_perc'].get(dia.name,false)">
+                               <b>  <span t-esc="formatLang(docs['dia_perc'].get(dia.name),digits=0)"/>  %  </b>
+                            </t>
+                            </td>
+
+                        </t>
+                         <td class="text-right">
+                               <b> <span t-esc="formatLang(sum(docs['dia_perc'].itervalues()),digits=0)"/> % </b>
                             </td>
 
                       </tr>
