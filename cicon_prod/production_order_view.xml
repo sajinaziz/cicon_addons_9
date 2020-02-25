@@ -70,7 +70,7 @@
                 <form string="Production Order" >
                     <header>
                         <button name="set_confirm" confirm='Status Change to Confrim?' states="pending" string="Confirm" class="oe_highlight"  type="object" />
-                        <button name="set_pending" confirm='Reset Status to Pending ?'  states="confirm" string="Set as Pending" groups="cicon_prod.group_prod_admin" type="object" />
+                        <button name="set_pending" confirm='Reset Status to Pending ?'  states="confirm,hold,cancel" string="Set as Pending" groups="cicon_prod.group_prod_admin" type="object" />
                         <button name="set_cancel" confirm='Confirm , Status Change to Cancel ?' groups="cicon_prod.group_prod_admin"  states="pending,progress,confirm" string="Cancel Order" type="object" />
                         <button name="create_dn" confirm='Confirm , Create DN ?'  states="confirm,progress,partial_delivery" groups="cicon_prod.group_prod_admin" string="Delivery Note"  type="object" />
                         <!--<button name="set_transit" confirm="Confirm , Status Change to Cancel ?" states="pending,progress" string="Transit" type="object"/>-->
@@ -167,7 +167,8 @@
                 <field name="customer_order_id" widget="selection"/>
                 <field name="order_division" widget="selection"/>
                 <!--<field name="categ_ids" widget="selection"/>-->
-                <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer'])]"/>
+                <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer','hold'])]"/>
+                <filter name="hold_order" string="On Hold " domain="[('state','in',['hold'])]"/>
                 <filter name="no_plan_order" string="Not Planned/Pending Order" domain="[('state','not in',['delivered','cancel','transfer']),('plan_id','=',False)]"/>
                 <filter name="to_do" string="Need Action" domain="[('customer_order_id','=',False)]"/>
                 <!--#TODO: Search by Product Template-->
