@@ -16,7 +16,7 @@ class cicon_prod_report_option_wizard(models.TransientModel):
     @api.multi
     def show_report(self):
         _parms = []
-        _parms.append(('state', 'not in', ['delivered', 'cancel', 'transfer']))
+        _parms.append(('state', 'not in', ['delivered', 'cancel', 'transfer', 'hold']))
         _div_heading = ''
         if self.partner_id:
             _parms.append(('partner_id', '=', self.partner_id.id))
