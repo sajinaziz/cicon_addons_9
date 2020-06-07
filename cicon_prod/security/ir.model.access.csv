@@ -10,6 +10,8 @@ access_prod_order_analysis_user,cicon.prod.order.analysis prod_user,model_cicon_
 access_prod_report_template,cicon.prod.report.template prod_user,model_cicon_prod_report_template,group_prod_user,1,0,0,0
 access_prod_plan_admin,cicon.prod.plan_admin,model_cicon_prod_plan,group_prod_admin,1,1,1,1
 access_prod_plan_user,cicon.prod.plan_user,model_cicon_prod_plan,group_prod_user,1,0,0,0
+access_prod_plan_load_admin,cicon.prod.plan.load_admin,model_cicon_prod_plan_load,group_prod_admin,1,1,1,1
+access_prod_plan_load_user,cicon.prod.plan.load_user,model_cicon_prod_plan_load,group_prod_user,1,0,0,0
 acc_cic_steel_weight_type,cic.steel.weight.type_user,model_cicon_steel_weight_type,group_prod_user,1,0,0,0
 acc_cic_contract,cic.contract_user,model_cicon_contract,group_prod_user,1,0,0,0
 acc_cic_contract_weight.type,cic.contract.weight.type_user,model_cicon_contract_weight_type,group_prod_user,1,0,0,0

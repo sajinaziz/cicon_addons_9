@@ -5,11 +5,13 @@
         <record model="ir.ui.view" id="cicon_prod_order_tree_view">
 			<field name="name">cicon.prod.order.tree</field>
 			<field name="model">cicon.prod.order</field>
+            <field name="priority">15</field>
 			<field name="arch" type="xml">
-                <tree string="Production Orders">
-                    <field name="partner_id"/>
-                    <field name="project_id"/>
-                    <field name="customer_order_id"/>
+                <tree string="Production Orders" default_order="partner_id,project_id,order_date,customer_order_id">
+                    <field name="partner_id" context="{'order_display': 'name' }"/>
+                    <field name="project_id" context="{'order_display': 'name' }"/>
+                    <field name="customer_order_id" context="{'order_display': 'name' }"/>
+                    <field name="order_date"/>
                     <field name="name"/>
                     <field name="description"/>
                     <field name="remarks"/>
@@ -18,8 +20,8 @@
                     <field name="total_tonnage" sum="Total"/>
                     <field name="order_division"/>
                     <field name="state"/>
-                    <field name="plan_id" invisible="1"/>
-                    <field name="load" invisible="1"/>
+<!--                    <field name="plan_id" invisible="1"/>-->
+<!--                    <field name="load" invisible="1"/>-->
                     <button name="set_deliver" states="pending,progress,hold" confirm="Confirm  Delivered ?" string="Delivered" type="object"  icon="gtk-redo" groups="cicon_prod.group_prod_delivery_user"/>
                 </tree>
 			</field>
@@ -31,11 +33,11 @@
 			<field name="name">cicon.prod.order.kanban</field>
 			<field name="model">cicon.prod.order</field>
 			<field name="arch" type="xml">
-                <kanban quick_create='false'  default_group_by="plan_id" class="oe_background_grey" >
+                <kanban quick_create='false'  class="oe_background_grey" >
                     <field name="name"/>
-                    <field name="plan_id"/>
+<!--                    <field name="plan_id"/>-->
                     <field name="sequence"/>
-                    <field name="load"/>
+<!--                    <field name="load"/>-->
                     <field name="required_date"/>
                     <field name="template_ids"/>
                     <templates>
@@ -91,7 +93,7 @@
                                 <field name="revision_no"/>
                                 <field name="tag_count"/>
                                 <field name="bar_mark_count"/>
-                                <field name="plan_id"/>
+                                <field name="prod_plan_id"/>
                                 <field name="order_division"/>
                             </group>
                         </group>
@@ -168,15 +170,19 @@
                 <field name="order_division" widget="selection"/>
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer','hold'])]"/>
+
                 <filter name="hold_order" string="On Hold " domain="[('state','in',['hold'])]"/>
-                <filter name="no_plan_order" string="Not Planned/Pending Order" domain="[('state','not in',['delivered','cancel','transfer']),('plan_id','=',False)]"/>
+                <separator />
+                <filter name="no_plan_order" string="Not Planned" domain="[('plan_load_id','=', False)]"/>
+                <separator />
+                <filter name="planned_order" string="Planned" domain="[('plan_load_id','!=', False)]"/>
                 <filter name="to_do" string="Need Action" domain="[('customer_order_id','=',False)]"/>
                 <!--#TODO: Search by Product Template-->
                 <filter name="delivered" string="Delivered" domain="[('state','in',['delivered','cancel'])]"/>
                 <group expand="0" string="Group By...">
                     <filter string="Customer Order" name="group_order_customer" icon="terp-folder-violet" domain="[]" context="{'group_by':'customer_order_id'}"/>
-                    <filter string="Plan" name="group_planned_date" context="{'group_by':'plan_id'}"/>
-                    <filter string="Load" name="group_by_load" context="{'group_by':'load'}"/>
+<!--                    <filter string="Plan" name="group_planned_date" context="{'group_by':'plan_id'}"/>-->
+<!--                    <filter string="Load" name="group_by_load" context="{'group_by':'load'}"/>-->
                     <filter string="State" name="group_state" context="{'group_by':'state'}"/>
                 </group>
 
@@ -243,102 +249,24 @@
            <field name="context">{'search_default_pending_order':1}</field>
        </record>
 
-          <record model="ir.ui.view" id="cicon_prod_plan_tree_view">
-			<field name="name">cicon.prod.plan.tree</field>
-			<field name="model">cicon.prod.plan</field>
-			<field name="arch" type="xml">
-                <tree string="Production Plan">
-                    <field name="plan_date"/>
-                    <field name="work_shift"/>
-                    <field  name="state" />
-                </tree>
-			</field>
-        </record>
-
-       <record model="ir.ui.view" id="cicon_prod_plan_form_view">
-			<field name="name">cicon.prod.plan.form</field>
-			<field name="model">cicon.prod.plan</field>
-			<field name="arch" type="xml">
-                <form string="Production Plan">
-                        <group col="4">
-                            <field name="plan_date"/>
-                            <field name="work_shift"/>
-                            <field  name="state" />
-                        </group>
-                         <notebook>
-                            <page string="Orders">
-                                <field name="prod_order_ids" widget="many2many">
-                                    <tree editable="bottom">
-                                         <field name="sequence" widget="handle"/>
-                                          <field name="partner_id" readonly="1"/>
-                                          <field name="project_id" readonly="1"/>
-                                          <field name="customer_order_id" readonly="1"/>
-                                          <field name="name" readonly="1"/>
-                                          <field name="description" readonly="1"/>
-                                          <field name="required_date" readonly="1"/>
-                                          <field name="total_tonnage" sum="Total" />
-                                          <field name="load" />
-                                          <field name="remarks"/>
-                                          <field name="state" readonly="1"/>
-                                    </tree>
-                                </field>
-                            </page>
-
-                        </notebook>
-
-                </form>
-			</field>
-        </record>
-
-
-          <record model="ir.ui.view" id="cicon_prod_order_plan_tree_view">
-			<field name="name">cicon.prod.order.plan.tree</field>
-			<field name="model">cicon.prod.order</field>
-            <field name="priority" eval="99"/>
-			<field name="arch" type="xml">
-                <tree string="Production Orders">
-                    <field name="partner_id"/>
-                    <field name="project_id"/>
-                    <field name="customer_order_id"/>
-                    <field name="name"/>
-                    <field name="description"/>
-                    <field name="remarks"/>
-                    <field name="required_date"/>
-                    <field name="template_ids"/>
-                    <field name="total_tonnage" sum="Total"/>
-                    <field name="plan_id"/>
-                    <field name="state"/>
-
-                    <!--<button name="set_deliver" states="pending,progress,hold" confirm="Confirm  Delivered ?" string="Delivered" type="object"  icon="gtk-redo" groups="cicon_prod.group_prod_delivery_user"/>-->
-                </tree>
-			</field>
-        </record>
 
 
 
-       <record model="ir.actions.act_window" id="action_cicon_prod_plan">
-            <field name="name" >Production Plan</field>
-            <field name="res_model">cicon.prod.plan</field>
-           <field name="view_id" ref=""/>
 
-       </record>
 
-            <record model="ir.actions.act_window" id="action_cicon_prod_order_planning">
-            <field name="name" >Production Planning</field>
-            <field name="res_model">cicon.prod.order</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="cicon_prod_order_plan_tree_view"/>
-       </record>
+
+
+
+
+
+
 
 
         <menuitem name="Production"  parent="cicon_menu" id="cicon_menu_prod_order" sequence="2" />
         <menuitem  parent="cicon_menu_prod_order" id="cicon_prod_orders" action="action_cicon_prod_order" sequence="20"/>
         <!--<menuitem  parent="cicon_menu_prod_order" id="menu_cicon_prod_order_lines" action="action_cicon_prod_order_line"></menuitem>-->
         <menuitem name="Reports"  parent="cicon_menu" id="cicon_menu_report" sequence="50" />
-        <menuitem name="Planning"  parent="cicon_menu_prod_order" id="cicon_menu_planning" sequence="30"/>
-        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_plan" action="action_cicon_prod_plan" sequence="10"/>
-        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20"/>
-        <menuitem  id="cicon_menu_to_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20" groups="cicon_prod.group_prod_manager"/>
+
 
     </data>
 </openerp>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+
+         <record model="ir.ui.view" id="cicon_prod_plan_tree_view">
+			<field name="name">cicon.prod.plan.tree</field>
+			<field name="model">cicon.prod.plan</field>
+			<field name="arch" type="xml">
+                <tree string="Production Plan">
+                    <field name="plan_date"/>
+                    <field name="work_shift"/>
+                    <field  name="state" />
+                </tree>
+			</field>
+        </record>
+
+
+        <record id="cic_prod_plan_load_form" model="ir.ui.view">
+            <field name="name">cicon.prod.plan.load.form</field>
+            <field name="model">cicon.prod.plan.load</field>
+            <field name="arch" type="xml">
+                <form string="Order State">
+                    <group>
+                        <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
+                        <field name="load"/>
+                        <field name="note"/>
+                        <field name="search_prod_order_ids" widget="many2many_tags"  options="{'no_create':True, 'no_edit':True }"  context="{'search_default_pending_order':1}"/>
+                        <field name="search_partner_id"  />
+                    </group>
+                    <notebook>
+                        <page string="Orders">
+                            <field name="prod_order_ids" widget="many2many" options="{'not_delete': True}">
+                                <tree create="false" delete="false" >
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="partner_id" />
+                                    <field name="project_id"/>
+                                    <field name="customer_order_id"/>
+                                    <field name="name" />
+                                    <field name="description" />
+                                    <field name="required_date" />
+                                    <field name="total_tonnage" sum="Total" />
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="add_load"  string="Add" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="cic_prod_plan_load_form_view" model="ir.ui.view">
+            <field name="name">cicon.prod.plan.load.form.view</field>
+            <field name="model">cicon.prod.plan.load</field>
+            <field name="priority">15</field>
+            <field name="arch" type="xml">
+                <form string="Order State">
+                    <group>
+                        <field name="id" invisible="1"/>
+                        <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
+                        <field name="load"/>
+                        <field name="note"/>
+                        <field name="search_prod_order_ids" widget="many2many_tags"
+                               domain="[('partner_id', '=', search_partner_id),
+                                        ('plan_load_id','=',False), ('state','not in',['delivered','cancel','transfer','hold'])]"
+                               options="{'no_create':True, 'no_edit':True }" context="{'search_default_pending_order':1}" />
+                        <field name="search_partner_id"  />
+                    </group>
+                    <notebook>
+                        <page string="Orders">
+                            <field name="prod_order_ids" widget="many2many" options="{'not_delete': True}">
+                                <tree create="false" delete="false" >
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="partner_id" />
+                                    <field name="project_id"/>
+                                    <field name="customer_order_id"/>
+                                    <field name="name" />
+                                    <field name="description" />
+                                    <field name="required_date" />
+                                    <field name="total_tonnage" sum="Total" />
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+               </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_cicon_prod_plan_load_new">
+             <field name="name" >Production Plan Load</field>
+             <field name="res_model">cicon.prod.plan.load</field>
+             <field name="view_id" ref="cic_prod_plan_load_form"/>
+             <field name="target">new</field>
+             <field name="context">{'default_prod_plan_id': active_id}</field>
+       </record>
+
+
+        <record model="ir.ui.view" id="cicon_prod_order_plan_tree_view">
+			<field name="name">cicon.prod.order.plan.tree</field>
+			<field name="model">cicon.prod.order</field>
+            <field name="priority" eval="99"/>
+			<field name="arch" type="xml">
+                  <tree string="Production Orders" create="false" delete="false" editable="false"
+                        default_order="partner_id,project_id,order_date,customer_order_id" decoration-danger="state in('delivered','cancel')">
+                    <field name="partner_id" context="{'order_display': 'name' }"/>
+                    <field name="project_id" context="{'order_display': 'name' }"/>
+                    <field name="customer_order_id" context="{'order_display': 'name' }"/>
+                    <field name="order_date"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="remarks"/>
+                    <field name="required_date"/>
+                    <field name="template_ids"/>
+                    <field name="total_tonnage" sum="Total"/>
+                    <field name="order_division"/>
+                    <field name="state"/>
+                </tree>
+			</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="prod_plan_pivot_view">
+            <field name="name">Production Plan</field>
+            <field name="model">cicon.prod.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Production Plan" display_quantity="true">
+                    <field name="partner_id" type="row"/>
+                    <field name="total_tonnage" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_cicon_prod_order_planning">
+            <field name="name" >Production Plan</field>
+            <field name="res_model">cicon.prod.order</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="domain">[('prod_plan_id','=', active_id)]</field>
+            <field name="view_id" ref="cicon_prod_order_plan_tree_view"/>
+       </record>
+
+
+
+        <record model="ir.ui.view" id="cicon_prod_plan_form_view">
+			<field name="name">cicon.prod.plan.form</field>
+			<field name="model">cicon.prod.plan</field>
+			<field name="arch" type="xml">
+                <form string="Production Plan">
+                    <header>
+                         <button name="%(action_cicon_prod_plan_load_new)d"
+                                     string="Add New Load"
+                                     type="action"
+                                     class="btn btn-primary btn-sm"
+                             />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                        <group col="4">
+                            <field name="plan_date"/>
+                            <field name="work_shift"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                        <div class="oe_button_box">
+
+
+
+                             <button name="arrange_seq"
+                                     string="Re-Arrange Sequence"
+                                     type="object"
+                                     confirm="Confirm Load re-arrange !"
+                                     class="btn btn-link"
+                             />
+
+                            <button class="btn btn-link"
+                                    name="%(action_cicon_prod_order)d"  type="action"
+                                    context="{'search_default_pending_order':1, 'search_default_no_plan_order':1}"
+                                    >
+                                <field name="order_count_not_planned"
+                                 string="Pending Orders"
+                                 widget="statinfo" />
+                            </button>
+
+                             <button class="btn btn-default"
+                                    name="%(action_cicon_prod_order_planning)d"  type="action"
+                                     string="Orders View"
+                                    >
+                            </button>
+
+
+                        </div>
+                         <notebook>
+                            <page string="Order View">
+                                <field name="prod_order_ids" widget="many2many">
+                                    <tree editable="bottom" default_order="plan_load" decoration-danger="state in('delivered','cancel')" >
+
+                                          <field name="plan_load_id" readonly="1"/>
+                                          <field name="plan_load" invisible="1"/>
+                                          <field name="partner_id" readonly="1"/>
+                                          <field name="project_id" readonly="1"/>
+                                          <field name="customer_order_id" readonly="1"/>
+                                          <field name="name" readonly="1"/>
+                                          <field name="description" readonly="1"/>
+                                          <field name="required_date" readonly="1"/>
+                                          <field name="total_tonnage" sum="Total" />
+                                          <field name="remarks"/>
+                                          <field name="state" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                             <page string="Loading View">
+                                 <field name="plan_load_ids">
+                                    <tree  default_order="load">
+<!--                                       <field name="display_name"/>-->
+                                       <field name="load" />
+                                       <field name="prod_order_codes"/>
+                                       <field name="note"/>
+                                        <field name="prod_order_tonnage"/>
+
+                                    </tree>
+                                 </field>
+                             </page>
+<!--                             <page string="Status">-->
+
+<!--                             </page>-->
+
+                        </notebook>
+
+                </form>
+			</field>
+        </record>
+
+
+
+
+
+
+        <record model="ir.actions.act_window" id="action_cicon_prod_plan">
+            <field name="name" >Production Plan</field>
+            <field name="res_model">cicon.prod.plan</field>
+           <field name="view_id" ref=""/>
+
+       </record>
+
+
+
+
+
+
+        <menuitem name="Planning"  parent="cicon_menu_prod_order" id="cicon_menu_planning" sequence="30"/>
+        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_plan" action="action_cicon_prod_plan" sequence="10"/>
+
+<!--        <menuitem  parent="cicon_menu_planning" id="cicon_menu_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20"/>-->
+<!--        <menuitem  id="cicon_menu_to_prod_order_plan" action="action_cicon_prod_order_planning" sequence="20" groups="cicon_prod.group_prod_manager"/>-->
+
+    </data>
+</odoo>

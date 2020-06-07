@@ -19,8 +19,7 @@ class cicon_prod_order(models.Model):
                 # _temp_str.extend([x.name for x in line.product_tmpl_id])
             rec.template_ids = list(set(_temp))
             if rec.template_ids:
-                rec.template_str = ','.join([x.name for x in rec.template_ids])
-
+                rec.template_str = ','.join([x.description_picking for x in rec.template_ids])
 
     name = fields.Char('Armaor Code / Internal Ref.', size=12, required=True, track_visibility="onchange", readonly=True, states={'pending': [('readonly', False)]})
     revision_no = fields.Integer('Revision No', required=True, readonly=True, track_visibility="onchange", states={'pending': [('readonly', False)]})
@@ -32,8 +31,10 @@ class cicon_prod_order(models.Model):
     product_lines = fields.One2many('cicon.prod.order.line', 'prod_order_id', string="Products", readonly=True, states={'pending': [('readonly', False)]})
     tag_count = fields.Integer('Tags', readonly=True, states={'pending': [('readonly', False)]})
     bar_mark_count = fields.Integer('Bar Marks', readonly=True, states={'pending': [('readonly', False)]})
-    partner_id = fields.Many2one('res.partner', related='customer_order_id.project_id.partner_id', string='Customer', readonly=True)
-    project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project', readonly=True)
+    partner_id = fields.Many2one('res.partner', related='customer_order_id.project_id.partner_id', string='Customer', readonly=True, store=True)
+    project_id = fields.Many2one('res.partner.project', related='customer_order_id.project_id', string='Project', readonly=True, store=True)
+    order_date = fields.Date( related='customer_order_id.order_date', string='Order Date',
+                                 readonly=True, store=True)
     state = fields.Selection([('pending', 'New'), ('confirm', 'Confirm'), ('progress', 'In Progress'),
                               ('ready', 'Ready To Deliver'), ('partial_delivery', 'Partially Delivered'),
                               ('delivered', 'Delivered'), ('cancel', 'Cancel'),
@@ -42,15 +43,15 @@ class cicon_prod_order(models.Model):
     created_user = fields.Many2one('res.users', string="Created By", readonly=True, states={'pending': [('readonly', False)]}, default=lambda self: self.env.user.id)
     # prod_note = fields.Char(store=False, string="Warning", readonly=True)
     planned_date = fields.Date('Planned Date')
-    plan_id = fields.Many2one('cicon.prod.plan', string="Production Plan")
+    # plan_id = fields.Many2one('cicon.prod.plan', string="Production Plan", ondelete='set null')
     sequence = fields.Integer('Sequence')
     template_ids = fields.Many2many('product.template', compute=_get_tonnage, store=False, string='Products')
-    template_str = fields.Char(compute=_get_tonnage,store=False, string='Products')
-    load = fields.Float("Load Priority")
+    template_str = fields.Char(compute=_get_tonnage, store=False, string='Products')
+    # load = fields.Float("Load Priority")
     delivery_order_ids = fields.Many2many('cicon.prod.delivery.order', 'cicon_prod_order_dn_rel', 'prod_order_id', 'dn_id', "Delivery Orders",
                                         readonly=True)
 
-    _order = "load, sequence, required_date desc"
+    _order = "sequence, required_date desc"
     # _sequence = 'load'
 
     @api.multi
@@ -110,9 +111,9 @@ class cicon_prod_order(models.Model):
         print _fold
         return _plans, _fold
 
-    _group_by_full = {
-        'plan_id': plan_groups,
-    }
+    # _group_by_full = {
+    #     'plan_id': plan_groups,
+    # }
 
     # @api.one
     # def write(self, vals):
@@ -157,25 +158,7 @@ class cicon_prod_order_line(models.Model):
 cicon_prod_order_line()
 
 
-class cicon_prod_plan(models.Model):
-    _name = 'cicon.prod.plan'
-    _description = "CICON Production Plan"
-    _rec_name = 'display_name'
 
-    @api.multi
-    def _display_name(self):
-        for rec in self:
-            rec.display_name = rec.plan_date + '/' + str(rec.work_shift).upper()
-
-    display_name = fields.Char(string="Name", compute=_display_name)
-    plan_date = fields.Date('Plan Date', required=True, default=fields.Date.context_today)
-    work_shift = fields.Selection([('day', 'Day'), ('night', 'Night')], required=True, string="Work Shift")
-    prod_order_ids = fields.One2many('cicon.prod.order','plan_id', string="Orders")
-    state = fields.Selection([('pending', 'Pending'), ('done', 'Complete')], default="pending", string="Status" , required=True)
-
-    _sql_constraints = [('uniq_plan', 'UNIQUE(plan_date,work_shift)', "Unique Plan !")]
-
-cicon_prod_plan()
 
 
 class cicon_customer_order(models.Model):
