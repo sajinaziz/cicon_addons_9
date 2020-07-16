@@ -1,5 +1,6 @@
 from openerp import models, osv, fields, api
 from openerp.exceptions import UserError
+from datetime import datetime
 
 
 class cicon_prod_plan(models.Model):
@@ -11,7 +12,7 @@ class cicon_prod_plan(models.Model):
     def _display_name(self):
         for rec in self:
             rec.display_name = rec.plan_date + '/' + str(rec.work_shift).upper()
-            rec.order_count_not_planned  =  self.env['cicon.prod.order'].search_count([('plan_load_id', '=', False),
+            rec.order_count_not_planned = self.env['cicon.prod.order'].search_count([('plan_load_id', '=', False),
                                                                                        ('state', 'not in', ['delivered', 'cancel', 'transfer', 'hold'])])
 
     @api.multi
@@ -52,24 +53,33 @@ class cicon_prod_plan_load(models.Model):
     _description = "Load Priority"
     _rec_name = 'display_name'
 
-    @api.multi
-    @api.depends('load')
-    def _display_name(self):
-        for rec in self:
-            rec.display_name = 'T' + str(rec.load)
-
     def _calc_load(self):
-        _plan_id = self.env.context.get('default_prod_plan_id')
-        _loads = self.env['cicon.prod.plan'].browse(_plan_id).plan_load_ids.mapped('load')
-        if _loads:
-            _range = list(range(1, max(_loads) + 1, 1))
-            _miss = list(set(_range).difference(_loads))
-            if _miss:
-                return min(_miss)
+        _default_name = self.env.context.get('default_name', False)
+        _plan_id = self.env.context.get('default_prod_plan_id', False)
+        if _plan_id:
+            _loads = self.env['cicon.prod.plan'].browse(_plan_id).plan_load_ids.mapped('load')
+            if _loads:
+                _range = list(range(1, max(_loads) + 1, 1))
+                _miss = list(set(_range).difference(_loads))
+                if _miss:
+                    return min(_miss)
+                else:
+                    return max(_loads) + 1
             else:
-                return max(_loads) + 1
-        else:
-            return 1
+                return 1
+
+        if _default_name:
+            return _default_name
+
+    @api.model
+    def default_get(self, fields):
+        _res = super(cicon_prod_plan_load, self).default_get(fields)
+        if _res.get('load', False) and not _res.get('prod_plan_id', False):
+            _plans = self.env['cicon.prod.plan'].search([('state', '=', 'pending')])
+            if len(_plans) ==1:
+                _res['prod_plan_id'] = _plans.id
+        print _res
+        return _res
 
     @api.multi
     def _get_order_code(self):
@@ -80,23 +90,34 @@ class cicon_prod_plan_load(models.Model):
                 rec.prod_order_codes = _codes
                 rec.prod_order_tonnage = _tons
 
-    @api.depends('search_prod_order_ids')
+    @api.depends('search_prod_order_ids', 'prod_order_ids.plan_load_id')
     def _get_customer(self):
         self.ensure_one()
-        if self.search_prod_order_ids:
+        if self.search_prod_order_ids or self.prod_order_ids:
             _partner = self.search_prod_order_ids.mapped('partner_id')
-            self.search_partner_id = _partner
+            _partner |= self.prod_order_ids.mapped('partner_id')
+            if len(_partner) == 1:
+                self.search_partner_id = _partner
+
+    @api.multi
+    @api.depends('load', 'prod_plan_id.plan_date')
+    def _display_name(self):
+        for rec in self:
+            if rec.prod_plan_id:
+                _plan_date = datetime.strptime(rec.prod_plan_id.plan_date, "%Y-%m-%d").strftime('%d-%b')
+                rec.display_name = str(rec.load) + '(' + str(_plan_date) + ')'
 
     display_name = fields.Char("Load #", compute=_display_name, store=True)
     load = fields.Integer('Load Priority', required=True, default=_calc_load)
     note = fields.Char(string="Notes")
 
     search_prod_order_ids = fields.Many2many('cicon.prod.order',  string="Code Search",
-                                           domain="[('plan_load_id','=',False),('state','not in',['delivered','cancel','transfer','hold'])]")
-    search_partner_id = fields.Many2one('res.partner', compute=_get_customer, string="Customer Search", domain="[('customer','=',True)]")
+                                             domain="[('plan_load_id','=',False), ('state','not in',['delivered','cancel','transfer','hold'])]")
+    search_partner_id = fields.Many2one('res.partner', compute=_get_customer,
+                                        string="Customer Search", domain="[('customer','=',True)]", store=True)
 
     prod_order_ids = fields.One2many('cicon.prod.order', 'plan_load_id',
-                                      string='Production Orders')
+                                     string='Production Orders')
     prod_order_codes = fields.Char(compute=_get_order_code, string="Codes",  store=False)
     prod_order_tonnage = fields.Float(compute=_get_order_code, string="Tonnage", digits=(10, 3), store=False)
 
@@ -106,7 +127,7 @@ class cicon_prod_plan_load(models.Model):
 
     _order = 'load'
 
-    @api.onchange('search_prod_order_ids')
+    @api.onchange('search_prod_order_ids' )
     def change_search_code(self):
         if self.search_prod_order_ids:
             _ids = [(4, o.id) for o in self.search_prod_order_ids]
@@ -147,6 +168,7 @@ class cicon_prod_plan_load(models.Model):
         return True
 
     @api.multi
+    @api.depends('prod_order_ids')
     def _check_customer(self):
         for rec in self:
             _customers = rec.prod_order_ids.mapped('partner_id')
@@ -168,3 +190,19 @@ class cicon_prod_order(models.Model):
                                    string="Plan", ondetele='set null', track_visibility='onchange')
     plan_load = fields.Integer(related='plan_load_id.load', store=True)
 
+    
+
+    @api.multi
+    @api.depends('plan_load_id')
+    def _check_customer(self):
+        for _rec in self:
+            _prod_orders = self.env['cicon.prod.order'].search([('plan_load_id', '=', _rec.plan_load_id.id)])
+            _customers = _prod_orders.mapped('partner_id')
+            if len(_customers) > 1:
+                return False
+            else:
+                return True
+
+    _constraints = [
+        (_check_customer, 'Different Customers found !', ['plan_load_id']),
+    ]
