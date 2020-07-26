@@ -1,6 +1,10 @@
 from openerp import models, osv, fields, api
 from openerp.exceptions import UserError
 from datetime import datetime
+import xlsxwriter
+from xlsxwriter.utility import xl_range
+import cStringIO
+import base64
 
 
 class cicon_prod_plan(models.Model):
@@ -47,38 +51,169 @@ class cicon_prod_plan(models.Model):
 
     _sql_constraints = [('uniq_plan', 'UNIQUE(plan_date,work_shift)', "Unique Plan !")]
 
+    @api.multi
+    def action_done(self):
+        self.ensure_one()
+        _pending_orders = self.prod_order_ids.filtered(lambda p: p.state not in ('delivered'))
+        if _pending_orders:
+            raise UserError(" ( %d ) Pending Orders found in plan, Please clear before closing Plan !" % (len(_pending_orders)))
+        else:
+            self.state = 'done'
+
+    @api.multi
+    def action_pending(self):
+        self.ensure_one()
+        self.state = 'pending'
+
+    @api.multi
+    def excel_plan(self):
+        self.ensure_one()
+        if self.plan_load_ids and self.prod_order_ids:
+            self._create_excel()
+
+    def _clean_templ_str(self, _temp_str):
+        _res = []
+        _str_val = _temp_str.split(',')
+        print _res
+        if ('TH' or 'CO') in _str_val:
+            _res.append('T')
+        if 'ST' in _str_val:
+            _res.append('ST')
+        print _temp_str , _res
+        if _res:
+            return ','.join(_res)
+        else:
+            return ''
+
+    def _create_excel(self):
+        _header_cols = ['Load', 'Customer', 'Project', 'Items', 'Order Date', 'Code', 'Order',  'Description',
+                        'Tonnage', 'Required', 'Remarks','Status']
+
+        output = cStringIO.StringIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        _title_format = workbook.add_format()
+        _title_format.set_bold()
+        _title_format.set_bottom()
+        _number_format = workbook.add_format()
+        _number_format.set_num_format('###0.000')
+        _number_format.set_bold()
+        worksheet = workbook.add_worksheet("Plan")
+
+        _fill_aling = workbook.add_format()
+        _fill_aling.set_align('fill')
+        worksheet.set_default_row(13)
+        _row = 0
+        _col = 0
+        for _head in _header_cols:
+            worksheet.write(_row, _col, _head, _title_format)
+            _col += 1
+
+        _start_row = 0
+        for _load in self.plan_load_ids:
+            _row += 1
+            _start_row = _row
+            worksheet.write(_row, 0, _load.load)
+            _customer_order_ids = _load.prod_order_ids.mapped('customer_order_id')
+            for _customer_order in _customer_order_ids:
+                worksheet.write(_row, 1, _customer_order.partner_id.name, _fill_aling)
+                worksheet.write(_row, 2, _customer_order.project_id.name, _fill_aling)
+                _prod_orders = _load.prod_order_ids.filtered(lambda c: c.customer_order_id.id == _customer_order.id)
+                for _prod_order in _prod_orders:
+                    worksheet.write(_row, 3, self._clean_templ_str(_prod_order.template_str))
+                    worksheet.write(_row, 4, datetime.strptime(_customer_order.order_date, "%Y-%m-%d").strftime('%d-%b'))
+                    worksheet.write(_row, 5, _prod_order.name)
+                    worksheet.write(_row, 6, _prod_order.customer_order_id.name)
+                    worksheet.write(_row, 7, _prod_order.description, _fill_aling)
+                    worksheet.write(_row, 8, _prod_order.total_tonnage, _number_format)
+                    if _prod_order.required_date:
+                        worksheet.write(_row, 9, datetime.strptime(_prod_order.required_date, "%Y-%m-%d").strftime('%d-%b'))
+                    if _prod_order.remarks:
+                        worksheet.write(_row, 10, _prod_order.remarks)
+                    worksheet.write(_row, 11, _prod_order.state)
+                    _row += 1
+
+            if _start_row < _row - 1: #If Need total display
+                worksheet.write_blank(_row, 0, None, _title_format)
+                worksheet.write_blank(_row, 1, None, _title_format)
+                if _load.note:
+                    worksheet.write(_row, 2, _load.note, _title_format)
+                else:
+                    worksheet.write_blank(_row, 2, None, _title_format)
+                for i in range(3, 7):
+                    worksheet.write_blank(_row, i, None, _title_format)
+                worksheet.write(_row, 7, "Total", _title_format)
+                _sum_range = xl_range(_start_row, 8, _row-1, 8)
+                worksheet.write_formula(_row, 8, '=SUM(%s)' % _sum_range, _title_format)
+                for i in range(9, 12):
+                    worksheet.write_blank(_row, i, None, _title_format)
+                _row += 1
+            else:
+                for i in range(12):
+                    worksheet.write_blank(_row, i, None, _title_format)
+                _row += 1
+
+        worksheet.set_column(0, 0, 4)
+        worksheet.set_column(1, 1, 24)
+        worksheet.set_column(2, 2, 27)
+        worksheet.set_column(3, 3, 5)
+        worksheet.set_column(4, 4, 7.5)
+        worksheet.set_column(5, 5, 12)
+        worksheet.set_column(6, 6, 8)
+        worksheet.set_column(7, 7, 50)
+        worksheet.set_column(8, 8, 8)
+        worksheet.set_column(9, 9, 8)
+        worksheet.set_column(10, 10, 10)
+        worksheet.set_column(11, 11, 8)
+
+        workbook.close()
+        output.seek(0)
+        _r_name = 'Production Plan' + datetime.strptime(self.plan_date, "%Y-%m-%d").strftime('%d-%b-%Y')
+        _file_name = 'production Plan' + datetime.strptime(self.plan_date, "%Y-%m-%d").strftime('%d-%b-%Y') + '.xlsx'
+        vals = {
+            'name': _r_name,
+            'datas_fname': _file_name,
+            'description': 'Production Plan',
+            'type': 'binary',
+            'db_datas': base64.encodestring(output.read()),
+            'res_name': _r_name,
+            'res_model': 'cicon.prod.plan',
+            'res_id': self.id
+        }
+        file_id = self.env['ir.attachment'].create(vals)
+        return file_id
+
 
 class cicon_prod_plan_load(models.Model):
     _name = 'cicon.prod.plan.load'
     _description = "Load Priority"
     _rec_name = 'display_name'
 
-    def _calc_load(self):
-        _default_name = self.env.context.get('default_name', False)
-        _plan_id = self.env.context.get('default_prod_plan_id', False)
-        if _plan_id:
-            _loads = self.env['cicon.prod.plan'].browse(_plan_id).plan_load_ids.mapped('load')
-            if _loads:
-                _range = list(range(1, max(_loads) + 1, 1))
-                _miss = list(set(_range).difference(_loads))
-                if _miss:
-                    return min(_miss)
-                else:
-                    return max(_loads) + 1
-            else:
-                return 1
-
-        if _default_name:
-            return _default_name
+    # def _calc_load(self):
+    #     _default_name = self.env.context.get('default_name', False)
+    #     _plan_id = self.env.context.get('default_prod_plan_id', False)
+    #     if _plan_id:
+    #         _loads = self.env['cicon.prod.plan'].browse(_plan_id).plan_load_ids.mapped('load')
+    #         if _loads:
+    #             _range = list(range(1, max(_loads) + 1, 1))
+    #             _miss = list(set(_range).difference(_loads))
+    #             if _miss:
+    #                 return min(_miss)
+    #             else:
+    #                 return max(_loads) + 1
+    #         else:
+    #             return 1
+    #
+    #     if _default_name:
+    #         return _default_name
 
     @api.model
     def default_get(self, fields):
         _res = super(cicon_prod_plan_load, self).default_get(fields)
         if _res.get('load', False) and not _res.get('prod_plan_id', False):
             _plans = self.env['cicon.prod.plan'].search([('state', '=', 'pending')])
-            if len(_plans) ==1:
+            if len(_plans) == 1:
                 _res['prod_plan_id'] = _plans.id
-        print _res
+
         return _res
 
     @api.multi
@@ -108,7 +243,7 @@ class cicon_prod_plan_load(models.Model):
                 rec.display_name = str(rec.load) + '(' + str(_plan_date) + ')'
 
     display_name = fields.Char("Load #", compute=_display_name, store=True)
-    load = fields.Integer('Load Priority', required=True, default=_calc_load)
+    load = fields.Integer('Load Priority', required=True)
     note = fields.Char(string="Notes")
 
     search_prod_order_ids = fields.Many2many('cicon.prod.order',  string="Code Search",
@@ -151,6 +286,20 @@ class cicon_prod_plan_load(models.Model):
                 'domain': {'search_prod_order_ids': [('plan_load_id', '=', False),
                                                      ('state', 'not in', ['delivered', 'cancel', 'transfer', 'hold'])]}}
         return _res
+
+    @api.onchange('prod_plan_id')
+    def onchange_plan(self):
+        if self.prod_plan_id:
+            _loads = self.prod_plan_id.plan_load_ids.mapped('load')
+            if _loads:
+                _range = list(range(1, max(_loads) + 1, 1))
+                _miss = list(set(_range).difference(_loads))
+                if _miss:
+                    self.load = min(_miss)
+                else:
+                    self.load = max(_loads) + 1
+            else:
+                return 1
 
     @api.onchange('prod_order_ids')
     def change_prod_order(self):

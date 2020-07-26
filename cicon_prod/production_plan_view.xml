@@ -22,8 +22,8 @@
             <field name="model">cicon.prod.plan.load</field>
             <field name="priority">90</field>
             <field name="arch" type="xml">
-
                 <form string="Order State">
+
                     <group>
                         <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
                         <field name="load"/>
@@ -160,7 +160,13 @@
                                      string="Add New Load"
                                      type="action"
                                      class="btn btn-primary btn-sm"
+                                    states="pending"
                              />
+
+                        <button name="action_done" confirm="Confirm Plan Completed !?" states="pending" string="Completed" type="object" />
+                        <button name="action_pending" states="done" string="Start Plan" type="object" />
+                        <button name="excel_plan" states="pending" string="Export Plan" type="object" />
+
                         <field name="state" widget="statusbar" />
                     </header>
                         <group col="4">
@@ -224,7 +230,7 @@
                                        <field name="load" />
                                        <field name="prod_order_codes"/>
                                        <field name="note"/>
-                                        <field name="prod_order_tonnage"/>
+                                       <field name="prod_order_tonnage"/>
 
                                     </tree>
                                  </field>
@@ -241,12 +247,102 @@
 
 
 
+<!--         TODO: Kanaban-->
+
+        <record id="cicon_prod_plan_load_kanban_view" model="ir.ui.view" >
+             <field name="name">cicon.prod.plan.load.kanban</field>
+             <field name="model">cicon.prod.plan.load</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="load"  class="o_kanban_small_column o_kanban_dashboard">
+                <field name="load"/>
+                <field name="prod_order_tonnage"/>
+                <field name="search_partner_id"/>
+                <field name="note"/>
+                <field name="prod_order_codes"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="load"/></div>
+                                    <div class="o_secondary"><field name="prod_order_tonnage"/></div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content o_visible">
+                                <div class="row">
+                                    <div class="col-xs-12 o_kanban_primary_left">
+                                        <p class="text-small"> <field name="search_partner_id"/> </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 o_kanban_primary_left">
+                                        <p class="text-small"> <field name="prod_order_codes" /> </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_cicon_prod_plan_load">
+            <field name="name" >Plan Trips</field>
+            <field name="res_model">cicon.prod.plan.load</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('prod_plan_id','=', active_id)]</field>
+       </record>
+
+        <record id="cicon_prod_plan_kanban_view" model="ir.ui.view" >
+             <field name="name">cicon.prod.plan.kanban</field>
+             <field name="model">cicon.prod.plan</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban">
+                <field name="plan_date"/>
+                <field name="work_shift"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="plan_date"/></div>
+                                    <div class="o_secondary"><field name="work_shift"/></div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content o_visible">
+                                <div class="row">
+                                    <div class="col-xs-6 o_kanban_primary_left">
+                                        <button class="btn btn-primary" name="%(action_cicon_prod_plan_load)d" type="action">Trips</button>
+                                    </div>
+                                    <div class="col-xs-6 o_kanban_primary_right">
+                                    </div>
+                                </div>
+                                </div>
+
+                        </div>
+                    </t>
+                </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
 
 
 
         <record model="ir.actions.act_window" id="action_cicon_prod_plan">
             <field name="name" >Production Plan</field>
             <field name="res_model">cicon.prod.plan</field>
+            <field name="view_mode">tree,form</field>
            <field name="view_id" ref=""/>
 
        </record>
@@ -300,7 +396,7 @@
                     <field name="template_str" readonly="1"/>
                     <field name="total_tonnage" sum="Total" string="Tonnage" readonly="1"/>
                     <field name="state" readonly="1"/>
-                      <field name="plan_load_id" domain="[('search_partner_id','=', partner_id)]"
+                      <field name="plan_load_id" domain="['|',('search_partner_id','=', partner_id), ('search_partner_id','=', False)]"
                               context="{'form_view_ref': 'cicon_prod.cic_prod_plan_load_form_quick'}"
                              string="   Load   "/>
                     <field name="plan_load" context="{'order_display': 'load' }" invisible="1"/>
