@@ -168,6 +168,7 @@
                 <field name="project_id" widget="selection"/>
                 <field name="customer_order_id" widget="selection"/>
                 <field name="order_division" widget="selection"/>
+                <field name="prod_plan_id" />
                 <!--<field name="categ_ids" widget="selection"/>-->
                 <filter name="pending_order" string="Pending Order" domain="[('state','not in',['delivered','cancel','transfer','hold'])]"/>
 

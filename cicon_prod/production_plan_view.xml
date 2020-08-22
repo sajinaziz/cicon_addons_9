@@ -26,7 +26,12 @@
 
                     <group>
                         <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
-                        <field name="load"/>
+                    </group>
+                      <group col="4">
+                         <field name="load"/>
+                         <field name="re_arrange"/>
+                     </group>
+                    <group>
                         <field name="note"/>
                         <field name="search_prod_order_ids" widget="many2many_tags"  options="{'no_create':True, 'no_edit':True }"  context="{'search_default_pending_order':1}"/>
                         <field name="search_partner_id"  />
@@ -66,7 +71,12 @@
                     <group>
                         <field name="id" invisible="1"/>
                         <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
-                        <field name="load"/>
+                    </group>
+                     <group col="4">
+                         <field name="load"/>
+                         <field name="re_arrange"/>
+                     </group>
+                     <group>
                         <field name="note"/>
                         <field name="search_prod_order_ids" widget="many2many_tags"
                                domain="[('partner_id', '=', search_partner_id),
@@ -163,10 +173,15 @@
                                     states="pending"
                              />
 
-                        <button name="action_done" confirm="Confirm Plan Completed !?" states="pending" string="Completed" type="object" />
-                        <button name="action_pending" states="done" string="Start Plan" type="object" />
-                        <button name="excel_plan" states="pending" string="Export Plan" type="object" />
+                         <button class="btn btn-default"
+                                    string="Import Pending Plan"
+                                name="%(action_plan_import_wizard_form)d" type="action">
+                            </button>
 
+
+                        <button name="excel_plan" states="pending" string="Export Plan" type="object" />
+                        <button name="action_pending" states="done" string="Start Plan" type="object" />
+                        <button name="action_done" confirm="Confirm Plan Completed !?" states="pending" string="Completed" type="object" />
                         <field name="state" widget="statusbar" />
                     </header>
                         <group col="4">
@@ -201,6 +216,8 @@
                                      string="Orders View"
                                     >
                             </button>
+
+
 
 
                         </div>
@@ -355,8 +372,11 @@
                 <form string="Load">
                     <group>
                         <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
-                        <field name="load"/>
                         <field name="note"/>
+                    </group>
+                    <group col="4">
+                        <field name="load"/>
+                        <field name="re_arrange"/>
                     </group>
                     <field name="prod_order_ids" widget="many2many" options="{'not_delete': True}" attrs="{'invisible':[('prod_order_ids','=',[])]}" >
                                 <tree create="false" delete="false" >
@@ -396,12 +416,9 @@
                     <field name="template_str" readonly="1"/>
                     <field name="total_tonnage" sum="Total" string="Tonnage" readonly="1"/>
                     <field name="state" readonly="1"/>
-                      <field name="plan_load_id" domain="['|',('search_partner_id','=', partner_id), ('search_partner_id','=', False)]"
-                              context="{'form_view_ref': 'cicon_prod.cic_prod_plan_load_form_quick'}"
-                             string="   Load   "/>
+                      <field name="plan_load_id"
+                             string=" Load  " readonly="1"/>
                     <field name="plan_load" context="{'order_display': 'load' }" invisible="1"/>
-
-
                 </tree>
 			</field>
         </record>

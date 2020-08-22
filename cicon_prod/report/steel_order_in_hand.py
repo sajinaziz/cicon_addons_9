@@ -49,19 +49,25 @@ class cicon_steel_order_in_hand(models.AbstractModel): # Report File Name
             for _dia in set([l.dia_attrib_value_id for l in _lines]): # Loop through the distinct dia from records
                 _qty[_dia.name] = sum([q.quantity for q in _lines if q.dia_attrib_value_id.id == _dia.id]) # sum and store to _dia Dictionary with the Dia Key
             project['quantity'] = _qty # Add dia to Main Dictionary
+            project['total'] = sum(project['quantity'].itervalues())
+            project['percent'] = 0
         _dia_val = []
         for i, k in enumerate(_customer_project_list):
             _dia_val.extend(k['quantity'].keys()) # get all Dia Key and add  to _dia_val List for Grand Total
         _grand_total = {}
         _dia_percent = {}
         _total_qty = sum([sum(i['quantity'].itervalues()) for i in _customer_project_list])
-        print _total_qty
         for dia_value in _dia_val: # Loop Dia and  sum , store to _grand_total Dictionary with the Dia Key
             _grand_total[dia_value] = sum([i['quantity'].get(dia_value, 0) for i in _customer_project_list])
             if _grand_total[dia_value] > 0 and _total_qty > 0:
                 _dia_percent[dia_value] = (_grand_total[dia_value] * 100 / _total_qty)
             else:
                 _dia_percent[dia_value] = 0
+        if _total_qty > 0:
+            for _project in _customer_project_list:
+                if _project['total'] > 0:
+                    _project['percent'] = (_project['total'] * 100 / _total_qty )
+
         _vals = []
         _product_templates = self.env['product.template'].search([('id', 'in', self._context.get('prod_template_ids'))])
         # Create a list of dia used in selected templates sorted with sequence

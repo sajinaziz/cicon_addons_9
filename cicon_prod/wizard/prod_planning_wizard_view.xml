@@ -1,59 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<!--    <data>-->
+    <data>
 
-<!--        <record id="cic_prod_plan_wizard" model="ir.ui.view">-->
-<!--            <field name="name">cic.prod.plan.wizard.form</field>-->
-<!--            <field name="model">cic.prod.plan.wizard</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <form string="Order State" version="7.0">-->
-<!--                    <group>-->
-<!--                        <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>-->
-<!--                        <field name="load"/>-->
-<!--                        <field name="remarks"/>-->
-<!--                    </group>-->
-<!--                    <notebook>-->
-<!--                        <page string="Orders">-->
-<!--                            <field name="prod_order_ids">-->
-<!--                                <tree create="false" edit="false">-->
-<!--                                    <field name="partner_id" />-->
-<!--                                    <field name="project_id"/>-->
-<!--                                    <field name="customer_order_id"/>-->
-<!--                                    <field name="name" />-->
-<!--                                    <field name="description" />-->
-<!--                                    <field name="required_date" />-->
-<!--                                    <field name="total_tonnage" />-->
-<!--                                    <field name="state"/>-->
-<!--                                </tree>-->
-<!--                            </field>-->
-<!--                        </page>-->
-<!--                    </notebook>-->
-<!--                    <footer>-->
-<!--                        <button name="update_plan" confirm="Confirm Update !" string="Update Plan" type="object" class="oe_highlight"/>-->
-<!--                        or-->
-<!--                        <button string="Cancel" class="oe_link" special="cancel" />-->
-<!--                    </footer>-->
-<!--               </form>-->
-<!--            </field>-->
-<!--        </record>-->
+        <record id="cic_change_plan_wizard_form" model="ir.ui.view">
+            <field name="name">cic.change.plan.wizard.form</field>
+            <field name="model">cic.change.plan.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Plan">
+                    <group>
+                        <field name="prod_plan_id" domain="[('state','=', 'pending')]"/>
+                        <field name="remarks"/>
+                    </group>
+                        <field name="prod_order_ids">
+                                <tree create="false" edit="false">
+                                    <field name="partner_id" />
+                                    <field name="project_id"/>
+                                    <field name="customer_order_id"/>
+                                    <field name="name" />
+                                    <field name="description" />
+                                    <field name="required_date" />
+                                    <field name="total_tonnage" />
+                                    <field name="state"/>
+                                </tree>
+                        </field>
+                    <footer>
+                        <button name="update_plan" confirm="Confirm Update !" string="Update Plan" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
 
-<!--       <record model="ir.actions.act_window" id="action_cic_prod_plan_wizard">-->
-<!--            <field name="name" >Production Plan</field>-->
-<!--            <field name="res_model">cic.prod.plan.wizard</field>-->
+<!--       <record model="ir.actions.act_window" id="action_cic_change_plan_wizard">-->
+<!--            <field name="name" >Change Plan</field>-->
+<!--            <field name="res_model">cic.change.plan.wizard</field>-->
 <!--            <field name="view_mode">form</field>-->
 <!--            <field name="target">new</field>-->
 <!--       </record>-->
 
 
-<!--           <act_window name="Update Planning"-->
+<!--        <act_window name="Change Plan"-->
 <!--            src_model="cicon.prod.order"-->
-<!--            res_model="cic.prod.plan.wizard"-->
+<!--            res_model="cic.change.plan.wizard"-->
 <!--            view_mode="form"-->
 <!--            view_type="form"-->
 <!--            multi="True"-->
 <!--            key2="client_action_multi"-->
 <!--            context="{'default_prod_order_ids':active_ids}"-->
-<!--            id="action_cic_prod_plan_wizard" />-->
+<!--            id="action_cic_change_plan_wizard" />-->
 
-<!--</data>-->
+<!--    <record id="prod_order_action_remove_plan" model="ir.actions.server">-->
+<!--        <field name="name">Remove Plan</field>-->
+<!--        <field name="model_id" ref="model_cicon_prod_order"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">-->
+<!--            if context.get('active_ids'):-->
+<!--                self.remove_plan(cr, uid, context=context)-->
+<!--        </field>-->
+<!--        <field name="sequence" eval="25"/>-->
+<!--    </record>-->
+
+<!--    <record id="ir_prod_plan_action_remove_pan" model="ir.values">-->
+<!--        <field name="model_id" ref="model_cicon_prod_order" />-->
+<!--        <field name="name">Remove Plan</field>-->
+<!--        <field name="key2">client_action_multi</field>-->
+<!--        <field eval="'ir.actions.server,%d'%prod_order_action_remove_plan" name="value"/>-->
+<!--        <field name="key">action</field>-->
+<!--        <field name="model">cicon.prod.order</field>-->
+
+<!--    </record>-->
+
+</data>
 </odoo>

@@ -76,6 +76,7 @@
                           <th> <span t-field="dia.name"/>   </th>
                       </t>
                       <th>Total</th>
+                      <th> % </th>
                   </thead>
                   <t t-set="r_count" t-value="0"/>
                   <tbody>
@@ -97,6 +98,7 @@
                             </td>
                         </t>
                         <td class="text-right">  <span t-esc="formatLang(sum(o['quantity'].itervalues()),digits=digit)"/> </td>
+                        <td class="text-right">  <span t-esc="formatLang(o['percent'],digits=0)" /> % </td>
 
                     </tr>
                  </t>

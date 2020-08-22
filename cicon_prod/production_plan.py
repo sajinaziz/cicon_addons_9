@@ -19,6 +19,17 @@ class cicon_prod_plan(models.Model):
             rec.order_count_not_planned = self.env['cicon.prod.order'].search_count([('plan_load_id', '=', False),
                                                                                        ('state', 'not in', ['delivered', 'cancel', 'transfer', 'hold'])])
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        recs = self.browse()
+        if name:
+            recs = self.search([('plan_date', operator, name)] + args, limit=limit)
+        if not recs:
+            recs = self.search([('plan_date', operator, name)] + args, limit=limit)
+        return recs.name_get()
+
+
     @api.multi
     @api.depends('plan_load_ids')
     def _get_prd_orders_load(self):
@@ -225,14 +236,15 @@ class cicon_prod_plan_load(models.Model):
                 rec.prod_order_codes = _codes
                 rec.prod_order_tonnage = _tons
 
+    @api.multi
     @api.depends('search_prod_order_ids', 'prod_order_ids.plan_load_id')
     def _get_customer(self):
-        self.ensure_one()
-        if self.search_prod_order_ids or self.prod_order_ids:
-            _partner = self.search_prod_order_ids.mapped('partner_id')
-            _partner |= self.prod_order_ids.mapped('partner_id')
-            if len(_partner) == 1:
-                self.search_partner_id = _partner
+        for rec in self:
+            if rec.search_prod_order_ids or rec.prod_order_ids:
+                _partner = rec.search_prod_order_ids.mapped('partner_id')
+                _partner |= rec.prod_order_ids.mapped('partner_id')
+                if len(_partner) == 1:
+                    rec.search_partner_id = _partner
 
     @api.multi
     @api.depends('load', 'prod_plan_id.plan_date')
@@ -245,6 +257,7 @@ class cicon_prod_plan_load(models.Model):
     display_name = fields.Char("Load #", compute=_display_name, store=True)
     load = fields.Integer('Load Priority', required=True)
     note = fields.Char(string="Notes")
+    re_arrange = fields.Boolean('Re Arrange', help="Re Arrange load if exists !", default=False)
 
     search_prod_order_ids = fields.Many2many('cicon.prod.order',  string="Code Search",
                                              domain="[('plan_load_id','=',False), ('state','not in',['delivered','cancel','transfer','hold'])]")
@@ -255,6 +268,7 @@ class cicon_prod_plan_load(models.Model):
                                      string='Production Orders')
     prod_order_codes = fields.Char(compute=_get_order_code, string="Codes",  store=False)
     prod_order_tonnage = fields.Float(compute=_get_order_code, string="Tonnage", digits=(10, 3), store=False)
+
 
     prod_plan_id = fields.Many2one('cicon.prod.plan', required=True, string="Production Plan", ondelete='restrict')
 
@@ -326,6 +340,32 @@ class cicon_prod_plan_load(models.Model):
             else:
                 return True
 
+    @api.model
+    def create(self, vals):
+        if vals.get('re_arrange', False):
+            self._add_load_position(_load=vals.get('load'), _plan=vals.get('prod_plan_id'))
+            vals['re_arrange'] = False
+        res = super(cicon_prod_plan_load, self).create(vals)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('re_arrange', False):
+            self._add_load_position(_load=vals.get('load'), _plan=self.prod_plan_id.id)
+            vals['re_arrange'] = False
+        res = super(cicon_prod_plan_load, self).write(vals)
+        return res
+
+    def _add_load_position(self, _load , _plan):
+        _load_exist = self.env['cicon.prod.plan.load'].search([('load', '=', _load), ('prod_plan_id', '=', _plan)],
+                                                              limit=1)
+        if _load_exist:
+            _loads = self.env['cicon.prod.plan.load'].search([('load', '>=', _load), ('prod_plan_id', '=', _plan)],
+                                                             order='load desc')
+            for _ld in _loads:
+                _ld.write({'load': _ld.load + 1})
+        return True
+
     _constraints = [
         (_check_customer, 'Different Customers found !', ['prod_order_ids']),
     ]
@@ -340,18 +380,27 @@ class cicon_prod_order(models.Model):
     plan_load = fields.Integer(related='plan_load_id.load', store=True)
 
     
+    #
+    # @api.multi
+    # @api.depends('plan_load_id')
+    # def _check_customer(self):
+    #     for _rec in self:
+    #         _prod_orders = self.env['cicon.prod.order'].search([('plan_load_id', '=', _rec.plan_load_id.id)])
+    #         _customers = _prod_orders.mapped('partner_id')
+    #         print _customers
+    #         if len(_customers) > 1:
+    #             return False
+    #         else:
+    #             return True
+    #
+    # _constraints = [
+    #     (_check_customer, 'Different Customers found !', ['plan_load_id']),
+    # ]
 
-    @api.multi
-    @api.depends('plan_load_id')
-    def _check_customer(self):
-        for _rec in self:
-            _prod_orders = self.env['cicon.prod.order'].search([('plan_load_id', '=', _rec.plan_load_id.id)])
-            _customers = _prod_orders.mapped('partner_id')
-            if len(_customers) > 1:
-                return False
-            else:
-                return True
+    @api.model
+    def remove_plan(self):
+        if self._context.get('active_ids'):
+            _orders = self.env['cicon.prod.order'].search([('id', 'in', self._context.get('active_ids'))])
+            _orders.write({'plan_load_id': False})
 
-    _constraints = [
-        (_check_customer, 'Different Customers found !', ['plan_load_id']),
-    ]
+

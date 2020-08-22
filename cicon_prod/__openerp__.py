@@ -11,6 +11,7 @@
         'res_partner_project_view.xml',
         'customer_order_view.xml',
         'production_order_view.xml',
+        'wizard/prod_plan_import_wizard_view.xml',
         'production_plan_view.xml',
         'contract_lpo_view.xml',
         'wizard/change_state_wizard_view.xml',
