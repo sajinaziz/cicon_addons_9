@@ -30,9 +30,12 @@ class PlanImportWizard(models.TransientModel):
 
             for _load in _loads:
                 _load_count += 1
-                _new_load = self.env['cicon.prod.plan.load'].create(vals={'prod_plan_id': self.to_plan_id.id, 'load': _load_count, 'note': _load.note})
+                _new_load = self.env['cicon.prod.plan.load'].create(vals={'prod_plan_id':   self.to_plan_id.id, 'load': _load_count, 'note': _load.note})
+                _prod_ids = []
                 for _order in _load.prod_order_ids.filtered(lambda o: o.state not in ['delivered', 'cancel', 'transfer', 'hold']):
                     _order.plan_load_id = _new_load.id
+                    _prod_ids.append(_order.id)
+                _new_load.search_prod_order_ids = _prod_ids
         else:
             raise UserError("No Pending Orders to import!")
 
