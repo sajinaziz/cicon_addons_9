@@ -65,7 +65,7 @@
         </record>
 
 
-         <record model="ir.ui.view" id="cicon_prod_order_form_view">
+        <record model="ir.ui.view" id="cicon_prod_order_form_view">
 			<field name="name">cicon.prod.order.form</field>
 			<field name="model">cicon.prod.order</field>
 			<field name="arch" type="xml">

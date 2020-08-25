@@ -88,9 +88,8 @@ class cicon_prod_plan(models.Model):
         print _res
         if ('TH' or 'CO') in _str_val:
             _res.append('T')
-        if 'ST' in _str_val:
-            _res.append('ST')
-        print _temp_str , _res
+        if 'SB' in _str_val:
+            _res.append('SB')
         if _res:
             return ','.join(_res)
         else:
@@ -161,6 +160,8 @@ class cicon_prod_plan(models.Model):
             else:
                 for i in range(12):
                     worksheet.write_blank(_row, i, None, _title_format)
+                if _load.note:
+                    worksheet.write(_row, 2, _load.note, _title_format)
                 _row += 1
 
         worksheet.set_column(0, 0, 4)

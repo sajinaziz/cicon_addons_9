@@ -38,10 +38,10 @@
                     </group>
                     <notebook>
                         <page string="Orders">
-                            <field name="prod_order_ids" widget="many2many" options="{'not_delete': True}">
-                                <tree create="false" delete="false" >
+                            <field name="prod_order_ids"  widget="many2many" options="{'not_delete': True}">
+                                <tree create="false" delete="false" decoration-danger="state in('delivered','cancel')" >
                                     <field name="sequence" widget="handle"/>
-                                    <field name="partner_id" />
+                                    <field name="partner_id"/>
                                     <field name="project_id"/>
                                     <field name="customer_order_id"/>
                                     <field name="name" />
@@ -87,7 +87,7 @@
                     <notebook>
                         <page string="Orders">
                             <field name="prod_order_ids" widget="many2many" options="{'not_delete': True}">
-                                <tree create="false" delete="false" >
+                                <tree create="false" delete="false" decoration-danger="state in('delivered','cancel')" >
                                     <field name="sequence" widget="handle"/>
                                     <field name="partner_id" />
                                     <field name="project_id"/>
@@ -242,7 +242,7 @@
                             </page>
                              <page string="Loading View">
                                  <field name="plan_load_ids">
-                                    <tree  default_order="load">
+                                    <tree  default_order="load" decoration-danger="state in('delivered')" decoration-info="state in('partial')">
 <!--                                       <field name="display_name"/>-->
                                        <field name="load" />
                                        <field name="prod_order_codes"/>
