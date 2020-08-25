@@ -254,6 +254,25 @@ class cicon_prod_plan_load(models.Model):
                 _plan_date = datetime.strptime(rec.prod_plan_id.plan_date, "%Y-%m-%d").strftime('%d-%b')
                 rec.display_name = str(rec.load) + '(' + str(_plan_date) + ')'
 
+    _LOAD_STATES = [('no_order', 'No Order'), ('pending', 'Pending'), ('delivered', 'Delivered'), ('partial', 'Partial')]
+
+    @api.multi
+    @api.depends('prod_order_ids.state', 'prod_order_ids')
+    def _load_state(self):
+        for rec in self:
+            if rec.prod_order_ids:
+                _states = list(set(rec.prod_order_ids.mapped('state')))
+                if _states:
+                    if len(_states) == 1:
+                        if _states[0] != 'delivered':
+                            rec.state = 'pending'
+                        elif _states[0] == 'delivered':
+                            rec.state = 'delivered'
+                    else:
+                        rec.state = 'partial'
+            else:
+                rec.state = 'no_order'
+
     display_name = fields.Char("Load #", compute=_display_name, store=True)
     load = fields.Integer('Load Priority', required=True)
     note = fields.Char(string="Notes")
@@ -269,8 +288,9 @@ class cicon_prod_plan_load(models.Model):
     prod_order_codes = fields.Char(compute=_get_order_code, string="Codes",  store=False)
     prod_order_tonnage = fields.Float(compute=_get_order_code, string="Tonnage", digits=(10, 3), store=False)
 
-
     prod_plan_id = fields.Many2one('cicon.prod.plan', required=True, string="Production Plan", ondelete='restrict')
+    state = fields.Selection(selection=_LOAD_STATES, string='Status',
+                             compute=_load_state, readonly=True, store=True)
 
     _sql_constraints = [('uniq_plan_load', 'UNIQUE(load,prod_plan_id)', "Unique Plan Load !")]
 
@@ -329,6 +349,9 @@ class cicon_prod_plan_load(models.Model):
     @api.one
     def add_load(self):
         return True
+
+
+
 
     @api.multi
     @api.depends('prod_order_ids')

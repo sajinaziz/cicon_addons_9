@@ -248,6 +248,7 @@
                                        <field name="prod_order_codes"/>
                                        <field name="note"/>
                                        <field name="prod_order_tonnage"/>
+                                       <field name="state" />
 
                                     </tree>
                                  </field>

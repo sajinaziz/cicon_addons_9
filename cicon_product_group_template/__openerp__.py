@@ -4,7 +4,7 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'category': 'CICON Product Group',
-    'depends': ['base','product'],
+    'depends': ['base', 'product'],
     'description': """
 Module for CICON Product Group Template.
 ===============================================
